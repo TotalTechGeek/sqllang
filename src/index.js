@@ -1,0 +1,78 @@
+/**
+ * sqllang — SQL over plain JavaScript data.
+ *
+ *   import { query } from 'sqllang'
+ *   query('SELECT name, SUM(total) AS spent FROM orders GROUP BY name', { orders })
+ *
+ * A query compiles to a JSON plan whose expressions are JSON Logic; the
+ * executor runs it on json-logic-engine.
+ */
+
+import { compile } from './compile.js'
+import { executePlan, createEngine, defaultEngine, toRows } from './execute.js'
+import { SqlError, SqlSyntaxError } from './errors.js'
+import { SqlLimitError, SAFE_LIMITS } from './guard.js'
+import { functions } from './functions.js'
+import { aggregates, windowFunctions } from './aggregates.js'
+
+/**
+ * Compile once, run many times.
+ *
+ * @param {string} sql One statement, or a script of `;`-separated statements.
+ * @param {{ engine?: any, interpreted?: boolean, limits?: object }} [options]
+ *   `limits` — { timeoutMs, maxRows, maxStringLength, maxQueryLength, regex }, or
+ *   SAFE_LIMITS; applied at compile time and on every run.
+ */
+export function prepare (sql, options = {}) {
+  const engine = options.engine ?? defaultEngine
+  const plan = compile(sql, { functions: engine.sqlFunctions, limits: options.limits })
+  const run = (data, params, runOptions = {}) =>
+    executePlan(plan, data, { ...options, ...runOptions, engine, params: params ?? runOptions.params ?? options.params })
+  return {
+    plan,
+    /** Rows of the last statement, with a non-enumerable `columns` array. */
+    query: (data, params) => asRows(last(run(data, params).results)),
+    /** Every statement's result, plus the tables INSERT created. */
+    execute: (data, params) => run(data, params)
+  }
+}
+
+/**
+ * Run SQL against data and get rows back.
+ *
+ * @param {string} sql
+ * @param {object | object[]} data Tables by name — `{ orders: [...], users: [...] }` — or
+ *   a single array, which is the table `data`.
+ * @param {{ params?: any[] | Record<string, any>, engine?: any, interpreted?: boolean }} [options]
+ * @returns {object[] & { columns: string[] }}
+ */
+export function query (sql, data, options = {}) {
+  return prepare(sql, options).query(data, options.params)
+}
+
+/**
+ * Run a script and get every statement's result, and the tables it created.
+ */
+export function execute (sql, data, options = {}) {
+  return prepare(sql, options).execute(data, options.params)
+}
+
+function last (results) {
+  for (let i = results.length - 1; i >= 0; i--) if (!('inserted' in results[i])) return results[i]
+  return { columns: [], rows: [] }
+}
+
+function asRows ({ columns, rows }) {
+  Object.defineProperty(rows, 'columns', { value: columns, enumerable: false })
+  return rows
+}
+
+/** Every scalar function name SQL can call. */
+export const functionNames = Object.keys(functions).sort()
+/** Every aggregate function name. */
+export const aggregateNames = Object.keys(aggregates).sort()
+
+export {
+  compile, executePlan, createEngine, defaultEngine, toRows,
+  SqlError, SqlSyntaxError, SqlLimitError, SAFE_LIMITS, windowFunctions
+}

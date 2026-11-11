@@ -1,0 +1,581 @@
+// sqllang — a SQL dialect for querying plain JavaScript data.
+//
+// Statements come out as a small AST (Query, Select, SetOp, Insert, ...).
+// Expressions come out as JSON Logic *already*, with a handful of
+// placeholders the compiler resolves once it knows the query's scope:
+//
+//   {"$ref": ["o", "items", 0, "sku"]}   a column / path reference
+//   {"$call": {...}}                      a function call (scalar, aggregate or window)
+//   {"$subquery": q} {"$exists": q} {"$inSub": [left, q]}
+//   {"$param": 1 | "name" | null}         a bound parameter
+//
+// Everything else — {"EQ": [a, b]}, {"ADD": [a, b]}, {"if": [...]} — is final
+// and runs on json-logic-engine as written.
+
+grammar SQL;
+start Script;
+
+token WS pattern "\\s+" skip;
+token LineComment pattern "--[^\\n]*" skip;
+token BlockComment pattern "/\\*[\\s\\S]*?\\*/" skip;
+
+// Keywords: case-insensitive patterns anchored on a word boundary, so `orders`
+// is an identifier rather than OR + `ders`, and OR never wins inside ORDER.
+// The list is kept short on purpose — every keyword is a column name a user's
+// data can no longer use unquoted (it still can after a dot: `t.order`).
+token Select pattern "SELECT(?![A-Za-z0-9_])" ignoreCase;
+token From pattern "FROM(?![A-Za-z0-9_])" ignoreCase;
+token Where pattern "WHERE(?![A-Za-z0-9_])" ignoreCase;
+token As pattern "AS(?![A-Za-z0-9_])" ignoreCase;
+token Distinct pattern "DISTINCT(?![A-Za-z0-9_])" ignoreCase;
+token All pattern "ALL(?![A-Za-z0-9_])" ignoreCase;
+token And pattern "AND(?![A-Za-z0-9_])" ignoreCase;
+token Or pattern "OR(?![A-Za-z0-9_])" ignoreCase;
+token Not pattern "NOT(?![A-Za-z0-9_])" ignoreCase;
+token In pattern "IN(?![A-Za-z0-9_])" ignoreCase;
+token Is pattern "IS(?![A-Za-z0-9_])" ignoreCase;
+token Null pattern "NULL(?![A-Za-z0-9_])" ignoreCase;
+token Like pattern "LIKE(?![A-Za-z0-9_])" ignoreCase;
+token Ilike pattern "ILIKE(?![A-Za-z0-9_])" ignoreCase;
+token Between pattern "BETWEEN(?![A-Za-z0-9_])" ignoreCase;
+token Inner pattern "INNER(?![A-Za-z0-9_])" ignoreCase;
+token Left pattern "LEFT(?![A-Za-z0-9_])" ignoreCase;
+token Right pattern "RIGHT(?![A-Za-z0-9_])" ignoreCase;
+token Full pattern "FULL(?![A-Za-z0-9_])" ignoreCase;
+token Outer pattern "OUTER(?![A-Za-z0-9_])" ignoreCase;
+token Cross pattern "CROSS(?![A-Za-z0-9_])" ignoreCase;
+token Join pattern "JOIN(?![A-Za-z0-9_])" ignoreCase;
+token On pattern "ON(?![A-Za-z0-9_])" ignoreCase;
+token Using pattern "USING(?![A-Za-z0-9_])" ignoreCase;
+token Group pattern "GROUP(?![A-Za-z0-9_])" ignoreCase;
+token By pattern "BY(?![A-Za-z0-9_])" ignoreCase;
+token Order pattern "ORDER(?![A-Za-z0-9_])" ignoreCase;
+token Asc pattern "ASC(?![A-Za-z0-9_])" ignoreCase;
+token Desc pattern "DESC(?![A-Za-z0-9_])" ignoreCase;
+token Nulls pattern "NULLS(?![A-Za-z0-9_])" ignoreCase;
+token Having pattern "HAVING(?![A-Za-z0-9_])" ignoreCase;
+token Limit pattern "LIMIT(?![A-Za-z0-9_])" ignoreCase;
+token Offset pattern "OFFSET(?![A-Za-z0-9_])" ignoreCase;
+token Insert pattern "INSERT(?![A-Za-z0-9_])" ignoreCase;
+token Into pattern "INTO(?![A-Za-z0-9_])" ignoreCase;
+token Values pattern "VALUES(?![A-Za-z0-9_])" ignoreCase;
+token True pattern "TRUE(?![A-Za-z0-9_])" ignoreCase;
+token False pattern "FALSE(?![A-Za-z0-9_])" ignoreCase;
+token Case pattern "CASE(?![A-Za-z0-9_])" ignoreCase;
+token When pattern "WHEN(?![A-Za-z0-9_])" ignoreCase;
+token Then pattern "THEN(?![A-Za-z0-9_])" ignoreCase;
+token Else pattern "ELSE(?![A-Za-z0-9_])" ignoreCase;
+token End pattern "END(?![A-Za-z0-9_])" ignoreCase;
+token With pattern "WITH(?![A-Za-z0-9_])" ignoreCase;
+token Union pattern "UNION(?![A-Za-z0-9_])" ignoreCase;
+token Except pattern "EXCEPT(?![A-Za-z0-9_])" ignoreCase;
+token Intersect pattern "INTERSECT(?![A-Za-z0-9_])" ignoreCase;
+token Exists pattern "EXISTS(?![A-Za-z0-9_])" ignoreCase;
+token Cast pattern "CAST(?![A-Za-z0-9_])" ignoreCase;
+token Extract pattern "EXTRACT(?![A-Za-z0-9_])" ignoreCase;
+token Over pattern "OVER(?![A-Za-z0-9_])" ignoreCase;
+token Partition pattern "PARTITION(?![A-Za-z0-9_])" ignoreCase;
+token Filter pattern "FILTER(?![A-Za-z0-9_])" ignoreCase;
+
+token Number pattern "(?:[0-9]+\\.?[0-9]*|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?";
+token String pattern "'(?:''|[^'])*'";
+token QuotedIdent pattern "\"(?:\"\"|[^\"])*\"";
+token BacktickIdent pattern "`[^`]*`";
+token Identifier pattern "[A-Za-z_][A-Za-z0-9_$]*";
+token DollarParam pattern "\\$[0-9]+";
+
+token LongArrow literal "->>";
+token Arrow literal "->";
+token DoubleColon literal "::";
+token NamedParam pattern ":[A-Za-z_][A-Za-z0-9_]*";
+token Concat literal "||";
+token NotEq literal "<>";
+token LtEq literal "<=";
+token GtEq literal ">=";
+token BangEq literal "!=";
+token EqEq literal "==";
+token Lt literal "<";
+token Gt literal ">";
+token Eq literal "=";
+token Plus literal "+";
+token Minus literal "-";
+token Star literal "*";
+token Slash literal "/";
+token Percent literal "%";
+token LParen literal "(";
+token RParen literal ")";
+token LBracket literal "[";
+token RBracket literal "]";
+token Comma literal ",";
+token Dot literal ".";
+token Semicolon literal ";";
+token QMark literal "?";
+
+// -- scripts and statements -------------------------------------------------
+
+rule Script = seq(
+  many(consume(Semicolon)),
+  label(head, subrule(Statement)),
+  label(tail, many(pick(1, consume(Semicolon), option(subrule(Statement))))),
+  eof(),
+  action({"obj":["type","Script","head",{"val":"head"},"tail",{"val":"tail"}]})
+);
+
+rule Statement = alt(subrule(Query), subrule(InsertStatement));
+
+rule Query = seq(
+  label(ctes, option(subrule(WithClause))),
+  label(body, subrule(SetExpr)),
+  label(orderBy, option(subrule(OrderByClause))),
+  label(limit, option(subrule(LimitClause))),
+  action({"obj":["type","Query","with",{"val":"ctes"},"body",{"val":"body"},"orderBy",{"val":"orderBy"},"limit",{"val":"limit"}]})
+);
+
+rule WithClause = pick(1, consume(With), many1Sep(subrule(Cte), Comma));
+
+rule Cte = seq(
+  label(name, subrule(Ident)), consume(As),
+  label(query, between(consume(LParen), subrule(Query), consume(RParen))),
+  action({"obj":["name",{"val":"name"},"query",{"val":"query"}]})
+);
+
+rule SetExpr = infixLeft(
+  subrule(SetOperand),
+  subrule(SetOperator),
+  action({"obj":["type","SetOp","op",{"val":["op","op"]},"all",{"val":["op","all"]},"left",{"val":"left"},"right",{"val":"right"}]})
+);
+
+rule SetOperator = seq(
+  label(op, alt(yields(consume(Union), "UNION"), yields(consume(Except), "EXCEPT"), yields(consume(Intersect), "INTERSECT"))),
+  label(all, flag(consume(All))),
+  option(consume(Distinct)),
+  action({"obj":["op",{"val":"op"},"all",{"val":"all"}]})
+);
+
+rule SetOperand = alt(
+  subrule(SelectCore),
+  subrule(ValuesCore),
+  between(consume(LParen), subrule(Query), consume(RParen))
+);
+
+rule SelectCore = seq(
+  consume(Select),
+  label(distinct, flag(consume(Distinct))),
+  option(consume(All)),
+  label(columns, many1Sep(subrule(ResultColumn), Comma)),
+  label(from, option(pick(1, consume(From), many1Sep(subrule(FromTerm), Comma)))),
+  label(where, option(pick(1, consume(Where), subrule(Expression)))),
+  label(groupBy, option(pick(2, consume(Group), consume(By), many1Sep(subrule(Expression), Comma)))),
+  label(having, option(pick(1, consume(Having), subrule(Expression)))),
+  action({"obj":[
+    "type","Select",
+    "distinct",{"val":"distinct"},
+    "columns",{"val":"columns"},
+    "from",{"val":"from"},
+    "where",{"val":"where"},
+    "groupBy",{"val":"groupBy"},
+    "having",{"val":"having"}
+  ]})
+);
+
+// VALUES (1, 'a'), (2, 'b') — a literal table, usable anywhere a SELECT is.
+rule ValuesCore = seq(
+  consume(Values),
+  label(rows, many1Sep(subrule(ValueRow), Comma)),
+  action({"obj":["type","Values","rows",{"val":"rows"}]})
+);
+
+rule ValueRow = between(consume(LParen), many1Sep(subrule(Expression), Comma), consume(RParen));
+
+rule ResultColumn = alt(
+  seq(
+    label(table, subrule(Ident)), consume(Dot), consume(Star),
+    action({"obj":["type","Star","table",{"val":"table"}]})
+  ),
+  seq(consume(Star), action({"obj":["type","Star","table",null]})),
+  seq(
+    label(expr, subrule(Expression)),
+    label(alias, option(subrule(AliasClause))),
+    action({"obj":["type","Column","expr",{"val":"expr"},"alias",{"val":"alias"}]})
+  )
+);
+
+rule AliasClause = seq(option(consume(As)), label(name, subrule(Ident)), action({"val":"name"}));
+
+// -- FROM ---------------------------------------------------------------------
+
+// One comma-separated FROM entry: a source and the explicit joins hanging off it.
+// Commas between entries are cross joins — lateral ones when the right side is a
+// path into an earlier alias (`FROM orders o, o.items i`).
+rule FromTerm = seq(
+  label(base, subrule(FromItem)),
+  label(joins, many(subrule(JoinClause))),
+  action({"obj":["base",{"val":"base"},"joins",{"val":"joins"}]})
+);
+
+rule FromItem = seq(
+  label(source, alt(subrule(SubquerySource), subrule(FunctionSource), subrule(PathSource))),
+  label(alias, option(subrule(AliasClause))),
+  action({"obj":["source",{"val":"source"},"alias",{"val":"alias"}]})
+);
+
+rule SubquerySource = seq(
+  label(q, between(consume(LParen), subrule(Query), consume(RParen))),
+  action({"obj":["type","Subquery","query",{"val":"q"}]})
+);
+
+// UNNEST(o.items), GENERATE_SERIES(1, 10) — a table-valued function.
+rule FunctionSource = seq(
+  label(name, subrule(Ident)),
+  consume(LParen),
+  label(args, manySep(subrule(Expression), Comma)),
+  consume(RParen),
+  action({"obj":["type","Function","name",{"val":"name"},"args",{"val":"args"}]})
+);
+
+rule PathSource = seq(
+  label(path, subrule(PathSegments)),
+  action({"obj":["type","Path","path",{"val":"path"}]})
+);
+
+rule JoinClause = alt(
+  seq(
+    consume(Cross), consume(Join),
+    label(item, subrule(FromItem)),
+    action({"obj":["type","Join","joinType","CROSS","item",{"val":"item"},"on",null,"using",null]})
+  ),
+  seq(
+    label(joinType, subrule(JoinType)),
+    label(item, subrule(FromItem)),
+    label(on, option(pick(1, consume(On), subrule(Expression)))),
+    label(using, option(pick(1, consume(Using), between(consume(LParen), many1Sep(subrule(Ident), Comma), consume(RParen))))),
+    action({"obj":["type","Join","joinType",{"val":"joinType"},"item",{"val":"item"},"on",{"val":"on"},"using",{"val":"using"}]})
+  )
+);
+
+rule JoinType = alt(
+  yields(consume(Inner), consume(Join), "INNER"),
+  yields(consume(Left), option(consume(Outer)), consume(Join), "LEFT"),
+  yields(consume(Right), option(consume(Outer)), consume(Join), "RIGHT"),
+  yields(consume(Full), option(consume(Outer)), consume(Join), "FULL"),
+  yields(consume(Join), "INNER")
+);
+
+// -- ORDER BY / LIMIT -----------------------------------------------------------
+
+rule OrderByClause = pick(2, consume(Order), consume(By), many1Sep(subrule(OrderItem), Comma));
+
+rule OrderItem = seq(
+  label(e, subrule(Expression)),
+  label(dir, option(alt(yields(consume(Asc), "ASC"), yields(consume(Desc), "DESC")))),
+  label(nulls, option(pick(1, consume(Nulls), subrule(AnyName)))),
+  action({"obj":["expr",{"val":"e"},"dir",{"val":"dir"},"nulls",{"val":"nulls"}]})
+);
+
+rule LimitClause = alt(
+  seq(
+    consume(Limit), label(n, alt(yields(consume(All), null), subrule(Additive))),
+    label(off, option(pick(1, consume(Offset), subrule(Additive)))),
+    action({"obj":["limit",{"val":"n"},"offset",{"val":"off"}]})
+  ),
+  seq(
+    consume(Offset), label(off, subrule(Additive)),
+    action({"obj":["limit",null,"offset",{"val":"off"}]})
+  )
+);
+
+// -- INSERT -----------------------------------------------------------------------
+
+// Mostly so a SQL dump can be loaded and then queried in the same script.
+rule InsertStatement = seq(
+  consume(Insert), consume(Into),
+  label(table, subrule(PathSegments)),
+  label(columns, option(between(consume(LParen), many1Sep(subrule(AnyName), Comma), consume(RParen)))),
+  label(source, subrule(Query)),
+  action({"obj":["type","Insert","table",{"val":"table"},"columns",{"val":"columns"},"source",{"val":"source"}]})
+);
+
+// -- names ----------------------------------------------------------------------
+
+// An identifier: bare, "double-quoted" or `backticked`.
+rule Ident = alt(
+  as(consume(Identifier), action({"val":"image"})),
+  as(consume(QuotedIdent), action({"unquoteIdent":{"val":"image"}})),
+  as(consume(BacktickIdent), action({"unquoteBacktick":{"val":"image"}}))
+);
+
+// After a dot, any word will do — `t.order`, `e.from` — since nothing else can
+// appear there.
+rule AnyName = alt(
+  subrule(Ident),
+  as(oneOf(Select, From, Where, As, Distinct, All, And, Or, Not, In, Is, Null, Like, Ilike, Between,
+           Inner, Left, Right, Full, Outer, Cross, Join, On, Using, Group, By, Order, Asc, Desc, Nulls,
+           Having, Limit, Offset, Insert, Into, Values, True, False, Case, When, Then, Else, End, With,
+           Union, Except, Intersect, Exists, Cast, Extract, Over, Partition, Filter),
+     action({"val":"image"}))
+);
+
+// a.b.c, a[0], a['some key'], a[*] — the segments of a reference, as an array.
+rule PathSegments = seq(
+  label(head, subrule(Ident)),
+  label(tail, many(subrule(PathStep))),
+  action({"segments":[{"val":"head"},{"val":"tail"}]})
+);
+
+rule PathStep = alt(
+  pick(1, consume(Dot), subrule(AnyName)),
+  pick(1, consume(LBracket), alt(
+    subrule(NumberLiteral),
+    subrule(StringLiteral),
+    yields(consume(Star), "[*]")
+  ), consume(RBracket))
+);
+
+// -- expressions, by precedence ---------------------------------------------------
+//
+//   OR < AND < NOT < predicates (=, <, IN, BETWEEN, LIKE, IS ...) < || < + - < * / %
+//   < unary - < postfix (::type, ->, ->>) < primary
+
+rule Expression = subrule(OrExpr);
+
+rule OrExpr = infixLeft(subrule(AndExpr), consume(Or), action({"obj":["OR",[{"val":"left"},{"val":"right"}]]}));
+
+rule AndExpr = infixLeft(subrule(NotExpr), consume(And), action({"obj":["AND",[{"val":"left"},{"val":"right"}]]}));
+
+rule NotExpr = prefix(consume(Not), subrule(Predicate), action({"obj":["NOT",[{"val":"operand"}]]}));
+
+// A predicate is an operand followed by any number of tails; each tail knows its
+// own shape (`= x`, `IN (...)`, `BETWEEN a AND b`, `IS NOT NULL`), and `pred`
+// splices the left side in.
+rule Predicate = postfix(subrule(ConcatExpr), subrule(PredicateTail), action({"pred":[{"val":"left"},{"val":"suffix"}]}));
+
+rule PredicateTail = alt(
+  seq(
+    label(op, alt(
+      yields(consume(Eq), "EQ"), yields(consume(EqEq), "EQ"),
+      yields(consume(NotEq), "NE"), yields(consume(BangEq), "NE"),
+      yields(consume(LtEq), "LE"), yields(consume(GtEq), "GE"),
+      yields(consume(Lt), "LT"), yields(consume(Gt), "GT")
+    )),
+    label(right, subrule(ConcatExpr)),
+    action({"obj":["op",{"val":"op"},"args",[{"val":"right"}],"negated",false]})
+  ),
+  seq(
+    label(negated, flag(consume(Not))),
+    label(t, alt(subrule(InTail), subrule(BetweenTail), subrule(LikeTail))),
+    action({"obj":["op",{"val":["t","op"]},"args",{"val":["t","args"]},"negated",{"val":"negated"}]})
+  ),
+  seq(
+    consume(Is),
+    label(negated, flag(consume(Not))),
+    label(t, alt(
+      seq(consume(Null), action({"obj":["op","IS_NULL","args",[]]})),
+      seq(consume(True), action({"obj":["op","IS_TRUE","args",[]]})),
+      seq(consume(False), action({"obj":["op","IS_FALSE","args",[]]})),
+      seq(consume(Distinct), consume(From), label(e, subrule(ConcatExpr)), action({"obj":["op","IS_DISTINCT","args",[{"val":"e"}]]}))
+    )),
+    action({"obj":["op",{"val":["t","op"]},"args",{"val":["t","args"]},"negated",{"val":"negated"}]})
+  )
+);
+
+rule InTail = seq(
+  consume(In),
+  consume(LParen),
+  label(body, alt(
+    seq(label(q, subrule(Query)), action({"obj":["op","$inSub","args",[{"val":"q"}]]})),
+    seq(label(xs, many1Sep(subrule(Expression), Comma)), action({"obj":["op","IN","args",{"val":"xs"}]}))
+  )),
+  consume(RParen),
+  action({"val":"body"})
+);
+
+rule BetweenTail = seq(
+  consume(Between),
+  label(low, subrule(ConcatExpr)), consume(And), label(high, subrule(ConcatExpr)),
+  action({"obj":["op","BETWEEN","args",[{"val":"low"},{"val":"high"}]]})
+);
+
+rule LikeTail = seq(
+  label(op, alt(yields(consume(Like), "LIKE"), yields(consume(Ilike), "ILIKE"))),
+  label(p, subrule(ConcatExpr)),
+  action({"obj":["op",{"val":"op"},"args",[{"val":"p"}]]})
+);
+
+rule ConcatExpr = infixLeft(subrule(Additive), consume(Concat), action({"obj":["STRCAT",[{"val":"left"},{"val":"right"}]]}));
+
+rule Additive = infixLeft(
+  subrule(Multiplicative),
+  alt(yields(consume(Plus), "ADD"), yields(consume(Minus), "SUB")),
+  action({"obj":[{"val":"op"},[{"val":"left"},{"val":"right"}]]})
+);
+
+rule Multiplicative = infixLeft(
+  subrule(Unary),
+  alt(yields(consume(Star), "MUL"), yields(consume(Slash), "DIV"), yields(consume(Percent), "MOD")),
+  action({"obj":[{"val":"op"},[{"val":"left"},{"val":"right"}]]})
+);
+
+rule Unary = prefix(
+  alt(yields(consume(Minus), "NEG"), yields(consume(Plus), "POS")),
+  subrule(PostfixExpr),
+  action({"obj":[{"val":"op"},[{"val":"operand"}]]})
+);
+
+rule PostfixExpr = postfix(
+  subrule(Primary),
+  alt(
+    seq(consume(DoubleColon), label(t, subrule(TypeName)), action({"obj":["op","CAST","arg",{"val":"t"}]})),
+    seq(consume(LongArrow), label(k, subrule(Primary)), action({"obj":["op","JSON_TEXT","arg",{"val":"k"}]})),
+    seq(consume(Arrow), label(k, subrule(Primary)), action({"obj":["op","JSON_GET","arg",{"val":"k"}]}))
+  ),
+  action({"obj":[{"val":["suffix","op"]},[{"val":"left"},{"val":["suffix","arg"]}]]})
+);
+
+// VARCHAR(255), NUMERIC(10, 2) — the size is accepted and ignored.
+rule TypeName = seq(
+  label(name, subrule(Ident)),
+  option(between(consume(LParen), many1Sep(consume(Number), Comma), consume(RParen))),
+  action({"val":"name"})
+);
+
+rule Primary = alt(
+  subrule(ParenExpr),
+  subrule(ExistsExpr),
+  subrule(CaseExpr),
+  subrule(CastExpr),
+  subrule(ExtractExpr),
+  subrule(FunctionCall),
+  subrule(NumberLiteral),
+  subrule(StringLiteral),
+  yields(consume(True), true),
+  yields(consume(False), false),
+  yields(consume(Null), null),
+  subrule(Param),
+  subrule(ColumnRef)
+);
+
+// `(expr)` or a scalar subquery `(SELECT ...)`.
+rule ParenExpr = between(consume(LParen), alt(
+  seq(label(q, subrule(Query)), action({"obj":["$subquery",{"val":"q"}]})),
+  subrule(Expression)
+), consume(RParen));
+
+rule ExistsExpr = seq(
+  consume(Exists),
+  label(q, between(consume(LParen), subrule(Query), consume(RParen))),
+  action({"obj":["$exists",{"val":"q"}]})
+);
+
+rule CaseExpr = seq(
+  consume(Case),
+  label(subject, option(subrule(Expression))),
+  label(whens, many1(subrule(WhenClause))),
+  label(otherwise, option(pick(1, consume(Else), subrule(Expression)))),
+  consume(End),
+  action({"caseOf":[{"val":"subject"},{"val":"whens"},{"val":"otherwise"}]})
+);
+
+rule WhenClause = seq(
+  consume(When), label(cond, subrule(Expression)), consume(Then), label(result, subrule(Expression)),
+  action([{"val":"cond"},{"val":"result"}])
+);
+
+rule CastExpr = seq(
+  consume(Cast), consume(LParen),
+  label(e, subrule(Expression)), consume(As), label(t, subrule(TypeName)),
+  consume(RParen),
+  action({"obj":["CAST",[{"val":"e"},{"val":"t"}]]})
+);
+
+// EXTRACT(YEAR FROM ts)
+rule ExtractExpr = seq(
+  consume(Extract), consume(LParen),
+  label(field, subrule(Ident)), consume(From), label(e, subrule(Expression)),
+  consume(RParen),
+  action({"obj":["DATE_PART",[{"val":"field"},{"val":"e"}]]})
+);
+
+rule FunctionCall = seq(
+  label(name, alt(subrule(Ident), as(oneOf(Left, Right), action({"val":"image"})))),
+  consume(LParen),
+  label(distinct, flag(consume(Distinct))),
+  label(star, flag(consume(Star))),
+  label(args, manySep(subrule(Expression), Comma)),
+  label(orderBy, option(subrule(OrderByClause))),
+  consume(RParen),
+  label(filter, option(pick(3, consume(Filter), consume(LParen), consume(Where), subrule(Expression), consume(RParen)))),
+  label(over, option(pick(1, consume(Over), subrule(WindowSpec)))),
+  action({"obj":["$call",{"obj":[
+    "name",{"val":"name"},
+    "args",{"val":"args"},
+    "distinct",{"val":"distinct"},
+    "star",{"val":"star"},
+    "orderBy",{"val":"orderBy"},
+    "filter",{"val":"filter"},
+    "over",{"val":"over"}
+  ]}]})
+);
+
+rule WindowSpec = seq(
+  consume(LParen),
+  label(partitionBy, option(pick(2, consume(Partition), consume(By), many1Sep(subrule(Expression), Comma)))),
+  label(orderBy, option(subrule(OrderByClause))),
+  consume(RParen),
+  action({"obj":["partitionBy",{"val":"partitionBy"},"orderBy",{"val":"orderBy"}]})
+);
+
+rule NumberLiteral = as(consume(Number), action({"num":{"val":"image"}}));
+
+rule StringLiteral = as(consume(String), action({"unquote":{"val":"image"}}));
+
+rule Param = alt(
+  seq(consume(QMark), action({"obj":["$param",null]})),
+  as(consume(DollarParam), action({"obj":["$param",{"paramName":{"val":"image"}}]})),
+  as(consume(NamedParam), action({"obj":["$param",{"paramName":{"val":"image"}}]}))
+);
+
+rule ColumnRef = seq(label(path, subrule(PathSegments)), action({"obj":["$ref",{"val":"path"}]}));
+
+// -- semantics -------------------------------------------------------------------
+
+methods {
+  export const unquote = {
+    method: (image) => image.slice(1, -1).replace(/''/g, "'"),
+    optimizeUnary: true
+  }
+  export const unquoteIdent = {
+    method: (image) => image.slice(1, -1).replace(/""/g, '"'),
+    optimizeUnary: true
+  }
+  export const unquoteBacktick = {
+    method: (image) => image.slice(1, -1),
+    optimizeUnary: true
+  }
+  export const num = {
+    method: (image) => Number(image),
+    optimizeUnary: true
+  }
+  export const segments = ([head, tail]) => [head, ...tail]
+  // `$1` -> 1, `:name` -> 'name'
+  export const paramName = {
+    method: (image) => image[0] === '$' ? Number(image.slice(1)) : image.slice(1),
+    optimizeUnary: true
+  }
+
+  // Splice a predicate's left operand into its tail: `x` + `{op: 'IN', args: [1, 2]}`.
+  export const pred = ([left, tail]) => {
+    const node = { [tail.op]: [left, ...tail.args] }
+    return tail.negated ? { NOT: [node] } : node
+  }
+
+  // CASE, both forms, as JSON Logic's lazy `if`. A branch is taken when its
+  // condition passes the same test WHERE applies — NULL and FALSE do not.
+  export const caseOf = ([subject, whens, otherwise]) => {
+    const args = []
+    for (const [cond, result] of whens) {
+      args.push({ TRUTHY: [subject === null ? cond : { EQ: [subject, cond] }] }, result)
+    }
+    args.push(otherwise)
+    return { if: args }
+  }
+}

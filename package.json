@@ -1,0 +1,60 @@
+{
+  "name": "sqllang",
+  "version": "0.0.1",
+  "description": "SQL over your own data: query arrays of rows, columnar tables, nested documents and JSON-text columns with a SQL dialect — joins, CTEs, window functions, subqueries. Compiles to JSON Logic and runs on json-logic-engine.",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build:parser": "grammatik generate src/grammar.gram -o src/parser.js --positions offset",
+    "prebuild": "bun run build:parser",
+    "build": "node scripts/build.js",
+    "pretest": "bun run build:parser",
+    "test": "node --test test/*.test.js",
+    "test:types": "bun run build && tsc -p test/types",
+    "test:dist": "bun run build && node test/dist/smoke.mjs",
+    "test:csp": "node --disallow-code-generation-from-strings test/dist/csp.mjs",
+    "test:all": "bun run test && bun run test:csp && bun run test:dist && tsc -p test/types",
+    "prepublishOnly": "bun run test:all"
+  },
+  "keywords": [
+    "sql",
+    "query",
+    "json",
+    "documents",
+    "in-memory",
+    "json-logic",
+    "json-logic-engine",
+    "window-functions",
+    "analytics",
+    "parser"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "json-logic-engine": "^5.0.7"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "grammatik": "0.1.2",
+    "typescript": "^5.9.3"
+  }
+}

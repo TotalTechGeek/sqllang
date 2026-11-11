@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# bun manages dependencies and runs the scripts; the tests run on Node, which is
+# what the package supports (package.json: node >= 18).
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The node:sqlite comparison runs where node:sqlite exists and is
+        # skipped elsewhere.
+        node: [18, 20, 22, 24, 26]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+      - run: bun install --frozen-lockfile
+      - name: Unit and differential tests
+        run: bun run test
+      - name: Runs with code generation disabled (strict CSP)
+        run: bun run test:csp
+      - name: Built bundles load as ESM and CommonJS
+        run: bun run test:dist
+
+  types:
+    name: Type declarations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bun run test:types
+
+  parser:
+    name: Generated parser is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bun run build:parser
+      - name: src/parser.js matches src/grammar.gram
+        run: git diff --exit-code -- src/parser.js || (echo "::error file=src/parser.js::src/parser.js is stale; run bun run build:parser and commit it" && exit 1)
