@@ -267,6 +267,28 @@ const numeric = (f) => op((x, y) => {
   return Number.isFinite(r) ? r : null
 })
 
+// -- short-circuit AND / OR -----------------------------------------------------
+//
+// Measured: inlining comparisons and arithmetic with a literal operand was no
+// faster than the engine calling the small operator functions, so only the
+// short-circuit is compiled. `prev` is the engine's scratch variable; it is
+// read again before anything else can overwrite it.
+
+/** Raw code. */
+const code = (bs, text) => bs.compile([text])
+
+/** AND stops at the first FALSE, OR at the first TRUE; anything undecided goes to the full function. */
+function shortCircuit (impl, decisive) {
+  return (args, bs) => {
+    if (!Array.isArray(args) || args.length < 2) return callCompiled(bs, impl, args)
+    let acc = args[args.length - 1]
+    for (let i = args.length - 2; i >= 0; i--) {
+      acc = bs.compile`((prev = ${args[i]}) === ${code(bs, String(decisive))} ? ${code(bs, String(decisive))} : ${sync(impl)}(prev, ${acc}))`
+    }
+    return acc
+  }
+}
+
 // Each comparison written out: numbers against numbers and strings against
 // strings compare directly; everything else goes through compare().
 const isNil = (v) => v === null || v === undefined
@@ -306,11 +328,14 @@ function or () {
   return sawNull ? null : false
 }
 
+// `x IN (:ids)` with an array bound to `:ids` is membership in that array, as most database
+// drivers expand it. A single non-array operand is the ordinary one-element list.
 function inList (v) {
   if (isNull(v)) return null
+  const list = arguments.length === 2 && Array.isArray(arguments[1]) ? arguments[1] : Array.prototype.slice.call(arguments, 1)
   let sawNull = false
-  for (let i = 1; i < arguments.length; i++) {
-    const e = equals(v, arguments[i])
+  for (let i = 0; i < list.length; i++) {
+    const e = equals(v, list[i])
     if (e) return true
     if (e === null) sawNull = true
   }
@@ -373,8 +398,8 @@ export const operators = {
     return !equals(a, b)
   }),
 
-  AND: op(and),
-  OR: op(or),
+  AND: { ...op(and), compile: shortCircuit(and, false) },
+  OR: { ...op(or), compile: shortCircuit(or, true) },
   NOT: op((v) => (v === null || v === undefined ? null : !isTrue(v))),
 
   ADD: numeric((a, b) => a + b),

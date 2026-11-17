@@ -243,7 +243,7 @@ function planSelect (sel, outer, cteNames, cx, orderBy) {
   const columns = []
   const outputs = new Map()
   const taken = new Set()
-  sel.columns.forEach((col, i) => {
+  expandPivots(sel.columns).forEach((col, i) => {
     if (col.type === 'Star') {
       if (col.table !== null && !scope.aliases.includes(col.table)) throw new SqlError(`Unknown table '${col.table}' in ${col.table}.*`)
       const aliases = col.table !== null ? [col.table] : [...scope.aliases]
@@ -308,6 +308,26 @@ function planSelect (sel, outer, cteNames, cx, orderBy) {
     orderBy: order,
     needsOutv
   }
+}
+
+/**
+ * `PIVOT(agg FOR col IN (a, b))` is one column per value: `agg FILTER (WHERE col = a)
+ * AS a, ...`. The values are literals, so the columns are known at compile time.
+ */
+function expandPivots (columns) {
+  if (!columns.some((c) => c.expr && c.expr.$pivot)) return columns
+  return columns.flatMap((c) => {
+    if (!c.expr || !c.expr.$pivot) return [c]
+    const { agg, col, values } = c.expr.$pivot
+    if (c.alias != null) throw new SqlError('PIVOT makes one column per value, so it cannot take an alias')
+    const call = agg && agg.$call
+    if (!call || call.over || call.filter) throw new SqlError('PIVOT needs a plain aggregate, such as PIVOT(SUM(x) FOR col IN (...))')
+    return values.map((v) => {
+      if (v !== null && typeof v === 'object') throw new SqlError('PIVOT values must be literals')
+      const match = v === null ? { IS_NULL: [col] } : { EQ: [col, v] }
+      return { type: 'Column', alias: v === null ? 'null' : String(v), expr: { $call: { ...call, filter: match } } }
+    })
+  })
 }
 
 function direction (item) {
@@ -392,6 +412,7 @@ function expr (node, scope, cx, mode) {
   const value = node[key]
   switch (key) {
     case '$ref': return ref(value, scope, cx, mode)
+    case '$pivot': throw new SqlError('PIVOT can only be a column in the select list')
     case '$param':
       return { PARAM: [value === null ? cx.positional++ : typeof value === 'number' ? value - 1 : value] }
     case '$call': return call(value, scope, cx, mode)

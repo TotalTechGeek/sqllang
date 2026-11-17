@@ -109,6 +109,8 @@ Mostly Postgres-flavoured, with a few SQLite conveniences.
   `BETWEEN`, `IN`, `IS [NOT] NULL | TRUE | FALSE | DISTINCT FROM`
 - aggregates with `DISTINCT`, `FILTER (WHERE …)` and `ORDER BY` inside:
   `STRING_AGG(name, ', ' ORDER BY name)`
+- `PIVOT(SUM(x) FOR col IN ('a', 'b'))` in a select list: one column per literal value, the same as
+  `SUM(x) FILTER (WHERE col = 'a') AS a, …` (values are literals, so the columns are known up front)
 - window functions: `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `PERCENT_RANK`, `CUME_DIST`, `NTILE`,
   `LAG`, `LEAD`, `FIRST_VALUE`, `LAST_VALUE`, `NTH_VALUE`, and any aggregate `OVER (PARTITION BY … ORDER BY …)`
   (default frame: running to the current row's peers when ordered, the whole partition otherwise)

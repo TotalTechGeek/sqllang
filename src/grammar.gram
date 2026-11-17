@@ -76,6 +76,9 @@ token Extract pattern "EXTRACT(?![A-Za-z0-9_])" ignoreCase;
 token Over pattern "OVER(?![A-Za-z0-9_])" ignoreCase;
 token Partition pattern "PARTITION(?![A-Za-z0-9_])" ignoreCase;
 token Filter pattern "FILTER(?![A-Za-z0-9_])" ignoreCase;
+token For pattern "FOR(?![A-Za-z0-9_])" ignoreCase;
+// Only a keyword when a parenthesis follows, so `pivot` stays a usable column name.
+token Pivot pattern "PIVOT(?=\\s*\\()" ignoreCase;
 
 token Number pattern "(?:[0-9]+\\.?[0-9]*|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?";
 token String pattern "'(?:''|[^'])*'";
@@ -311,7 +314,7 @@ rule AnyName = alt(
   as(oneOf(Select, From, Where, As, Distinct, All, And, Or, Not, In, Is, Null, Like, Ilike, Between,
            Inner, Left, Right, Full, Outer, Cross, Join, On, Using, Group, By, Order, Asc, Desc, Nulls,
            Having, Limit, Offset, Insert, Into, Values, True, False, Case, When, Then, Else, End, With,
-           Union, Except, Intersect, Exists, Cast, Extract, Over, Partition, Filter),
+           Union, Except, Intersect, Exists, Cast, Extract, Over, Partition, Filter, For),
      action({"val":"image"}))
 );
 
@@ -444,6 +447,7 @@ rule Primary = alt(
   subrule(CaseExpr),
   subrule(CastExpr),
   subrule(ExtractExpr),
+  subrule(PivotExpr),
   subrule(FunctionCall),
   subrule(NumberLiteral),
   subrule(StringLiteral),
@@ -493,6 +497,16 @@ rule ExtractExpr = seq(
   label(field, subrule(Ident)), consume(From), label(e, subrule(Expression)),
   consume(RParen),
   action({"obj":["DATE_PART",[{"val":"field"},{"val":"e"}]]})
+);
+
+// PIVOT(SUM(sales) FOR region IN ('north', 'south')) — a select-list item that
+// stands for one column per listed value; the compiler expands it.
+rule PivotExpr = seq(
+  consume(Pivot), consume(LParen),
+  label(agg, subrule(Expression)), consume(For), label(col, subrule(ConcatExpr)),
+  consume(In), consume(LParen), label(values, many1Sep(subrule(Expression), Comma)), consume(RParen),
+  consume(RParen),
+  action({"obj":["$pivot",{"obj":["agg",{"val":"agg"},"col",{"val":"col"},"values",{"val":"values"}]}]})
 );
 
 rule FunctionCall = seq(

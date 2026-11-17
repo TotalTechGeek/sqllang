@@ -51,9 +51,9 @@ export function enter (limits) {
   return () => { current = saved.current; deadline = saved.deadline }
 }
 
-/** Call once per unit of work in a loop; checks the clock every 1024 calls. */
-export function tick () {
-  if ((++ticks & 1023) === 0 && performance.now() > deadline) {
+/** Count `n` units of work (one by default); checks the clock each time 1024 are crossed. */
+export function tick (n = 1) {
+  if (((ticks += n) & 1023) < n && performance.now() > deadline) {
     throw new SqlLimitError(`Query exceeded its time limit of ${current.timeoutMs} ms`, 'timeoutMs')
   }
 }

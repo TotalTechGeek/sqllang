@@ -19,10 +19,25 @@ import {
 // operators that need it (parameters, subqueries); nested runs save and restore it.
 let active = null
 
+const SYNC = Symbol.for('json_logic_sync')
+const sync = (f) => { f[SYNC] = true; return f }
+
 const internal = {
   // One output row from `[name, value, name, value, ...]`. Compiled, it is a single
   // object literal, so a whole select list costs one call per row. Not
   // deterministic: each row needs its own object, never a folded shared one.
+  // A whole single-table scan as one function: [alias, where | null, row]. Compiled, the
+  // loop, the filter and the projection are one piece of code, with the rows passed in
+  // as `context.$scan`. Only used compiled; the interpreted path runs the loop itself.
+  SCAN: {
+    method: () => { throw new SqlError('SCAN runs compiled only') },
+    compile: ([alias, where, row], bs) => {
+      const skip = where === null ? bs.compile`` : bs.compile`if (!${sync(isTrue)}(${where})) continue;`
+      return bs.compile`(() => { const rows = context["$scan"]; const out = []; for (let i = 0; i < rows.length; i++) { if ((i & 1023) === 0) ${sync(tick)}(Math.min(1024, rows.length - i)); context[${alias}] = rows[i]; ${skip} out.push(${row}) } return out })()`
+    },
+    traverse: false,
+    deterministic: false
+  },
   ROW: {
     method: (args) => {
       const out = {}
@@ -412,6 +427,7 @@ function runSelect (p, state, outer, keep = null) {
 
   // `items` are { row, keys }: the projected row and its ORDER BY keys (or null).
   let items
+  let plain = null // the projected rows themselves, when there is no ORDER BY
   const single = p.steps.length === 1 && p.steps[0].join === 'FROM' && !p.windows.length
 
   if (single && !p.grouped && p.having === null) {
@@ -427,11 +443,18 @@ function runSelect (p, state, outer, keep = null) {
         top.add({ row: projector.project(env), keys })
       })
       items = top.best
+    } else if (orderFns === null) {
+      // No ORDER BY: nothing needs the `{ row, keys }` wrapper, so keep the rows.
+      plain = scanRows(p, state, base)
+      if (plain === null) {
+        plain = []
+        streamRows(p, state, base, (env) => { plain.push(projector.project(env)) })
+      }
     } else {
       items = []
       streamRows(p, state, base, (env) => {
         const row = projector.project(env)
-        const item = { row, keys: orderFns ? orderKeys(p, env, row, projector, orderFns) : null }
+        const item = { row, keys: orderKeys(p, env, row, projector, orderFns) }
         if (top !== null) { if (top.admits(item)) top.add(item) } else items.push(item)
       })
       if (top !== null) items = top.best
@@ -472,17 +495,19 @@ function runSelect (p, state, outer, keep = null) {
   }
 
   const columns = projector.columns
+  if (plain !== null) {
+    if (projector.hasStar) for (let i = 0; i < plain.length; i++) plain[i] = padRow(plain[i], columns)
+    if (p.distinct) {
+      const add = tupleSet(columns.length)
+      plain = plain.filter((row) => add(valuesOf(row, columns)))
+    }
+    return { columns, rows: plain }
+  }
   if (projector.hasStar) {
     // With `*` over rows of differing shape, give every row every column.
     for (let i = 0; i < items.length; i++) {
       const o = items[i].row
-      if (sameKeys(o, columns)) continue
-      const r = {}
-      for (let j = 0; j < columns.length; j++) {
-        const c = columns[j]
-        setKey(r, c, Object.prototype.hasOwnProperty.call(o, c) ? o[c] : null)
-      }
-      items[i].row = r
+      items[i].row = padRow(o, columns)
     }
   }
 
@@ -505,15 +530,31 @@ function runSelect (p, state, outer, keep = null) {
  * allocation shows most. Rows that pass WHERE stream through a single reused
  * context object; `visit(env, true)` must copy anything it keeps.
  */
+function sourceRows (p, state, base) {
+  const source = p.steps[0].source
+  return source.kind === 'expr' ? toRows(fnOf(state, source.expr)(base), false) : materialize(source, state)
+}
+
+const scanLogics = new WeakMap()
+
+/** The projected rows of a one-table scan, run as one compiled function; null when it cannot be. */
+function scanRows (p, state, base) {
+  if (state.interpreted || !p.row) return null
+  let logic = scanLogics.get(p)
+  if (!logic) scanLogics.set(p, logic = { SCAN: [p.steps[0].alias, p.where, p.row] })
+  const env = snapshot(base)
+  env.$scan = sourceRows(p, state, base)
+  return fnOf(state, logic)(env)
+}
+
 function streamRows (p, state, base, visit) {
   const step = p.steps[0]
   const alias = step.alias
-  const source = step.source
-  const rows = source.kind === 'expr' ? toRows(fnOf(state, source.expr)(base), false) : materialize(source, state)
+  const rows = sourceRows(p, state, base)
   const where = p.where === null ? null : fnOf(state, p.where)
   const env = snapshot(base)
   for (let i = 0; i < rows.length; i++) {
-    tick()
+    if ((i & 1023) === 0) tick(Math.min(1024, rows.length - i))
     env[alias] = rows[i]
     if (where !== null && !isTrue(where(env))) continue
     visit(env, true)
@@ -701,6 +742,17 @@ function readsOutput (orderBy) {
 }
 
 const nullish = (v) => (v === undefined ? null : v)
+/** `o` with every column present, in column order (the row itself when it already is). */
+function padRow (o, columns) {
+  if (sameKeys(o, columns)) return o
+  const r = {}
+  for (let j = 0; j < columns.length; j++) {
+    const c = columns[j]
+    setKey(r, c, Object.prototype.hasOwnProperty.call(o, c) ? o[c] : null)
+  }
+  return r
+}
+
 /** Whether `o` has exactly `columns`, in that order: it needs no padding. */
 function sameKeys (o, columns) {
   const keys = Object.keys(o)

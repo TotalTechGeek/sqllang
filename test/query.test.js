@@ -108,6 +108,13 @@ describe('WHERE and three-valued logic', () => {
     ])
   })
 
+  test('IN (:param) takes an array parameter as the list', () => {
+    assert.deepEqual(col('SELECT id FROM people WHERE id IN (:ids) ORDER BY id', D, { params: { ids: [4, 2] } }), [2, 4])
+    assert.deepEqual(col('SELECT id FROM people WHERE id NOT IN (:ids) ORDER BY id LIMIT 2', D, { params: { ids: [1, 2] } }), [3, 4])
+    assert.deepEqual(col('SELECT id FROM people WHERE id IN (:ids)', D, { params: { ids: [] } }), [])
+    assert.deepEqual(col('SELECT id FROM people WHERE id IN (:id)', D, { params: { id: 4 } }), [4])
+  })
+
   test('BETWEEN, LIKE, ILIKE', () => {
     assert.deepEqual(col('SELECT id FROM people WHERE age BETWEEN 25 AND 34', D), [1, 2, 5])
     assert.deepEqual(col('SELECT id FROM people WHERE age NOT BETWEEN 25 AND 34', D), [4])
@@ -890,5 +897,38 @@ describe('errors', () => {
     assert.equal(plan.type, 'sqllang')
     assert.deepEqual(JSON.parse(JSON.stringify(plan)), plan)
     assert.deepEqual(plan.statements[0].body.where, { GT: [{ val: ['t', 'a'] }, { PARAM: [0] }] })
+  })
+})
+
+describe('PIVOT', () => {
+  const s = [
+    { month: 'Jan', region: 'north', amount: 10 }, { month: 'Jan', region: 'south', amount: 7 },
+    { month: 'Feb', region: 'north', amount: 12 }, { month: 'Feb', region: null, amount: 1 },
+    { month: 'Mar', region: 'north', amount: 3 }, { month: 'Mar', region: 'north', amount: 4 }
+  ]
+  const data = { s, p: [{ pivot: 1 }] }
+  test('one column per listed value, per group', () => {
+    assert.deepEqual(
+      q("SELECT month, PIVOT(SUM(amount) FOR region IN ('north', 'south')) FROM s GROUP BY month ORDER BY month", data),
+      [{ month: 'Feb', north: 12, south: null }, { month: 'Jan', north: 10, south: 7 }, { month: 'Mar', north: 7, south: null }]
+    )
+  })
+  test('is the same as writing the FILTER aggregates out', () => {
+    const a = q("SELECT month, PIVOT(COUNT(*) FOR region IN ('north', 'south')) FROM s GROUP BY month ORDER BY month", data)
+    const b = q("SELECT month, COUNT(*) FILTER (WHERE region = 'north') AS north, COUNT(*) FILTER (WHERE region = 'south') AS south FROM s GROUP BY month ORDER BY month", data)
+    assert.deepEqual(a, b)
+  })
+  test('NULL and numeric values; clashing names are renamed', () => {
+    assert.deepEqual(q('SELECT PIVOT(COUNT(*) FOR region IN (NULL)) FROM s', data), [{ null: 1 }])
+    assert.deepEqual(q("SELECT PIVOT(SUM(amount) FOR month IN ('Jan')), PIVOT(MAX(amount) FOR month IN ('Jan')) FROM s", data), [{ Jan: 17, Jan_2: 10 }])
+  })
+  test('pivot is still usable as a name', () => {
+    assert.deepEqual(q('SELECT pivot FROM p', data), [{ pivot: 1 }])
+  })
+  test('rejects what it cannot expand', () => {
+    assert.throws(() => query("SELECT PIVOT(SUM(amount) FOR region IN ('a')) AS x FROM s", data), SqlError)
+    assert.throws(() => query("SELECT PIVOT(amount FOR region IN ('a')) FROM s", data), SqlError)
+    assert.throws(() => query('SELECT PIVOT(SUM(amount) FOR region IN (month)) FROM s', data), SqlError)
+    assert.throws(() => query("SELECT month FROM s WHERE PIVOT(SUM(amount) FOR region IN ('a')) > 1", data), SqlError)
   })
 })

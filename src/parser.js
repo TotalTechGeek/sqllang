@@ -292,6 +292,16 @@ const tokens = [
     "ignoreCase": true
   },
   {
+    "name": "For",
+    "pattern": "FOR(?![A-Za-z0-9_])",
+    "ignoreCase": true
+  },
+  {
+    "name": "Pivot",
+    "pattern": "PIVOT(?=\\s*\\()",
+    "ignoreCase": true
+  },
+  {
     "name": "Number",
     "pattern": "(?:[0-9]+\\.?[0-9]*|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?"
   },
@@ -430,11 +440,11 @@ const lexer = (() => {
   const DISPATCH = "ĀĀĀĀĀĀĀĀĀāāāāāĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀāĂăĀĄąĀĆćĈĉĊċČčĎďďďďďďďďďďĐđĒēĔĕĀĖėĘęĚěĜĝĞğĠġĠĢģĤĠĥĦħĨĩĪĠĠĠīĀĬĀĠĭĖėĘęĚěĜĝĞğĠġĠĢģĤĠĥĦħĨĩĪĠĠĠĀĮĀĀĀā"
   
   // Patterns are read from the token table above rather than repeated here.
-  const RX = [[0,"y"],[61,"y"],[56,"y"],[2,"y"],[65,"y"],[59,"y"]].map(([i, flags]) => new RegExp(tokens[i].pattern, flags))
+  const RX = [[0,"y"],[63,"y"],[58,"y"],[2,"y"],[67,"y"],[57,"iy"],[61,"y"]].map(([i, flags]) => new RegExp(tokens[i].pattern, flags))
   
   
   
-  const KW = [[[97,115],[65,83]],[[97,108,108],[65,76,76]],[[97,110,100],[65,78,68]],[[97,115,99],[65,83,67]],[[98,101,116,119,101,101,110],[66,69,84,87,69,69,78]],[[98,121],[66,89]],[[99,114,111,115,115],[67,82,79,83,83]],[[99,97,115,101],[67,65,83,69]],[[99,97,115,116],[67,65,83,84]],[[100,105,115,116,105,110,99,116],[68,73,83,84,73,78,67,84]],[[100,101,115,99],[68,69,83,67]],[[101,108,115,101],[69,76,83,69]],[[101,110,100],[69,78,68]],[[101,120,99,101,112,116],[69,88,67,69,80,84]],[[101,120,105,115,116,115],[69,88,73,83,84,83]],[[101,120,116,114,97,99,116],[69,88,84,82,65,67,84]],[[102,114,111,109],[70,82,79,77]],[[102,117,108,108],[70,85,76,76]],[[102,97,108,115,101],[70,65,76,83,69]],[[102,105,108,116,101,114],[70,73,76,84,69,82]],[[103,114,111,117,112],[71,82,79,85,80]],[[104,97,118,105,110,103],[72,65,86,73,78,71]],[[105,110],[73,78]],[[105,115],[73,83]],[[105,108,105,107,101],[73,76,73,75,69]],[[105,110,110,101,114],[73,78,78,69,82]],[[105,110,115,101,114,116],[73,78,83,69,82,84]],[[105,110,116,111],[73,78,84,79]],[[105,110,116,101,114,115,101,99,116],[73,78,84,69,82,83,69,67,84]],[[106,111,105,110],[74,79,73,78]],[[108,105,107,101],[76,73,75,69]],[[108,101,102,116],[76,69,70,84]],[[108,105,109,105,116],[76,73,77,73,84]],[[110,111,116],[78,79,84]],[[110,117,108,108],[78,85,76,76]],[[110,117,108,108,115],[78,85,76,76,83]],[[111,114],[79,82]],[[111,117,116,101,114],[79,85,84,69,82]],[[111,110],[79,78]],[[111,114,100,101,114],[79,82,68,69,82]],[[111,102,102,115,101,116],[79,70,70,83,69,84]],[[111,118,101,114],[79,86,69,82]],[[112,97,114,116,105,116,105,111,110],[80,65,82,84,73,84,73,79,78]],[[114,105,103,104,116],[82,73,71,72,84]],[[115,101,108,101,99,116],[83,69,76,69,67,84]],[[116,114,117,101],[84,82,85,69]],[[116,104,101,110],[84,72,69,78]],[[117,115,105,110,103],[85,83,73,78,71]],[[117,110,105,111,110],[85,78,73,79,78]],[[118,97,108,117,101,115],[86,65,76,85,69,83]],[[119,104,101,114,101],[87,72,69,82,69]],[[119,104,101,110],[87,72,69,78]],[[119,105,116,104],[87,73,84,72]]]
+  const KW = [[[97,115],[65,83]],[[97,108,108],[65,76,76]],[[97,110,100],[65,78,68]],[[97,115,99],[65,83,67]],[[98,101,116,119,101,101,110],[66,69,84,87,69,69,78]],[[98,121],[66,89]],[[99,114,111,115,115],[67,82,79,83,83]],[[99,97,115,101],[67,65,83,69]],[[99,97,115,116],[67,65,83,84]],[[100,105,115,116,105,110,99,116],[68,73,83,84,73,78,67,84]],[[100,101,115,99],[68,69,83,67]],[[101,108,115,101],[69,76,83,69]],[[101,110,100],[69,78,68]],[[101,120,99,101,112,116],[69,88,67,69,80,84]],[[101,120,105,115,116,115],[69,88,73,83,84,83]],[[101,120,116,114,97,99,116],[69,88,84,82,65,67,84]],[[102,114,111,109],[70,82,79,77]],[[102,117,108,108],[70,85,76,76]],[[102,97,108,115,101],[70,65,76,83,69]],[[102,105,108,116,101,114],[70,73,76,84,69,82]],[[102,111,114],[70,79,82]],[[103,114,111,117,112],[71,82,79,85,80]],[[104,97,118,105,110,103],[72,65,86,73,78,71]],[[105,110],[73,78]],[[105,115],[73,83]],[[105,108,105,107,101],[73,76,73,75,69]],[[105,110,110,101,114],[73,78,78,69,82]],[[105,110,115,101,114,116],[73,78,83,69,82,84]],[[105,110,116,111],[73,78,84,79]],[[105,110,116,101,114,115,101,99,116],[73,78,84,69,82,83,69,67,84]],[[106,111,105,110],[74,79,73,78]],[[108,105,107,101],[76,73,75,69]],[[108,101,102,116],[76,69,70,84]],[[108,105,109,105,116],[76,73,77,73,84]],[[110,111,116],[78,79,84]],[[110,117,108,108],[78,85,76,76]],[[110,117,108,108,115],[78,85,76,76,83]],[[111,114],[79,82]],[[111,117,116,101,114],[79,85,84,69,82]],[[111,110],[79,78]],[[111,114,100,101,114],[79,82,68,69,82]],[[111,102,102,115,101,116],[79,70,70,83,69,84]],[[111,118,101,114],[79,86,69,82]],[[112,97,114,116,105,116,105,111,110],[80,65,82,84,73,84,73,79,78]],[[114,105,103,104,116],[82,73,71,72,84]],[[115,101,108,101,99,116],[83,69,76,69,67,84]],[[116,114,117,101],[84,82,85,69]],[[116,104,101,110],[84,72,69,78]],[[117,115,105,110,103],[85,83,73,78,71]],[[117,110,105,111,110],[85,78,73,79,78]],[[118,97,108,117,101,115],[86,65,76,85,69,83]],[[119,104,101,114,101],[87,72,69,82,69]],[[119,104,101,110],[87,72,69,78]],[[119,105,116,104],[87,73,84,72]]]
   const look0 = (c) => (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122)
   function scanKeyword (text, offset, length, lower, upper, look) {
     const n = lower.length
@@ -460,7 +470,7 @@ const lexer = (() => {
     }
     return j
   }
-function scan58 (text, offset) {
+function scan60 (text, offset) {
     if (text.charCodeAt(offset) !== 34) return -1
     let fallback = -1
     let j = offset + 1
@@ -472,7 +482,7 @@ function scan58 (text, offset) {
       j += 2
     }
   }
-function scan57 (text, offset) {
+function scan59 (text, offset) {
     if (text.charCodeAt(offset) !== 39) return -1
     let fallback = -1
     let j = offset + 1
@@ -506,93 +516,93 @@ function scan57 (text, offset) {
           break
         }
         case 2: {
-          if (text.startsWith("!=", offset)) { id = 70; end = offset + 2; matched = "!="; break found }
+          if (text.startsWith("!=", offset)) { id = 72; end = offset + 2; matched = "!="; break found }
           break
         }
         case 3: {
-          { const e = scan58(text, offset); if (e !== -1) { id = 58; end = e; matched = null; break found } }
+          { const e = scan60(text, offset); if (e !== -1) { id = 60; end = e; matched = null; break found } }
           break
         }
         case 4: {
-          RX[1].lastIndex = offset; m = RX[1].exec(text); if (m !== null && m[0].length > 0) { id = 61; matched = m[0]; end = offset + matched.length; break found }
+          RX[1].lastIndex = offset; m = RX[1].exec(text); if (m !== null && m[0].length > 0) { id = 63; matched = m[0]; end = offset + matched.length; break found }
           break
         }
         case 5: {
-          if (code === 37) { id = 79; end = offset + 1; matched = "%"; break found }
+          if (code === 37) { id = 81; end = offset + 1; matched = "%"; break found }
           break
         }
         case 6: {
-          { const e = scan57(text, offset); if (e !== -1) { id = 57; end = e; matched = null; break found } }
+          { const e = scan59(text, offset); if (e !== -1) { id = 59; end = e; matched = null; break found } }
           break
         }
         case 7: {
-          if (code === 40) { id = 80; end = offset + 1; matched = "("; break found }
+          if (code === 40) { id = 82; end = offset + 1; matched = "("; break found }
           break
         }
         case 8: {
-          if (code === 41) { id = 81; end = offset + 1; matched = ")"; break found }
+          if (code === 41) { id = 83; end = offset + 1; matched = ")"; break found }
           break
         }
         case 9: {
-          if (code === 42) { id = 77; end = offset + 1; matched = "*"; break found }
+          if (code === 42) { id = 79; end = offset + 1; matched = "*"; break found }
           break
         }
         case 10: {
-          if (code === 43) { id = 75; end = offset + 1; matched = "+"; break found }
+          if (code === 43) { id = 77; end = offset + 1; matched = "+"; break found }
           break
         }
         case 11: {
-          if (code === 44) { id = 84; end = offset + 1; matched = ","; break found }
+          if (code === 44) { id = 86; end = offset + 1; matched = ","; break found }
           break
         }
         case 12: {
           if (text.startsWith("--", offset)) { let j = offset + 2; while (j < length) { const c = text.charCodeAt(j); if (c === 10) break; j++ } id = 1; end = j; matched = null; break found }
-          if (text.startsWith("->>", offset)) { id = 62; end = offset + 3; matched = "->>"; break found }
-          if (text.startsWith("->", offset)) { id = 63; end = offset + 2; matched = "->"; break found }
-          if (code === 45) { id = 76; end = offset + 1; matched = "-"; break found }
+          if (text.startsWith("->>", offset)) { id = 64; end = offset + 3; matched = "->>"; break found }
+          if (text.startsWith("->", offset)) { id = 65; end = offset + 2; matched = "->"; break found }
+          if (code === 45) { id = 78; end = offset + 1; matched = "-"; break found }
           break
         }
         case 13: {
-          RX[2].lastIndex = offset; m = RX[2].exec(text); if (m !== null && m[0].length > 0) { id = 56; matched = m[0]; end = offset + matched.length; break found }
-          if (code === 46) { id = 85; end = offset + 1; matched = "."; break found }
+          RX[2].lastIndex = offset; m = RX[2].exec(text); if (m !== null && m[0].length > 0) { id = 58; matched = m[0]; end = offset + matched.length; break found }
+          if (code === 46) { id = 87; end = offset + 1; matched = "."; break found }
           break
         }
         case 14: {
           RX[3].lastIndex = offset; if (RX[3].test(text) && RX[3].lastIndex > offset) { id = 2; end = RX[3].lastIndex; matched = null; break found }
-          if (code === 47) { id = 78; end = offset + 1; matched = "/"; break found }
+          if (code === 47) { id = 80; end = offset + 1; matched = "/"; break found }
           break
         }
         case 15: {
-          RX[2].lastIndex = offset; m = RX[2].exec(text); if (m !== null && m[0].length > 0) { id = 56; matched = m[0]; end = offset + matched.length; break found }
+          RX[2].lastIndex = offset; m = RX[2].exec(text); if (m !== null && m[0].length > 0) { id = 58; matched = m[0]; end = offset + matched.length; break found }
           break
         }
         case 16: {
-          if (text.startsWith("::", offset)) { id = 64; end = offset + 2; matched = "::"; break found }
-          RX[4].lastIndex = offset; m = RX[4].exec(text); if (m !== null && m[0].length > 0) { id = 65; matched = m[0]; end = offset + matched.length; break found }
+          if (text.startsWith("::", offset)) { id = 66; end = offset + 2; matched = "::"; break found }
+          RX[4].lastIndex = offset; m = RX[4].exec(text); if (m !== null && m[0].length > 0) { id = 67; matched = m[0]; end = offset + matched.length; break found }
           break
         }
         case 17: {
-          if (code === 59) { id = 86; end = offset + 1; matched = ";"; break found }
+          if (code === 59) { id = 88; end = offset + 1; matched = ";"; break found }
           break
         }
         case 18: {
-          if (text.startsWith("<>", offset)) { id = 67; end = offset + 2; matched = "<>"; break found }
-          if (text.startsWith("<=", offset)) { id = 68; end = offset + 2; matched = "<="; break found }
-          if (code === 60) { id = 72; end = offset + 1; matched = "<"; break found }
+          if (text.startsWith("<>", offset)) { id = 69; end = offset + 2; matched = "<>"; break found }
+          if (text.startsWith("<=", offset)) { id = 70; end = offset + 2; matched = "<="; break found }
+          if (code === 60) { id = 74; end = offset + 1; matched = "<"; break found }
           break
         }
         case 19: {
-          if (text.startsWith("==", offset)) { id = 71; end = offset + 2; matched = "=="; break found }
-          if (code === 61) { id = 74; end = offset + 1; matched = "="; break found }
+          if (text.startsWith("==", offset)) { id = 73; end = offset + 2; matched = "=="; break found }
+          if (code === 61) { id = 76; end = offset + 1; matched = "="; break found }
           break
         }
         case 20: {
-          if (text.startsWith(">=", offset)) { id = 69; end = offset + 2; matched = ">="; break found }
-          if (code === 62) { id = 73; end = offset + 1; matched = ">"; break found }
+          if (text.startsWith(">=", offset)) { id = 71; end = offset + 2; matched = ">="; break found }
+          if (code === 62) { id = 75; end = offset + 1; matched = ">"; break found }
           break
         }
         case 21: {
-          if (code === 63) { id = 87; end = offset + 1; matched = "?"; break found }
+          if (code === 63) { id = 89; end = offset + 1; matched = "?"; break found }
           break
         }
         case 22: {
@@ -600,26 +610,26 @@ function scan57 (text, offset) {
           { const e = scanKeyword(text, offset, length, KW[1][0], KW[1][1], look0); if (e !== -1) { id = 8; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[2][0], KW[2][1], look0); if (e !== -1) { id = 9; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[3][0], KW[3][1], look0); if (e !== -1) { id = 30; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 23: {
           { const e = scanKeyword(text, offset, length, KW[4][0], KW[4][1], look0); if (e !== -1) { id = 17; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[5][0], KW[5][1], look0); if (e !== -1) { id = 28; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 24: {
           { const e = scanKeyword(text, offset, length, KW[6][0], KW[6][1], look0); if (e !== -1) { id = 23; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[7][0], KW[7][1], look0); if (e !== -1) { id = 41; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[8][0], KW[8][1], look0); if (e !== -1) { id = 51; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 25: {
           { const e = scanKeyword(text, offset, length, KW[9][0], KW[9][1], look0); if (e !== -1) { id = 7; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[10][0], KW[10][1], look0); if (e !== -1) { id = 31; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 26: {
@@ -628,7 +638,7 @@ function scan57 (text, offset) {
           { const e = scanKeyword(text, offset, length, KW[13][0], KW[13][1], look0); if (e !== -1) { id = 48; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[14][0], KW[14][1], look0); if (e !== -1) { id = 50; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[15][0], KW[15][1], look0); if (e !== -1) { id = 52; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 27: {
@@ -636,116 +646,118 @@ function scan57 (text, offset) {
           { const e = scanKeyword(text, offset, length, KW[17][0], KW[17][1], look0); if (e !== -1) { id = 21; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[18][0], KW[18][1], look0); if (e !== -1) { id = 40; end = e; matched = null; break found } }
           { const e = scanKeyword(text, offset, length, KW[19][0], KW[19][1], look0); if (e !== -1) { id = 55; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[20][0], KW[20][1], look0); if (e !== -1) { id = 56; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 28: {
-          { const e = scanKeyword(text, offset, length, KW[20][0], KW[20][1], look0); if (e !== -1) { id = 27; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[21][0], KW[21][1], look0); if (e !== -1) { id = 27; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 29: {
-          { const e = scanKeyword(text, offset, length, KW[21][0], KW[21][1], look0); if (e !== -1) { id = 33; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[22][0], KW[22][1], look0); if (e !== -1) { id = 33; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 30: {
-          { const e = scanKeyword(text, offset, length, KW[22][0], KW[22][1], look0); if (e !== -1) { id = 12; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[23][0], KW[23][1], look0); if (e !== -1) { id = 13; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[24][0], KW[24][1], look0); if (e !== -1) { id = 16; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[25][0], KW[25][1], look0); if (e !== -1) { id = 18; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[26][0], KW[26][1], look0); if (e !== -1) { id = 36; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[27][0], KW[27][1], look0); if (e !== -1) { id = 37; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[28][0], KW[28][1], look0); if (e !== -1) { id = 49; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[23][0], KW[23][1], look0); if (e !== -1) { id = 12; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[24][0], KW[24][1], look0); if (e !== -1) { id = 13; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[25][0], KW[25][1], look0); if (e !== -1) { id = 16; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[26][0], KW[26][1], look0); if (e !== -1) { id = 18; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[27][0], KW[27][1], look0); if (e !== -1) { id = 36; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[28][0], KW[28][1], look0); if (e !== -1) { id = 37; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[29][0], KW[29][1], look0); if (e !== -1) { id = 49; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 31: {
-          { const e = scanKeyword(text, offset, length, KW[29][0], KW[29][1], look0); if (e !== -1) { id = 24; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[30][0], KW[30][1], look0); if (e !== -1) { id = 24; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 32: {
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 33: {
-          { const e = scanKeyword(text, offset, length, KW[30][0], KW[30][1], look0); if (e !== -1) { id = 15; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[31][0], KW[31][1], look0); if (e !== -1) { id = 19; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[32][0], KW[32][1], look0); if (e !== -1) { id = 34; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[31][0], KW[31][1], look0); if (e !== -1) { id = 15; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[32][0], KW[32][1], look0); if (e !== -1) { id = 19; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[33][0], KW[33][1], look0); if (e !== -1) { id = 34; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 34: {
-          { const e = scanKeyword(text, offset, length, KW[33][0], KW[33][1], look0); if (e !== -1) { id = 11; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[34][0], KW[34][1], look0); if (e !== -1) { id = 14; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[35][0], KW[35][1], look0); if (e !== -1) { id = 32; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[34][0], KW[34][1], look0); if (e !== -1) { id = 11; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[35][0], KW[35][1], look0); if (e !== -1) { id = 14; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[36][0], KW[36][1], look0); if (e !== -1) { id = 32; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 35: {
-          { const e = scanKeyword(text, offset, length, KW[36][0], KW[36][1], look0); if (e !== -1) { id = 10; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[37][0], KW[37][1], look0); if (e !== -1) { id = 22; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[38][0], KW[38][1], look0); if (e !== -1) { id = 25; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[39][0], KW[39][1], look0); if (e !== -1) { id = 29; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[40][0], KW[40][1], look0); if (e !== -1) { id = 35; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[41][0], KW[41][1], look0); if (e !== -1) { id = 53; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[37][0], KW[37][1], look0); if (e !== -1) { id = 10; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[38][0], KW[38][1], look0); if (e !== -1) { id = 22; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[39][0], KW[39][1], look0); if (e !== -1) { id = 25; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[40][0], KW[40][1], look0); if (e !== -1) { id = 29; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[41][0], KW[41][1], look0); if (e !== -1) { id = 35; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[42][0], KW[42][1], look0); if (e !== -1) { id = 53; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 36: {
-          { const e = scanKeyword(text, offset, length, KW[42][0], KW[42][1], look0); if (e !== -1) { id = 54; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[43][0], KW[43][1], look0); if (e !== -1) { id = 54; end = e; matched = null; break found } }
+          RX[5].lastIndex = offset; m = RX[5].exec(text); if (m !== null && m[0].length > 0) { id = 57; matched = m[0]; end = offset + matched.length; break found }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 37: {
-          { const e = scanKeyword(text, offset, length, KW[43][0], KW[43][1], look0); if (e !== -1) { id = 20; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[44][0], KW[44][1], look0); if (e !== -1) { id = 20; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 38: {
-          { const e = scanKeyword(text, offset, length, KW[44][0], KW[44][1], look0); if (e !== -1) { id = 3; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[45][0], KW[45][1], look0); if (e !== -1) { id = 3; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 39: {
-          { const e = scanKeyword(text, offset, length, KW[45][0], KW[45][1], look0); if (e !== -1) { id = 39; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[46][0], KW[46][1], look0); if (e !== -1) { id = 43; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[46][0], KW[46][1], look0); if (e !== -1) { id = 39; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[47][0], KW[47][1], look0); if (e !== -1) { id = 43; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 40: {
-          { const e = scanKeyword(text, offset, length, KW[47][0], KW[47][1], look0); if (e !== -1) { id = 26; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[48][0], KW[48][1], look0); if (e !== -1) { id = 47; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[48][0], KW[48][1], look0); if (e !== -1) { id = 26; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[49][0], KW[49][1], look0); if (e !== -1) { id = 47; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 41: {
-          { const e = scanKeyword(text, offset, length, KW[49][0], KW[49][1], look0); if (e !== -1) { id = 38; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[50][0], KW[50][1], look0); if (e !== -1) { id = 38; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 42: {
-          { const e = scanKeyword(text, offset, length, KW[50][0], KW[50][1], look0); if (e !== -1) { id = 5; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[51][0], KW[51][1], look0); if (e !== -1) { id = 42; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[52][0], KW[52][1], look0); if (e !== -1) { id = 46; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 60; end = j; matched = null; break found }
+          { const e = scanKeyword(text, offset, length, KW[51][0], KW[51][1], look0); if (e !== -1) { id = 5; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[52][0], KW[52][1], look0); if (e !== -1) { id = 42; end = e; matched = null; break found } }
+          { const e = scanKeyword(text, offset, length, KW[53][0], KW[53][1], look0); if (e !== -1) { id = 46; end = e; matched = null; break found } }
+          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 43: {
-          if (code === 91) { id = 82; end = offset + 1; matched = "["; break found }
+          if (code === 91) { id = 84; end = offset + 1; matched = "["; break found }
           break
         }
         case 44: {
-          if (code === 93) { id = 83; end = offset + 1; matched = "]"; break found }
+          if (code === 93) { id = 85; end = offset + 1; matched = "]"; break found }
           break
         }
         case 45: {
-          RX[5].lastIndex = offset; m = RX[5].exec(text); if (m !== null && m[0].length > 0) { id = 59; matched = m[0]; end = offset + matched.length; break found }
+          RX[6].lastIndex = offset; m = RX[6].exec(text); if (m !== null && m[0].length > 0) { id = 61; matched = m[0]; end = offset + matched.length; break found }
           break
         }
         case 46: {
-          if (text.startsWith("||", offset)) { id = 66; end = offset + 2; matched = "||"; break found }
+          if (text.startsWith("||", offset)) { id = 68; end = offset + 2; matched = "||"; break found }
           break
         }
         }
@@ -898,28 +910,29 @@ const H = [
   /* 48 */ (context) => { let prev; return engine.methods["caseOf"].method(([(typeof (prev = (context?.["subject"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["whens"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["otherwise"] ?? null)) === 'function' ? null : prev)]), context) },
   /* 49 */ (context) => { let prev; return ({["CAST"]: [(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["t"] ?? null)) === 'function' ? null : prev)]}) },
   /* 50 */ (context) => { let prev; return ({["DATE_PART"]: [(typeof (prev = (context?.["field"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 51 */ (context) => { let prev; return (typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev) },
-  /* 52 */ (context) => { let prev; return ({["$call"]: ({["name"]: (typeof (prev = (context?.["name"] ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = (context?.["args"] ?? null)) === 'function' ? null : prev), ["distinct"]: (typeof (prev = (context?.["distinct"] ?? null)) === 'function' ? null : prev), ["star"]: (typeof (prev = (context?.["star"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev), ["filter"]: (typeof (prev = (context?.["filter"] ?? null)) === 'function' ? null : prev), ["over"]: (typeof (prev = (context?.["over"] ?? null)) === 'function' ? null : prev)})}) },
-  /* 53 */ (context) => { let prev; return ({["$ref"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 54 */ (context) => { let prev; return ({["$param"]: null}) },
-  /* 55 */ (context) => { let prev; return ({["$param"]: engine.methods["paramName"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context)}) },
+  /* 51 */ (context) => { let prev; return ({["$pivot"]: ({["agg"]: (typeof (prev = (context?.["agg"] ?? null)) === 'function' ? null : prev), ["col"]: (typeof (prev = (context?.["col"] ?? null)) === 'function' ? null : prev), ["values"]: (typeof (prev = (context?.["values"] ?? null)) === 'function' ? null : prev)})}) },
+  /* 52 */ (context) => { let prev; return (typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev) },
+  /* 53 */ (context) => { let prev; return ({["$call"]: ({["name"]: (typeof (prev = (context?.["name"] ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = (context?.["args"] ?? null)) === 'function' ? null : prev), ["distinct"]: (typeof (prev = (context?.["distinct"] ?? null)) === 'function' ? null : prev), ["star"]: (typeof (prev = (context?.["star"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev), ["filter"]: (typeof (prev = (context?.["filter"] ?? null)) === 'function' ? null : prev), ["over"]: (typeof (prev = (context?.["over"] ?? null)) === 'function' ? null : prev)})}) },
+  /* 54 */ (context) => { let prev; return ({["$ref"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 55 */ (context) => { let prev; return ({["$param"]: null}) },
   /* 56 */ (context) => { let prev; return ({["$param"]: engine.methods["paramName"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context)}) },
-  /* 57 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)], ["negated"]: false}) },
-  /* 58 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
-  /* 59 */ (context) => { let prev; return ({["op"]: "IS_NULL", ["args"]: []}) },
-  /* 60 */ (context) => { let prev; return ({["op"]: "IS_TRUE", ["args"]: []}) },
-  /* 61 */ (context) => { let prev; return ({["op"]: "IS_FALSE", ["args"]: []}) },
-  /* 62 */ (context) => { let prev; return ({["op"]: "IS_DISTINCT", ["args"]: [(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 63 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
-  /* 64 */ (context) => { let prev; return [(typeof (prev = (context?.["cond"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["result"] ?? null)) === 'function' ? null : prev)] },
-  /* 65 */ (context) => { let prev; return ({["partitionBy"]: (typeof (prev = (context?.["partitionBy"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev)}) },
-  /* 66 */ (context) => { let prev; return ({["STRCAT"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 67 */ (context) => { let prev; return ({["op"]: "$inSub", ["args"]: [(typeof (prev = ((context) ?? null)) === 'function' ? null : prev)]}) },
+  /* 57 */ (context) => { let prev; return ({["$param"]: engine.methods["paramName"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context)}) },
+  /* 58 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)], ["negated"]: false}) },
+  /* 59 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
+  /* 60 */ (context) => { let prev; return ({["op"]: "IS_NULL", ["args"]: []}) },
+  /* 61 */ (context) => { let prev; return ({["op"]: "IS_TRUE", ["args"]: []}) },
+  /* 62 */ (context) => { let prev; return ({["op"]: "IS_FALSE", ["args"]: []}) },
+  /* 63 */ (context) => { let prev; return ({["op"]: "IS_DISTINCT", ["args"]: [(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 64 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
+  /* 65 */ (context) => { let prev; return [(typeof (prev = (context?.["cond"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["result"] ?? null)) === 'function' ? null : prev)] },
+  /* 66 */ (context) => { let prev; return ({["partitionBy"]: (typeof (prev = (context?.["partitionBy"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev)}) },
+  /* 67 */ (context) => { let prev; return ({["STRCAT"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
   /* 68 */ (context) => { let prev; return ({["op"]: "$inSub", ["args"]: [(typeof (prev = ((context) ?? null)) === 'function' ? null : prev)]}) },
-  /* 69 */ (context) => { let prev; return ({["op"]: "IN", ["args"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 69 */ (context) => { let prev; return ({["op"]: "$inSub", ["args"]: [(typeof (prev = ((context) ?? null)) === 'function' ? null : prev)]}) },
   /* 70 */ (context) => { let prev; return ({["op"]: "IN", ["args"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 71 */ (context) => { let prev; return ({["op"]: "BETWEEN", ["args"]: [(typeof (prev = (context?.["low"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["high"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 72 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["p"] ?? null)) === 'function' ? null : prev)]}) }
+  /* 71 */ (context) => { let prev; return ({["op"]: "IN", ["args"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 72 */ (context) => { let prev; return ({["op"]: "BETWEEN", ["args"]: [(typeof (prev = (context?.["low"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["high"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 73 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["p"] ?? null)) === 'function' ? null : prev)]}) }
 ]
 
 /**
@@ -985,38 +998,40 @@ const I = {
   "Over": 53,
   "Partition": 54,
   "Filter": 55,
-  "Number": 56,
-  "String": 57,
-  "QuotedIdent": 58,
-  "BacktickIdent": 59,
-  "Identifier": 60,
-  "DollarParam": 61,
-  "LongArrow": 62,
-  "Arrow": 63,
-  "DoubleColon": 64,
-  "NamedParam": 65,
-  "Concat": 66,
-  "NotEq": 67,
-  "LtEq": 68,
-  "GtEq": 69,
-  "BangEq": 70,
-  "EqEq": 71,
-  "Lt": 72,
-  "Gt": 73,
-  "Eq": 74,
-  "Plus": 75,
-  "Minus": 76,
-  "Star": 77,
-  "Slash": 78,
-  "Percent": 79,
-  "LParen": 80,
-  "RParen": 81,
-  "LBracket": 82,
-  "RBracket": 83,
-  "Comma": 84,
-  "Dot": 85,
-  "Semicolon": 86,
-  "QMark": 87
+  "For": 56,
+  "Pivot": 57,
+  "Number": 58,
+  "String": 59,
+  "QuotedIdent": 60,
+  "BacktickIdent": 61,
+  "Identifier": 62,
+  "DollarParam": 63,
+  "LongArrow": 64,
+  "Arrow": 65,
+  "DoubleColon": 66,
+  "NamedParam": 67,
+  "Concat": 68,
+  "NotEq": 69,
+  "LtEq": 70,
+  "GtEq": 71,
+  "BangEq": 72,
+  "EqEq": 73,
+  "Lt": 74,
+  "Gt": 75,
+  "Eq": 76,
+  "Plus": 77,
+  "Minus": 78,
+  "Star": 79,
+  "Slash": 80,
+  "Percent": 81,
+  "LParen": 82,
+  "RParen": 83,
+  "LBracket": 84,
+  "RBracket": 85,
+  "Comma": 86,
+  "Dot": 87,
+  "Semicolon": 88,
+  "QMark": 89
 }
 
 // Script
@@ -1035,7 +1050,7 @@ for (;;) {
 const _6 = c.idx;
 let _8;
 const _9 = c.tokens[c.idx];
-if (_9 !== undefined && (_9.id === 86 || (_9.id === undefined && _9.type === "Semicolon"))) { c.idx++; _8 = _9; }
+if (_9 !== undefined && (_9.id === 88 || (_9.id === undefined && _9.type === "Semicolon"))) { c.idx++; _8 = _9; }
 else { if (c.track) { E(c, "Semicolon"); } _8 = F; }
 if (_8 === F) { c.idx = _6; break; }
 if (c.idx === _6) P("many", _6);
@@ -1062,7 +1077,7 @@ L_18: {
 const _19 = c.idx;
 let _20;
 const _21 = c.tokens[c.idx];
-if (_21 !== undefined && (_21.id === 86 || (_21.id === undefined && _21.type === "Semicolon"))) { c.idx++; _20 = _21; }
+if (_21 !== undefined && (_21.id === 88 || (_21.id === undefined && _21.type === "Semicolon"))) { c.idx++; _20 = _21; }
 else { if (c.track) { E(c, "Semicolon"); } _20 = F; }
 if (_20 === F) { c.idx = _19; _17 = F; break L_18; }
 let _22;
@@ -1106,7 +1121,7 @@ const _30 = c.tokens[c.idx];
 if (_30 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Insert"); } _28 = F; break L_29; }
 const _31 = _30.id !== undefined ? _30.id : I[_30.type];
 switch (_31) {
-case 46: case 80: case 3: case 38: {
+case 46: case 82: case 3: case 38: {
 
 const _33 = c.ruleDepth;
 if (c.track) { c.ruleNames[_33] = "Query"; c.ruleDepth = _33 + 1; }
@@ -1227,7 +1242,7 @@ L_76: {
 const _77 = c.idx;
 let _78;
 const _79 = c.tokens[c.idx];
-if (_79 !== undefined && (_79.id === 80 || (_79.id === undefined && _79.type === "LParen"))) { c.idx++; _78 = _79; }
+if (_79 !== undefined && (_79.id === 82 || (_79.id === undefined && _79.type === "LParen"))) { c.idx++; _78 = _79; }
 else { if (c.track) { E(c, "LParen"); } _78 = F; }
 if (_78 === F) { c.idx = _77; _75 = F; break L_76; }
 
@@ -1245,7 +1260,7 @@ for (;;) {
 const _82 = c.idx;
 let _87;
 const _88 = c.tokens[c.idx];
-if (_88 !== undefined && (_88.id === 84 || (_88.id === undefined && _88.type === "Comma"))) { c.idx++; _87 = _88; }
+if (_88 !== undefined && (_88.id === 86 || (_88.id === undefined && _88.type === "Comma"))) { c.idx++; _87 = _88; }
 else { if (c.track) { E(c, "Comma"); } _87 = F; }
 if (_87 === F) { c.idx = _82; break; }
 const _83 = c.idx;
@@ -1261,7 +1276,7 @@ _80.push(_89);
 if (_80 === F) { c.idx = _77; _75 = F; break L_76; }
 let _91;
 const _92 = c.tokens[c.idx];
-if (_92 !== undefined && (_92.id === 81 || (_92.id === undefined && _92.type === "RParen"))) { c.idx++; _91 = _92; }
+if (_92 !== undefined && (_92.id === 83 || (_92.id === undefined && _92.type === "RParen"))) { c.idx++; _91 = _92; }
 else { if (c.track) { E(c, "RParen"); } _91 = F; }
 if (_91 === F) { c.idx = _77; _75 = F; break L_76; }
 _75 = _80;
@@ -1312,7 +1327,7 @@ for (;;) {
 const _104 = c.idx;
 let _109;
 const _110 = c.tokens[c.idx];
-if (_110 !== undefined && (_110.id === 84 || (_110.id === undefined && _110.type === "Comma"))) { c.idx++; _109 = _110; }
+if (_110 !== undefined && (_110.id === 86 || (_110.id === undefined && _110.type === "Comma"))) { c.idx++; _109 = _110; }
 else { if (c.track) { E(c, "Comma"); } _109 = F; }
 if (_109 === F) { c.idx = _104; break; }
 const _105 = c.idx;
@@ -1398,7 +1413,7 @@ for (;;) {
 const _133 = c.idx;
 let _138;
 const _139 = c.tokens[c.idx];
-if (_139 !== undefined && (_139.id === 84 || (_139.id === undefined && _139.type === "Comma"))) { c.idx++; _138 = _139; }
+if (_139 !== undefined && (_139.id === 86 || (_139.id === undefined && _139.type === "Comma"))) { c.idx++; _138 = _139; }
 else { if (c.track) { E(c, "Comma"); } _138 = F; }
 if (_138 === F) { c.idx = _133; break; }
 const _134 = c.idx;
@@ -1443,7 +1458,7 @@ if (_151 === F) { c.idx = _147; c.bindings = _150; _146 = F; break L_148; }
 let _154;
 L_155: {
 const _156 = c.tokens[c.idx];
-if (_156 === undefined) { if (c.track) { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _154 = F; break L_155; }
+if (_156 === undefined) { if (c.track) { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _154 = F; break L_155; }
 const _157 = _156.id !== undefined ? _156.id : I[_156.type];
 switch (_157) {
 case 8: {
@@ -1460,7 +1475,7 @@ _158 = null;
 }
 _154 = _158; break L_155;
 }
-case 76: case 75: case 39: case 40: case 14: case 80: case 50: case 41: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
+case 78: case 77: case 39: case 40: case 14: case 82: case 50: case 41: case 51: case 52: case 57: case 62: case 60: case 61: case 19: case 20: case 58: case 59: case 89: case 63: case 67: {
 
 const _164 = c.ruleDepth;
 if (c.track) { c.ruleNames[_164] = "Additive"; c.ruleDepth = _164 + 1; }
@@ -1468,7 +1483,7 @@ const _163 = R[14](c);
 if (c.track) c.ruleDepth = _164;
 _154 = _163; break L_155;
 }
-default: { if (c.track) { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _154 = F; break L_155; }
+default: { if (c.track) { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _154 = F; break L_155; }
 }
 }
 if (_154 !== F) _149["n"] = _154;
@@ -1586,10 +1601,10 @@ R[9] = (c) => {
 let _202;
 L_203: {
 const _204 = c.tokens[c.idx];
-if (_204 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); } _202 = F; break L_203; }
+if (_204 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); E(c, "For"); } _202 = F; break L_203; }
 const _205 = _204.id !== undefined ? _204.id : I[_204.type];
 switch (_205) {
-case 60: case 58: case 59: {
+case 62: case 60: case 61: {
 
 const _207 = c.ruleDepth;
 if (c.track) { c.ruleNames[_207] = "Ident"; c.ruleDepth = _207 + 1; }
@@ -1597,17 +1612,17 @@ const _206 = R[15](c);
 if (c.track) c.ruleDepth = _207;
 _202 = _206; break L_203;
 }
-case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: {
+case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: {
 let _209;
 const _210 = c.tokens[c.idx];
 let _211 = false;
-if (_210 !== undefined) { switch (_210.id !== undefined ? _210.id : I[_210.type]) { case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: _211 = true; } }
+if (_210 !== undefined) { switch (_210.id !== undefined ? _210.id : I[_210.type]) { case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: _211 = true; } }
 if (_211) { c.idx++; _209 = _210; }
-else { if (c.track) { E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); } _209 = F; }
+else { if (c.track) { E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); E(c, "For"); } _209 = F; }
 const _208 = _209 === F ? F : H[7](_209, c);
 _202 = _208; break L_203;
 }
-default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); } _202 = F; break L_203; }
+default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); E(c, "For"); } _202 = F; break L_203; }
 }
 }
 return _202;
@@ -1641,7 +1656,7 @@ L_224: {
 const _225 = c.idx;
 let _226;
 const _227 = c.tokens[c.idx];
-if (_227 !== undefined && (_227.id === 80 || (_227.id === undefined && _227.type === "LParen"))) { c.idx++; _226 = _227; }
+if (_227 !== undefined && (_227.id === 82 || (_227.id === undefined && _227.type === "LParen"))) { c.idx++; _226 = _227; }
 else { if (c.track) { E(c, "LParen"); } _226 = F; }
 if (_226 === F) { c.idx = _225; _223 = F; break L_224; }
 
@@ -1652,7 +1667,7 @@ if (c.track) c.ruleDepth = _229;
 if (_228 === F) { c.idx = _225; _223 = F; break L_224; }
 let _230;
 const _231 = c.tokens[c.idx];
-if (_231 !== undefined && (_231.id === 81 || (_231.id === undefined && _231.type === "RParen"))) { c.idx++; _230 = _231; }
+if (_231 !== undefined && (_231.id === 83 || (_231.id === undefined && _231.type === "RParen"))) { c.idx++; _230 = _231; }
 else { if (c.track) { E(c, "RParen"); } _230 = F; }
 if (_230 === F) { c.idx = _225; _223 = F; break L_224; }
 _223 = _228;
@@ -1692,14 +1707,14 @@ const _239 = R[18](c);
 if (c.track) c.ruleDepth = _240;
 _233 = _239; break L_234;
 }
-case 80: {
+case 82: {
 
 let _241;
 L_242: {
 const _243 = c.idx;
 let _244;
 const _245 = c.tokens[c.idx];
-if (_245 !== undefined && (_245.id === 80 || (_245.id === undefined && _245.type === "LParen"))) { c.idx++; _244 = _245; }
+if (_245 !== undefined && (_245.id === 82 || (_245.id === undefined && _245.type === "LParen"))) { c.idx++; _244 = _245; }
 else { if (c.track) { E(c, "LParen"); } _244 = F; }
 if (_244 === F) { c.idx = _243; _241 = F; break L_242; }
 
@@ -1710,7 +1725,7 @@ if (c.track) c.ruleDepth = _247;
 if (_246 === F) { c.idx = _243; _241 = F; break L_242; }
 let _248;
 const _249 = c.tokens[c.idx];
-if (_249 !== undefined && (_249.id === 81 || (_249.id === undefined && _249.type === "RParen"))) { c.idx++; _248 = _249; }
+if (_249 !== undefined && (_249.id === 83 || (_249.id === undefined && _249.type === "RParen"))) { c.idx++; _248 = _249; }
 else { if (c.track) { E(c, "RParen"); } _248 = F; }
 if (_248 === F) { c.idx = _243; _241 = F; break L_242; }
 _241 = _246;
@@ -1923,26 +1938,26 @@ const _323 = c.tokens[c.idx];
 if (_323 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); } _321 = F; break L_322; }
 const _324 = _323.id !== undefined ? _323.id : I[_323.type];
 switch (_324) {
-case 60: {
+case 62: {
 let _326;
 const _327 = c.tokens[c.idx];
-if (_327 !== undefined && (_327.id === 60 || (_327.id === undefined && _327.type === "Identifier"))) { c.idx++; _326 = _327; }
+if (_327 !== undefined && (_327.id === 62 || (_327.id === undefined && _327.type === "Identifier"))) { c.idx++; _326 = _327; }
 else { if (c.track) { E(c, "Identifier"); } _326 = F; }
 const _325 = _326 === F ? F : H[11](_326, c);
 _321 = _325; break L_322;
 }
-case 58: {
+case 60: {
 let _329;
 const _330 = c.tokens[c.idx];
-if (_330 !== undefined && (_330.id === 58 || (_330.id === undefined && _330.type === "QuotedIdent"))) { c.idx++; _329 = _330; }
+if (_330 !== undefined && (_330.id === 60 || (_330.id === undefined && _330.type === "QuotedIdent"))) { c.idx++; _329 = _330; }
 else { if (c.track) { E(c, "QuotedIdent"); } _329 = F; }
 const _328 = _329 === F ? F : H[12](_329, c);
 _321 = _328; break L_322;
 }
-case 59: {
+case 61: {
 let _332;
 const _333 = c.tokens[c.idx];
-if (_333 !== undefined && (_333.id === 59 || (_333.id === undefined && _333.type === "BacktickIdent"))) { c.idx++; _332 = _333; }
+if (_333 !== undefined && (_333.id === 61 || (_333.id === undefined && _333.type === "BacktickIdent"))) { c.idx++; _332 = _333; }
 else { if (c.track) { E(c, "BacktickIdent"); } _332 = F; }
 const _331 = _332 === F ? F : H[13](_332, c);
 _321 = _331; break L_322;
@@ -1962,14 +1977,14 @@ const _336 = c.tokens[c.idx];
 if (_336 === undefined) { if (c.track) { E(c, "Dot"); E(c, "LBracket"); } _334 = F; break L_335; }
 const _337 = _336.id !== undefined ? _336.id : I[_336.type];
 switch (_337) {
-case 85: {
+case 87: {
 
 let _338;
 L_339: {
 const _340 = c.idx;
 let _341;
 const _342 = c.tokens[c.idx];
-if (_342 !== undefined && (_342.id === 85 || (_342.id === undefined && _342.type === "Dot"))) { c.idx++; _341 = _342; }
+if (_342 !== undefined && (_342.id === 87 || (_342.id === undefined && _342.type === "Dot"))) { c.idx++; _341 = _342; }
 else { if (c.track) { E(c, "Dot"); } _341 = F; }
 if (_341 === F) { c.idx = _340; _338 = F; break L_339; }
 
@@ -1982,14 +1997,14 @@ _338 = _343;
 }
 _334 = _338; break L_335;
 }
-case 82: {
+case 84: {
 
 let _345;
 L_346: {
 const _347 = c.idx;
 let _348;
 const _349 = c.tokens[c.idx];
-if (_349 !== undefined && (_349.id === 82 || (_349.id === undefined && _349.type === "LBracket"))) { c.idx++; _348 = _349; }
+if (_349 !== undefined && (_349.id === 84 || (_349.id === undefined && _349.type === "LBracket"))) { c.idx++; _348 = _349; }
 else { if (c.track) { E(c, "LBracket"); } _348 = F; }
 if (_348 === F) { c.idx = _347; _345 = F; break L_346; }
 
@@ -1999,7 +2014,7 @@ const _352 = c.tokens[c.idx];
 if (_352 === undefined) { if (c.track) { E(c, "Number"); E(c, "String"); E(c, "Star"); } _350 = F; break L_351; }
 const _353 = _352.id !== undefined ? _352.id : I[_352.type];
 switch (_353) {
-case 56: {
+case 58: {
 
 const _355 = c.ruleDepth;
 if (c.track) { c.ruleNames[_355] = "NumberLiteral"; c.ruleDepth = _355 + 1; }
@@ -2007,7 +2022,7 @@ const _354 = R[22](c);
 if (c.track) c.ruleDepth = _355;
 _350 = _354; break L_351;
 }
-case 57: {
+case 59: {
 
 const _357 = c.ruleDepth;
 if (c.track) { c.ruleNames[_357] = "StringLiteral"; c.ruleDepth = _357 + 1; }
@@ -2015,14 +2030,14 @@ const _356 = R[23](c);
 if (c.track) c.ruleDepth = _357;
 _350 = _356; break L_351;
 }
-case 77: {
+case 79: {
 
 let _358;
 L_359: {
 const _360 = c.idx;
 let _361;
 const _362 = c.tokens[c.idx];
-if (_362 !== undefined && (_362.id === 77 || (_362.id === undefined && _362.type === "Star"))) { c.idx++; _361 = _362; }
+if (_362 !== undefined && (_362.id === 79 || (_362.id === undefined && _362.type === "Star"))) { c.idx++; _361 = _362; }
 else { if (c.track) { E(c, "Star"); } _361 = F; }
 if (_361 === F) { c.idx = _360; _358 = F; break L_359; }
 _358 = "[*]";
@@ -2035,7 +2050,7 @@ default: { if (c.track) { E(c, "Number"); E(c, "String"); E(c, "Star"); } _350 =
 if (_350 === F) { c.idx = _347; _345 = F; break L_346; }
 let _363;
 const _364 = c.tokens[c.idx];
-if (_364 !== undefined && (_364.id === 83 || (_364.id === undefined && _364.type === "RBracket"))) { c.idx++; _363 = _364; }
+if (_364 !== undefined && (_364.id === 85 || (_364.id === undefined && _364.type === "RBracket"))) { c.idx++; _363 = _364; }
 else { if (c.track) { E(c, "RBracket"); } _363 = F; }
 if (_363 === F) { c.idx = _347; _345 = F; break L_346; }
 _345 = _350;
@@ -2099,7 +2114,7 @@ for (;;) {
 const _384 = c.idx;
 let _389;
 const _390 = c.tokens[c.idx];
-if (_390 !== undefined && (_390.id === 84 || (_390.id === undefined && _390.type === "Comma"))) { c.idx++; _389 = _390; }
+if (_390 !== undefined && (_390.id === 86 || (_390.id === undefined && _390.type === "Comma"))) { c.idx++; _389 = _390; }
 else { if (c.track) { E(c, "Comma"); } _389 = F; }
 if (_389 === F) { c.idx = _384; break; }
 const _385 = c.idx;
@@ -2142,7 +2157,7 @@ for (;;) {
 const _403 = c.idx;
 let _408;
 const _409 = c.tokens[c.idx];
-if (_409 !== undefined && (_409.id === 84 || (_409.id === undefined && _409.type === "Comma"))) { c.idx++; _408 = _409; }
+if (_409 !== undefined && (_409.id === 86 || (_409.id === undefined && _409.type === "Comma"))) { c.idx++; _408 = _409; }
 else { if (c.track) { E(c, "Comma"); } _408 = F; }
 if (_408 === F) { c.idx = _403; break; }
 const _404 = c.idx;
@@ -2220,7 +2235,7 @@ for (;;) {
 const _434 = c.idx;
 let _439;
 const _440 = c.tokens[c.idx];
-if (_440 !== undefined && (_440.id === 84 || (_440.id === undefined && _440.type === "Comma"))) { c.idx++; _439 = _440; }
+if (_440 !== undefined && (_440.id === 86 || (_440.id === undefined && _440.type === "Comma"))) { c.idx++; _439 = _440; }
 else { if (c.track) { E(c, "Comma"); } _439 = F; }
 if (_439 === F) { c.idx = _434; break; }
 const _435 = c.idx;
@@ -2302,7 +2317,7 @@ for (;;) {
 const _464 = c.idx;
 let _469;
 const _470 = c.tokens[c.idx];
-if (_470 !== undefined && (_470.id === 84 || (_470.id === undefined && _470.type === "Comma"))) { c.idx++; _469 = _470; }
+if (_470 !== undefined && (_470.id === 86 || (_470.id === undefined && _470.type === "Comma"))) { c.idx++; _469 = _470; }
 else { if (c.track) { E(c, "Comma"); } _469 = F; }
 if (_469 === F) { c.idx = _464; break; }
 const _465 = c.idx;
@@ -2357,28 +2372,28 @@ const _485 = c.tokens[c.idx];
 if (_485 === undefined) { if (c.track) { E(c, "Plus"); E(c, "Minus"); } _483 = F; break L_484; }
 const _486 = _485.id !== undefined ? _485.id : I[_485.type];
 switch (_486) {
-case 75: {
+case 77: {
 
 let _487;
 L_488: {
 const _489 = c.idx;
 let _490;
 const _491 = c.tokens[c.idx];
-if (_491 !== undefined && (_491.id === 75 || (_491.id === undefined && _491.type === "Plus"))) { c.idx++; _490 = _491; }
+if (_491 !== undefined && (_491.id === 77 || (_491.id === undefined && _491.type === "Plus"))) { c.idx++; _490 = _491; }
 else { if (c.track) { E(c, "Plus"); } _490 = F; }
 if (_490 === F) { c.idx = _489; _487 = F; break L_488; }
 _487 = "ADD";
 }
 _483 = _487; break L_484;
 }
-case 76: {
+case 78: {
 
 let _492;
 L_493: {
 const _494 = c.idx;
 let _495;
 const _496 = c.tokens[c.idx];
-if (_496 !== undefined && (_496.id === 76 || (_496.id === undefined && _496.type === "Minus"))) { c.idx++; _495 = _496; }
+if (_496 !== undefined && (_496.id === 78 || (_496.id === undefined && _496.type === "Minus"))) { c.idx++; _495 = _496; }
 else { if (c.track) { E(c, "Minus"); } _495 = F; }
 if (_495 === F) { c.idx = _494; _492 = F; break L_493; }
 _492 = "SUB";
@@ -2421,9 +2436,9 @@ const _501 = c.tokens[_500];
 if (_501 === undefined) break;
 let _502;
 switch (_501.id !== undefined ? _501.id : I[_501.type]) {
-case 66: _502 = 0; break;
-case 75: case 76: _502 = 1; break;
-case 77: case 78: case 79: _502 = 2; break;
+case 68: _502 = 0; break;
+case 77: case 78: _502 = 1; break;
+case 79: case 80: case 81: _502 = 2; break;
 default: break L_499;
 }
 if (_502 < from) break;
@@ -2431,7 +2446,7 @@ switch (_502) {
 case 0: {
 let _509;
 const _510 = c.tokens[c.idx];
-if (_510 !== undefined && (_510.id === 66 || (_510.id === undefined && _510.type === "Concat"))) { c.idx++; _509 = _510; }
+if (_510 !== undefined && (_510.id === 68 || (_510.id === undefined && _510.type === "Concat"))) { c.idx++; _509 = _510; }
 else { if (c.track) { E(c, "Concat"); } _509 = F; }
 if (_509 === F) { c.idx = _500; break L_499; }
 const _511 = R[21](c, 1);
@@ -2449,28 +2464,28 @@ const _514 = c.tokens[c.idx];
 if (_514 === undefined) { if (c.track) { E(c, "Plus"); E(c, "Minus"); } _512 = F; break L_513; }
 const _515 = _514.id !== undefined ? _514.id : I[_514.type];
 switch (_515) {
-case 75: {
+case 77: {
 
 let _516;
 L_517: {
 const _518 = c.idx;
 let _519;
 const _520 = c.tokens[c.idx];
-if (_520 !== undefined && (_520.id === 75 || (_520.id === undefined && _520.type === "Plus"))) { c.idx++; _519 = _520; }
+if (_520 !== undefined && (_520.id === 77 || (_520.id === undefined && _520.type === "Plus"))) { c.idx++; _519 = _520; }
 else { if (c.track) { E(c, "Plus"); } _519 = F; }
 if (_519 === F) { c.idx = _518; _516 = F; break L_517; }
 _516 = "ADD";
 }
 _512 = _516; break L_513;
 }
-case 76: {
+case 78: {
 
 let _521;
 L_522: {
 const _523 = c.idx;
 let _524;
 const _525 = c.tokens[c.idx];
-if (_525 !== undefined && (_525.id === 76 || (_525.id === undefined && _525.type === "Minus"))) { c.idx++; _524 = _525; }
+if (_525 !== undefined && (_525.id === 78 || (_525.id === undefined && _525.type === "Minus"))) { c.idx++; _524 = _525; }
 else { if (c.track) { E(c, "Minus"); } _524 = F; }
 if (_524 === F) { c.idx = _523; _521 = F; break L_522; }
 _521 = "SUB";
@@ -2496,42 +2511,42 @@ const _529 = c.tokens[c.idx];
 if (_529 === undefined) { if (c.track) { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); } _527 = F; break L_528; }
 const _530 = _529.id !== undefined ? _529.id : I[_529.type];
 switch (_530) {
-case 77: {
+case 79: {
 
 let _531;
 L_532: {
 const _533 = c.idx;
 let _534;
 const _535 = c.tokens[c.idx];
-if (_535 !== undefined && (_535.id === 77 || (_535.id === undefined && _535.type === "Star"))) { c.idx++; _534 = _535; }
+if (_535 !== undefined && (_535.id === 79 || (_535.id === undefined && _535.type === "Star"))) { c.idx++; _534 = _535; }
 else { if (c.track) { E(c, "Star"); } _534 = F; }
 if (_534 === F) { c.idx = _533; _531 = F; break L_532; }
 _531 = "MUL";
 }
 _527 = _531; break L_528;
 }
-case 78: {
+case 80: {
 
 let _536;
 L_537: {
 const _538 = c.idx;
 let _539;
 const _540 = c.tokens[c.idx];
-if (_540 !== undefined && (_540.id === 78 || (_540.id === undefined && _540.type === "Slash"))) { c.idx++; _539 = _540; }
+if (_540 !== undefined && (_540.id === 80 || (_540.id === undefined && _540.type === "Slash"))) { c.idx++; _539 = _540; }
 else { if (c.track) { E(c, "Slash"); } _539 = F; }
 if (_539 === F) { c.idx = _538; _536 = F; break L_537; }
 _536 = "DIV";
 }
 _527 = _536; break L_528;
 }
-case 79: {
+case 81: {
 
 let _541;
 L_542: {
 const _543 = c.idx;
 let _544;
 const _545 = c.tokens[c.idx];
-if (_545 !== undefined && (_545.id === 79 || (_545.id === undefined && _545.type === "Percent"))) { c.idx++; _544 = _545; }
+if (_545 !== undefined && (_545.id === 81 || (_545.id === undefined && _545.type === "Percent"))) { c.idx++; _544 = _545; }
 else { if (c.track) { E(c, "Percent"); } _544 = F; }
 if (_544 === F) { c.idx = _543; _541 = F; break L_542; }
 _541 = "MOD";
@@ -2558,7 +2573,7 @@ return _503;
 R[22] = (c) => {
 let _548;
 const _549 = c.tokens[c.idx];
-if (_549 !== undefined && (_549.id === 56 || (_549.id === undefined && _549.type === "Number"))) { c.idx++; _548 = _549; }
+if (_549 !== undefined && (_549.id === 58 || (_549.id === undefined && _549.type === "Number"))) { c.idx++; _548 = _549; }
 else { if (c.track) { E(c, "Number"); } _548 = F; }
 const _547 = _548 === F ? F : H[20](_548, c);
 return _547;
@@ -2568,7 +2583,7 @@ return _547;
 R[23] = (c) => {
 let _551;
 const _552 = c.tokens[c.idx];
-if (_552 !== undefined && (_552.id === 57 || (_552.id === undefined && _552.type === "String"))) { c.idx++; _551 = _552; }
+if (_552 !== undefined && (_552.id === 59 || (_552.id === undefined && _552.type === "String"))) { c.idx++; _551 = _552; }
 else { if (c.track) { E(c, "String"); } _551 = F; }
 const _550 = _551 === F ? F : H[21](_551, c);
 return _550;
@@ -2580,10 +2595,10 @@ R[24] = (c) => {
 let _553;
 L_554: {
 const _555 = c.tokens[c.idx];
-if (_555 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _553 = F; break L_554; }
+if (_555 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _553 = F; break L_554; }
 const _556 = _555.id !== undefined ? _555.id : I[_555.type];
 switch (_556) {
-case 60: case 58: case 59: {
+case 62: case 60: case 61: {
 let _557;
 L_558: {
 const _559 = c.idx;
@@ -2591,8 +2606,8 @@ let _560 = 3;
 if (!c.track) {
 const _561 = c.tokens[_559 + 1];
 switch (_561 === undefined ? -1 : (_561.id !== undefined ? _561.id : I[_561.type])) {
-case 85: _560 = 3; break;
-case 80: case 82: _560 = 2; break;
+case 87: _560 = 3; break;
+case 82: case 84: _560 = 2; break;
 default: _560 = 2; break;
 }
 }
@@ -2614,12 +2629,12 @@ const _567 = _568;
 if (_567 === F) { c.idx = _563; c.bindings = _566; _562 = F; break L_564; }
 let _570;
 const _571 = c.tokens[c.idx];
-if (_571 !== undefined && (_571.id === 85 || (_571.id === undefined && _571.type === "Dot"))) { c.idx++; _570 = _571; }
+if (_571 !== undefined && (_571.id === 87 || (_571.id === undefined && _571.type === "Dot"))) { c.idx++; _570 = _571; }
 else { if (c.track) { E(c, "Dot"); } _570 = F; }
 if (_570 === F) { c.idx = _563; c.bindings = _566; _562 = F; break L_564; }
 let _572;
 const _573 = c.tokens[c.idx];
-if (_573 !== undefined && (_573.id === 77 || (_573.id === undefined && _573.type === "Star"))) { c.idx++; _572 = _573; }
+if (_573 !== undefined && (_573.id === 79 || (_573.id === undefined && _573.type === "Star"))) { c.idx++; _572 = _573; }
 else { if (c.track) { E(c, "Star"); } _572 = F; }
 if (_572 === F) { c.idx = _563; c.bindings = _566; _562 = F; break L_564; }
 const _574 = H[22](_565, c);
@@ -2669,7 +2684,7 @@ _557 = F;
 }
 _553 = _557; break L_554;
 }
-case 77: {
+case 79: {
 
 let _589;
 L_591: {
@@ -2679,7 +2694,7 @@ const _592 = {};
 c.bindings = _592;
 let _594;
 const _595 = c.tokens[c.idx];
-if (_595 !== undefined && (_595.id === 77 || (_595.id === undefined && _595.type === "Star"))) { c.idx++; _594 = _595; }
+if (_595 !== undefined && (_595.id === 79 || (_595.id === undefined && _595.type === "Star"))) { c.idx++; _594 = _595; }
 else { if (c.track) { E(c, "Star"); } _594 = F; }
 if (_594 === F) { c.idx = _590; c.bindings = _593; _589 = F; break L_591; }
 const _596 = H[24](_592, c);
@@ -2688,7 +2703,7 @@ _589 = _596;
 }
 _553 = _589; break L_554;
 }
-case 11: case 76: case 75: case 39: case 40: case 14: case 80: case 50: case 41: case 51: case 52: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
+case 11: case 78: case 77: case 39: case 40: case 14: case 82: case 50: case 41: case 51: case 52: case 57: case 19: case 20: case 58: case 59: case 89: case 63: case 67: {
 
 let _597;
 L_599: {
@@ -2723,7 +2738,7 @@ _597 = _610;
 }
 _553 = _597; break L_554;
 }
-default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _553 = F; break L_554; }
+default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _553 = F; break L_554; }
 }
 }
 return _553;
@@ -2779,7 +2794,7 @@ L_627: {
 const _628 = c.idx;
 let _629;
 const _630 = c.tokens[c.idx];
-if (_630 !== undefined && (_630.id === 80 || (_630.id === undefined && _630.type === "LParen"))) { c.idx++; _629 = _630; }
+if (_630 !== undefined && (_630.id === 82 || (_630.id === undefined && _630.type === "LParen"))) { c.idx++; _629 = _630; }
 else { if (c.track) { E(c, "LParen"); } _629 = F; }
 if (_629 === F) { c.idx = _628; _626 = F; break L_627; }
 
@@ -2797,7 +2812,7 @@ for (;;) {
 const _633 = c.idx;
 let _638;
 const _639 = c.tokens[c.idx];
-if (_639 !== undefined && (_639.id === 84 || (_639.id === undefined && _639.type === "Comma"))) { c.idx++; _638 = _639; }
+if (_639 !== undefined && (_639.id === 86 || (_639.id === undefined && _639.type === "Comma"))) { c.idx++; _638 = _639; }
 else { if (c.track) { E(c, "Comma"); } _638 = F; }
 if (_638 === F) { c.idx = _633; break; }
 const _634 = c.idx;
@@ -2813,7 +2828,7 @@ _631.push(_640);
 if (_631 === F) { c.idx = _628; _626 = F; break L_627; }
 let _642;
 const _643 = c.tokens[c.idx];
-if (_643 !== undefined && (_643.id === 81 || (_643.id === undefined && _643.type === "RParen"))) { c.idx++; _642 = _643; }
+if (_643 !== undefined && (_643.id === 83 || (_643.id === undefined && _643.type === "RParen"))) { c.idx++; _642 = _643; }
 else { if (c.track) { E(c, "RParen"); } _642 = F; }
 if (_642 === F) { c.idx = _628; _626 = F; break L_627; }
 _626 = _631;
@@ -2843,28 +2858,28 @@ const _653 = c.tokens[c.idx];
 if (_653 === undefined) { if (c.track) { E(c, "Minus"); E(c, "Plus"); } _651 = F; break L_652; }
 const _654 = _653.id !== undefined ? _653.id : I[_653.type];
 switch (_654) {
-case 76: {
+case 78: {
 
 let _655;
 L_656: {
 const _657 = c.idx;
 let _658;
 const _659 = c.tokens[c.idx];
-if (_659 !== undefined && (_659.id === 76 || (_659.id === undefined && _659.type === "Minus"))) { c.idx++; _658 = _659; }
+if (_659 !== undefined && (_659.id === 78 || (_659.id === undefined && _659.type === "Minus"))) { c.idx++; _658 = _659; }
 else { if (c.track) { E(c, "Minus"); } _658 = F; }
 if (_658 === F) { c.idx = _657; _655 = F; break L_656; }
 _655 = "NEG";
 }
 _651 = _655; break L_652;
 }
-case 75: {
+case 77: {
 
 let _660;
 L_661: {
 const _662 = c.idx;
 let _663;
 const _664 = c.tokens[c.idx];
-if (_664 !== undefined && (_664.id === 75 || (_664.id === undefined && _664.type === "Plus"))) { c.idx++; _663 = _664; }
+if (_664 !== undefined && (_664.id === 77 || (_664.id === undefined && _664.type === "Plus"))) { c.idx++; _663 = _664; }
 else { if (c.track) { E(c, "Plus"); } _663 = F; }
 if (_663 === F) { c.idx = _662; _660 = F; break L_661; }
 _660 = "POS";
@@ -2937,7 +2952,7 @@ const _685 = c.tokens[c.idx];
 if (_685 === undefined) { if (c.track) { E(c, "LParen"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); } _683 = F; break L_684; }
 const _686 = _685.id !== undefined ? _685.id : I[_685.type];
 switch (_686) {
-case 80: {
+case 82: {
 
 const _688 = c.ruleDepth;
 if (c.track) { c.ruleNames[_688] = "SubquerySource"; c.ruleDepth = _688 + 1; }
@@ -2945,7 +2960,7 @@ const _687 = R[37](c);
 if (c.track) c.ruleDepth = _688;
 _683 = _687; break L_684;
 }
-case 60: case 58: case 59: {
+case 62: case 60: case 61: {
 let _689;
 L_690: {
 const _691 = c.idx;
@@ -2953,8 +2968,8 @@ let _692 = 3;
 if (!c.track) {
 const _693 = c.tokens[_691 + 1];
 switch (_693 === undefined ? -1 : (_693.id !== undefined ? _693.id : I[_693.type])) {
-case 80: _692 = 3; break;
-case 85: case 82: _692 = 2; break;
+case 82: _692 = 3; break;
+case 87: case 84: _692 = 2; break;
 default: _692 = 2; break;
 }
 }
@@ -3114,7 +3129,7 @@ L_751: {
 const _752 = c.idx;
 let _753;
 const _754 = c.tokens[c.idx];
-if (_754 !== undefined && (_754.id === 80 || (_754.id === undefined && _754.type === "LParen"))) { c.idx++; _753 = _754; }
+if (_754 !== undefined && (_754.id === 82 || (_754.id === undefined && _754.type === "LParen"))) { c.idx++; _753 = _754; }
 else { if (c.track) { E(c, "LParen"); } _753 = F; }
 if (_753 === F) { c.idx = _752; _750 = F; break L_751; }
 
@@ -3132,7 +3147,7 @@ for (;;) {
 const _757 = c.idx;
 let _762;
 const _763 = c.tokens[c.idx];
-if (_763 !== undefined && (_763.id === 84 || (_763.id === undefined && _763.type === "Comma"))) { c.idx++; _762 = _763; }
+if (_763 !== undefined && (_763.id === 86 || (_763.id === undefined && _763.type === "Comma"))) { c.idx++; _762 = _763; }
 else { if (c.track) { E(c, "Comma"); } _762 = F; }
 if (_762 === F) { c.idx = _757; break; }
 const _758 = c.idx;
@@ -3148,7 +3163,7 @@ _755.push(_764);
 if (_755 === F) { c.idx = _752; _750 = F; break L_751; }
 let _766;
 const _767 = c.tokens[c.idx];
-if (_767 !== undefined && (_767.id === 81 || (_767.id === undefined && _767.type === "RParen"))) { c.idx++; _766 = _767; }
+if (_767 !== undefined && (_767.id === 83 || (_767.id === undefined && _767.type === "RParen"))) { c.idx++; _766 = _767; }
 else { if (c.track) { E(c, "RParen"); } _766 = F; }
 if (_766 === F) { c.idx = _752; _750 = F; break L_751; }
 _750 = _755;
@@ -3284,42 +3299,42 @@ const _804 = c.tokens[c.idx];
 if (_804 === undefined) { if (c.track) { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); } _802 = F; break L_803; }
 const _805 = _804.id !== undefined ? _804.id : I[_804.type];
 switch (_805) {
-case 77: {
+case 79: {
 
 let _806;
 L_807: {
 const _808 = c.idx;
 let _809;
 const _810 = c.tokens[c.idx];
-if (_810 !== undefined && (_810.id === 77 || (_810.id === undefined && _810.type === "Star"))) { c.idx++; _809 = _810; }
+if (_810 !== undefined && (_810.id === 79 || (_810.id === undefined && _810.type === "Star"))) { c.idx++; _809 = _810; }
 else { if (c.track) { E(c, "Star"); } _809 = F; }
 if (_809 === F) { c.idx = _808; _806 = F; break L_807; }
 _806 = "MUL";
 }
 _802 = _806; break L_803;
 }
-case 78: {
+case 80: {
 
 let _811;
 L_812: {
 const _813 = c.idx;
 let _814;
 const _815 = c.tokens[c.idx];
-if (_815 !== undefined && (_815.id === 78 || (_815.id === undefined && _815.type === "Slash"))) { c.idx++; _814 = _815; }
+if (_815 !== undefined && (_815.id === 80 || (_815.id === undefined && _815.type === "Slash"))) { c.idx++; _814 = _815; }
 else { if (c.track) { E(c, "Slash"); } _814 = F; }
 if (_814 === F) { c.idx = _813; _811 = F; break L_812; }
 _811 = "DIV";
 }
 _802 = _811; break L_803;
 }
-case 79: {
+case 81: {
 
 let _816;
 L_817: {
 const _818 = c.idx;
 let _819;
 const _820 = c.tokens[c.idx];
-if (_820 !== undefined && (_820.id === 79 || (_820.id === undefined && _820.type === "Percent"))) { c.idx++; _819 = _820; }
+if (_820 !== undefined && (_820.id === 81 || (_820.id === undefined && _820.type === "Percent"))) { c.idx++; _819 = _820; }
 else { if (c.track) { E(c, "Percent"); } _819 = F; }
 if (_819 === F) { c.idx = _818; _816 = F; break L_817; }
 _816 = "MOD";
@@ -3367,7 +3382,7 @@ const _832 = c.tokens[c.idx];
 if (_832 === undefined) { if (c.track) { E(c, "DoubleColon"); E(c, "LongArrow"); E(c, "Arrow"); } _830 = F; break L_831; }
 const _833 = _832.id !== undefined ? _832.id : I[_832.type];
 switch (_833) {
-case 64: {
+case 66: {
 
 let _834;
 L_836: {
@@ -3377,7 +3392,7 @@ const _837 = {};
 c.bindings = _837;
 let _839;
 const _840 = c.tokens[c.idx];
-if (_840 !== undefined && (_840.id === 64 || (_840.id === undefined && _840.type === "DoubleColon"))) { c.idx++; _839 = _840; }
+if (_840 !== undefined && (_840.id === 66 || (_840.id === undefined && _840.type === "DoubleColon"))) { c.idx++; _839 = _840; }
 else { if (c.track) { E(c, "DoubleColon"); } _839 = F; }
 if (_839 === F) { c.idx = _835; c.bindings = _838; _834 = F; break L_836; }
 
@@ -3394,7 +3409,7 @@ _834 = _844;
 }
 _830 = _834; break L_831;
 }
-case 62: {
+case 64: {
 
 let _845;
 L_847: {
@@ -3404,7 +3419,7 @@ const _848 = {};
 c.bindings = _848;
 let _850;
 const _851 = c.tokens[c.idx];
-if (_851 !== undefined && (_851.id === 62 || (_851.id === undefined && _851.type === "LongArrow"))) { c.idx++; _850 = _851; }
+if (_851 !== undefined && (_851.id === 64 || (_851.id === undefined && _851.type === "LongArrow"))) { c.idx++; _850 = _851; }
 else { if (c.track) { E(c, "LongArrow"); } _850 = F; }
 if (_850 === F) { c.idx = _846; c.bindings = _849; _845 = F; break L_847; }
 
@@ -3421,7 +3436,7 @@ _845 = _855;
 }
 _830 = _845; break L_831;
 }
-case 63: {
+case 65: {
 
 let _856;
 L_858: {
@@ -3431,7 +3446,7 @@ const _859 = {};
 c.bindings = _859;
 let _861;
 const _862 = c.tokens[c.idx];
-if (_862 !== undefined && (_862.id === 63 || (_862.id === undefined && _862.type === "Arrow"))) { c.idx++; _861 = _862; }
+if (_862 !== undefined && (_862.id === 65 || (_862.id === undefined && _862.type === "Arrow"))) { c.idx++; _861 = _862; }
 else { if (c.track) { E(c, "Arrow"); } _861 = F; }
 if (_861 === F) { c.idx = _857; c.bindings = _860; _856 = F; break L_858; }
 
@@ -3469,7 +3484,7 @@ L_870: {
 const _871 = c.idx;
 let _872;
 const _873 = c.tokens[c.idx];
-if (_873 !== undefined && (_873.id === 80 || (_873.id === undefined && _873.type === "LParen"))) { c.idx++; _872 = _873; }
+if (_873 !== undefined && (_873.id === 82 || (_873.id === undefined && _873.type === "LParen"))) { c.idx++; _872 = _873; }
 else { if (c.track) { E(c, "LParen"); } _872 = F; }
 if (_872 === F) { c.idx = _871; _869 = F; break L_870; }
 
@@ -3480,7 +3495,7 @@ if (c.track) c.ruleDepth = _875;
 if (_874 === F) { c.idx = _871; _869 = F; break L_870; }
 let _876;
 const _877 = c.tokens[c.idx];
-if (_877 !== undefined && (_877.id === 81 || (_877.id === undefined && _877.type === "RParen"))) { c.idx++; _876 = _877; }
+if (_877 !== undefined && (_877.id === 83 || (_877.id === undefined && _877.type === "RParen"))) { c.idx++; _876 = _877; }
 else { if (c.track) { E(c, "RParen"); } _876 = F; }
 if (_876 === F) { c.idx = _871; _869 = F; break L_870; }
 _869 = _874;
@@ -3508,7 +3523,7 @@ const _883 = _884;
 if (_883 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
 let _886;
 const _887 = c.tokens[c.idx];
-if (_887 !== undefined && (_887.id === 80 || (_887.id === undefined && _887.type === "LParen"))) { c.idx++; _886 = _887; }
+if (_887 !== undefined && (_887.id === 82 || (_887.id === undefined && _887.type === "LParen"))) { c.idx++; _886 = _887; }
 else { if (c.track) { E(c, "LParen"); } _886 = F; }
 if (_886 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
 
@@ -3526,7 +3541,7 @@ for (;;) {
 const _891 = c.idx;
 let _896;
 const _897 = c.tokens[c.idx];
-if (_897 !== undefined && (_897.id === 84 || (_897.id === undefined && _897.type === "Comma"))) { c.idx++; _896 = _897; }
+if (_897 !== undefined && (_897.id === 86 || (_897.id === undefined && _897.type === "Comma"))) { c.idx++; _896 = _897; }
 else { if (c.track) { E(c, "Comma"); } _896 = F; }
 if (_896 === F) { c.idx = _891; break; }
 const _892 = c.idx;
@@ -3544,7 +3559,7 @@ const _888 = _889;
 if (_888 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
 let _900;
 const _901 = c.tokens[c.idx];
-if (_901 !== undefined && (_901.id === 81 || (_901.id === undefined && _901.type === "RParen"))) { c.idx++; _900 = _901; }
+if (_901 !== undefined && (_901.id === 83 || (_901.id === undefined && _901.type === "RParen"))) { c.idx++; _900 = _901; }
 else { if (c.track) { E(c, "RParen"); } _900 = F; }
 if (_900 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
 const _902 = H[40](_881, c);
@@ -3742,10 +3757,10 @@ R[43] = (c) => {
 let _967;
 L_968: {
 const _969 = c.tokens[c.idx];
-if (_969 === undefined) { if (c.track) { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _967 = F; break L_968; }
+if (_969 === undefined) { if (c.track) { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _967 = F; break L_968; }
 const _970 = _969.id !== undefined ? _969.id : I[_969.type];
 switch (_970) {
-case 80: {
+case 82: {
 
 const _972 = c.ruleDepth;
 if (c.track) { c.ruleNames[_972] = "ParenExpr"; c.ruleDepth = _972 + 1; }
@@ -3785,116 +3800,124 @@ const _979 = R[51](c);
 if (c.track) c.ruleDepth = _980;
 _967 = _979; break L_968;
 }
-case 60: case 58: case 59: {
-let _981;
-L_982: {
-const _983 = c.idx;
-let _984 = 3;
-if (!c.track) {
-const _985 = c.tokens[_983 + 1];
-switch (_985 === undefined ? -1 : (_985.id !== undefined ? _985.id : I[_985.type])) {
-case 80: _984 = 3; break;
-case 85: case 82: _984 = 2; break;
-default: _984 = 2; break;
-}
-}
-if (_984 & 1) {
+case 57: {
 
-const _987 = c.ruleDepth;
-if (c.track) { c.ruleNames[_987] = "FunctionCall"; c.ruleDepth = _987 + 1; }
-const _986 = R[52](c);
-if (c.track) c.ruleDepth = _987;
-if (_986 !== F) { _981 = _986; break L_982; }
-c.idx = _983;
+const _982 = c.ruleDepth;
+if (c.track) { c.ruleNames[_982] = "PivotExpr"; c.ruleDepth = _982 + 1; }
+const _981 = R[52](c);
+if (c.track) c.ruleDepth = _982;
+_967 = _981; break L_968;
 }
-if (_984 & 2) {
+case 62: case 60: case 61: {
+let _983;
+L_984: {
+const _985 = c.idx;
+let _986 = 3;
+if (!c.track) {
+const _987 = c.tokens[_985 + 1];
+switch (_987 === undefined ? -1 : (_987.id !== undefined ? _987.id : I[_987.type])) {
+case 82: _986 = 3; break;
+case 87: case 84: _986 = 2; break;
+default: _986 = 2; break;
+}
+}
+if (_986 & 1) {
 
 const _989 = c.ruleDepth;
-if (c.track) { c.ruleNames[_989] = "ColumnRef"; c.ruleDepth = _989 + 1; }
+if (c.track) { c.ruleNames[_989] = "FunctionCall"; c.ruleDepth = _989 + 1; }
 const _988 = R[53](c);
 if (c.track) c.ruleDepth = _989;
-if (_988 !== F) { _981 = _988; break L_982; }
-c.idx = _983;
+if (_988 !== F) { _983 = _988; break L_984; }
+c.idx = _985;
 }
-_981 = F;
+if (_986 & 2) {
+
+const _991 = c.ruleDepth;
+if (c.track) { c.ruleNames[_991] = "ColumnRef"; c.ruleDepth = _991 + 1; }
+const _990 = R[54](c);
+if (c.track) c.ruleDepth = _991;
+if (_990 !== F) { _983 = _990; break L_984; }
+c.idx = _985;
 }
-_967 = _981; break L_968;
+_983 = F;
+}
+_967 = _983; break L_968;
 }
 case 19: case 20: {
 
-const _991 = c.ruleDepth;
-if (c.track) { c.ruleNames[_991] = "FunctionCall"; c.ruleDepth = _991 + 1; }
-const _990 = R[52](c);
-if (c.track) c.ruleDepth = _991;
-_967 = _990; break L_968;
-}
-case 56: {
-
 const _993 = c.ruleDepth;
-if (c.track) { c.ruleNames[_993] = "NumberLiteral"; c.ruleDepth = _993 + 1; }
-const _992 = R[22](c);
+if (c.track) { c.ruleNames[_993] = "FunctionCall"; c.ruleDepth = _993 + 1; }
+const _992 = R[53](c);
 if (c.track) c.ruleDepth = _993;
 _967 = _992; break L_968;
 }
-case 57: {
+case 58: {
 
 const _995 = c.ruleDepth;
-if (c.track) { c.ruleNames[_995] = "StringLiteral"; c.ruleDepth = _995 + 1; }
-const _994 = R[23](c);
+if (c.track) { c.ruleNames[_995] = "NumberLiteral"; c.ruleDepth = _995 + 1; }
+const _994 = R[22](c);
 if (c.track) c.ruleDepth = _995;
 _967 = _994; break L_968;
 }
+case 59: {
+
+const _997 = c.ruleDepth;
+if (c.track) { c.ruleNames[_997] = "StringLiteral"; c.ruleDepth = _997 + 1; }
+const _996 = R[23](c);
+if (c.track) c.ruleDepth = _997;
+_967 = _996; break L_968;
+}
 case 39: {
 
-let _996;
-L_997: {
-const _998 = c.idx;
-let _999;
-const _1000 = c.tokens[c.idx];
-if (_1000 !== undefined && (_1000.id === 39 || (_1000.id === undefined && _1000.type === "True"))) { c.idx++; _999 = _1000; }
-else { if (c.track) { E(c, "True"); } _999 = F; }
-if (_999 === F) { c.idx = _998; _996 = F; break L_997; }
-_996 = true;
+let _998;
+L_999: {
+const _1000 = c.idx;
+let _1001;
+const _1002 = c.tokens[c.idx];
+if (_1002 !== undefined && (_1002.id === 39 || (_1002.id === undefined && _1002.type === "True"))) { c.idx++; _1001 = _1002; }
+else { if (c.track) { E(c, "True"); } _1001 = F; }
+if (_1001 === F) { c.idx = _1000; _998 = F; break L_999; }
+_998 = true;
 }
-_967 = _996; break L_968;
+_967 = _998; break L_968;
 }
 case 40: {
 
-let _1001;
-L_1002: {
-const _1003 = c.idx;
-let _1004;
-const _1005 = c.tokens[c.idx];
-if (_1005 !== undefined && (_1005.id === 40 || (_1005.id === undefined && _1005.type === "False"))) { c.idx++; _1004 = _1005; }
-else { if (c.track) { E(c, "False"); } _1004 = F; }
-if (_1004 === F) { c.idx = _1003; _1001 = F; break L_1002; }
-_1001 = false;
+let _1003;
+L_1004: {
+const _1005 = c.idx;
+let _1006;
+const _1007 = c.tokens[c.idx];
+if (_1007 !== undefined && (_1007.id === 40 || (_1007.id === undefined && _1007.type === "False"))) { c.idx++; _1006 = _1007; }
+else { if (c.track) { E(c, "False"); } _1006 = F; }
+if (_1006 === F) { c.idx = _1005; _1003 = F; break L_1004; }
+_1003 = false;
 }
-_967 = _1001; break L_968;
+_967 = _1003; break L_968;
 }
 case 14: {
 
-let _1006;
-L_1007: {
-const _1008 = c.idx;
-let _1009;
-const _1010 = c.tokens[c.idx];
-if (_1010 !== undefined && (_1010.id === 14 || (_1010.id === undefined && _1010.type === "Null"))) { c.idx++; _1009 = _1010; }
-else { if (c.track) { E(c, "Null"); } _1009 = F; }
-if (_1009 === F) { c.idx = _1008; _1006 = F; break L_1007; }
-_1006 = null;
+let _1008;
+L_1009: {
+const _1010 = c.idx;
+let _1011;
+const _1012 = c.tokens[c.idx];
+if (_1012 !== undefined && (_1012.id === 14 || (_1012.id === undefined && _1012.type === "Null"))) { c.idx++; _1011 = _1012; }
+else { if (c.track) { E(c, "Null"); } _1011 = F; }
+if (_1011 === F) { c.idx = _1010; _1008 = F; break L_1009; }
+_1008 = null;
 }
-_967 = _1006; break L_968;
+_967 = _1008; break L_968;
 }
-case 87: case 61: case 65: {
+case 89: case 63: case 67: {
 
-const _1012 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1012] = "Param"; c.ruleDepth = _1012 + 1; }
-const _1011 = R[54](c);
-if (c.track) c.ruleDepth = _1012;
-_967 = _1011; break L_968;
+const _1014 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1014] = "Param"; c.ruleDepth = _1014 + 1; }
+const _1013 = R[55](c);
+if (c.track) c.ruleDepth = _1014;
+_967 = _1013; break L_968;
 }
-default: { if (c.track) { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _967 = F; break L_968; }
+default: { if (c.track) { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _967 = F; break L_968; }
 }
 }
 return _967;
@@ -3903,1482 +3926,1580 @@ return _967;
 // TypeName
 R[44] = (c) => {
 
-let _1014;
-L_1015: {
-const _1016 = c.idx;
+let _1016;
+L_1017: {
+const _1018 = c.idx;
 
-const _1018 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1018] = "Ident"; c.ruleDepth = _1018 + 1; }
-const _1017 = R[15](c);
-if (c.track) c.ruleDepth = _1018;
-if (_1017 === F) { c.idx = _1016; _1014 = F; break L_1015; }
-let _1019;
-const _1020 = c.idx;
+const _1020 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1020] = "Ident"; c.ruleDepth = _1020 + 1; }
+const _1019 = R[15](c);
+if (c.track) c.ruleDepth = _1020;
+if (_1019 === F) { c.idx = _1018; _1016 = F; break L_1017; }
+let _1021;
+const _1022 = c.idx;
 {
 
-let _1021;
-L_1022: {
-const _1023 = c.idx;
-let _1024;
-const _1025 = c.tokens[c.idx];
-if (_1025 !== undefined && (_1025.id === 80 || (_1025.id === undefined && _1025.type === "LParen"))) { c.idx++; _1024 = _1025; }
-else { if (c.track) { E(c, "LParen"); } _1024 = F; }
-if (_1024 === F) { c.idx = _1023; _1021 = F; break L_1022; }
+let _1023;
+L_1024: {
+const _1025 = c.idx;
+let _1026;
+const _1027 = c.tokens[c.idx];
+if (_1027 !== undefined && (_1027.id === 82 || (_1027.id === undefined && _1027.type === "LParen"))) { c.idx++; _1026 = _1027; }
+else { if (c.track) { E(c, "LParen"); } _1026 = F; }
+if (_1026 === F) { c.idx = _1025; _1023 = F; break L_1024; }
 
-let _1026 = [];
-L_1030: {
-const _1027 = c.idx;
-let _1031;
-const _1032 = c.tokens[c.idx];
-if (_1032 !== undefined && (_1032.id === 56 || (_1032.id === undefined && _1032.type === "Number"))) { c.idx++; _1031 = _1032; }
-else { if (c.track) { E(c, "Number"); } _1031 = F; }
-if (_1031 === F) { c.idx = _1027; _1026 = F; break L_1030; }
-_1026.push(_1031);
-for (;;) {
-const _1028 = c.idx;
+let _1028 = [];
+L_1032: {
+const _1029 = c.idx;
 let _1033;
 const _1034 = c.tokens[c.idx];
-if (_1034 !== undefined && (_1034.id === 84 || (_1034.id === undefined && _1034.type === "Comma"))) { c.idx++; _1033 = _1034; }
-else { if (c.track) { E(c, "Comma"); } _1033 = F; }
-if (_1033 === F) { c.idx = _1028; break; }
-const _1029 = c.idx;
+if (_1034 !== undefined && (_1034.id === 58 || (_1034.id === undefined && _1034.type === "Number"))) { c.idx++; _1033 = _1034; }
+else { if (c.track) { E(c, "Number"); } _1033 = F; }
+if (_1033 === F) { c.idx = _1029; _1028 = F; break L_1032; }
+_1028.push(_1033);
+for (;;) {
+const _1030 = c.idx;
 let _1035;
 const _1036 = c.tokens[c.idx];
-if (_1036 !== undefined && (_1036.id === 56 || (_1036.id === undefined && _1036.type === "Number"))) { c.idx++; _1035 = _1036; }
-else { if (c.track) { E(c, "Number"); } _1035 = F; }
-if (_1035 === F) { c.idx = _1028; break; }
-_1026.push(_1035);
-}
-}
-if (_1026 === F) { c.idx = _1023; _1021 = F; break L_1022; }
+if (_1036 !== undefined && (_1036.id === 86 || (_1036.id === undefined && _1036.type === "Comma"))) { c.idx++; _1035 = _1036; }
+else { if (c.track) { E(c, "Comma"); } _1035 = F; }
+if (_1035 === F) { c.idx = _1030; break; }
+const _1031 = c.idx;
 let _1037;
 const _1038 = c.tokens[c.idx];
-if (_1038 !== undefined && (_1038.id === 81 || (_1038.id === undefined && _1038.type === "RParen"))) { c.idx++; _1037 = _1038; }
-else { if (c.track) { E(c, "RParen"); } _1037 = F; }
-if (_1037 === F) { c.idx = _1023; _1021 = F; break L_1022; }
-_1021 = _1026;
+if (_1038 !== undefined && (_1038.id === 58 || (_1038.id === undefined && _1038.type === "Number"))) { c.idx++; _1037 = _1038; }
+else { if (c.track) { E(c, "Number"); } _1037 = F; }
+if (_1037 === F) { c.idx = _1030; break; }
+_1028.push(_1037);
 }
-if (_1021 === F) { c.idx = _1020; _1019 = null; } else _1019 = _1021;
 }
-if (_1019 === F) { c.idx = _1016; _1014 = F; break L_1015; }
-_1014 = _1017;
+if (_1028 === F) { c.idx = _1025; _1023 = F; break L_1024; }
+let _1039;
+const _1040 = c.tokens[c.idx];
+if (_1040 !== undefined && (_1040.id === 83 || (_1040.id === undefined && _1040.type === "RParen"))) { c.idx++; _1039 = _1040; }
+else { if (c.track) { E(c, "RParen"); } _1039 = F; }
+if (_1039 === F) { c.idx = _1025; _1023 = F; break L_1024; }
+_1023 = _1028;
 }
-return _1014;
+if (_1023 === F) { c.idx = _1022; _1021 = null; } else _1021 = _1023;
+}
+if (_1021 === F) { c.idx = _1018; _1016 = F; break L_1017; }
+_1016 = _1019;
+}
+return _1016;
 }
 
 // AndExpr$tower
 R[45] = (c) => {
 
-let _1039;
-L_1040: {
+let _1041;
+L_1042: {
 
-const _1045 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1045] = "NotExpr"; c.ruleDepth = _1045 + 1; }
-const _1044 = R[42](c);
-if (c.track) c.ruleDepth = _1045;
-if (_1044 === F) { _1039 = F; break L_1040; }
-let _1041 = _1044;
-let _1042 = null;
+const _1047 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1047] = "NotExpr"; c.ruleDepth = _1047 + 1; }
+const _1046 = R[42](c);
+if (c.track) c.ruleDepth = _1047;
+if (_1046 === F) { _1041 = F; break L_1042; }
+let _1043 = _1046;
+let _1044 = null;
 for (;;) {
-const _1043 = c.idx;
-let _1046;
-const _1047 = c.tokens[c.idx];
-if (_1047 !== undefined && (_1047.id === 9 || (_1047.id === undefined && _1047.type === "And"))) { c.idx++; _1046 = _1047; }
-else { if (c.track) { E(c, "And"); } _1046 = F; }
-if (_1046 === F) { c.idx = _1043; break; }
+const _1045 = c.idx;
+let _1048;
+const _1049 = c.tokens[c.idx];
+if (_1049 !== undefined && (_1049.id === 9 || (_1049.id === undefined && _1049.type === "And"))) { c.idx++; _1048 = _1049; }
+else { if (c.track) { E(c, "And"); } _1048 = F; }
+if (_1048 === F) { c.idx = _1045; break; }
 
-const _1049 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1049] = "NotExpr"; c.ruleDepth = _1049 + 1; }
-const _1048 = R[42](c);
-if (c.track) c.ruleDepth = _1049;
-if (_1048 === F) { c.idx = _1043; break; }
-if (_1042 === null) _1042 = { left: null, op: null, right: null };
-_1042.left = _1041; _1042.op = _1046; _1042.right = _1048;
-_1041 = H[43](_1042, c);
+const _1051 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1051] = "NotExpr"; c.ruleDepth = _1051 + 1; }
+const _1050 = R[42](c);
+if (c.track) c.ruleDepth = _1051;
+if (_1050 === F) { c.idx = _1045; break; }
+if (_1044 === null) _1044 = { left: null, op: null, right: null };
+_1044.left = _1043; _1044.op = _1048; _1044.right = _1050;
+_1043 = H[43](_1044, c);
 }
-_1039 = _1041;
+_1041 = _1043;
 }
-return _1039;
+return _1041;
 }
 
 // Predicate
 R[46] = (c) => {
 
-let _1050;
-L_1051: {
-
-const _1056 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1056] = "ConcatExpr"; c.ruleDepth = _1056 + 1; }
-const _1055 = R[55](c);
-if (c.track) c.ruleDepth = _1056;
-if (_1055 === F) { _1050 = F; break L_1051; }
-let _1052 = _1055;
-let _1053 = null;
-for (;;) {
-const _1054 = c.idx;
+let _1052;
+L_1053: {
 
 const _1058 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1058] = "PredicateTail"; c.ruleDepth = _1058 + 1; }
+if (c.track) { c.ruleNames[_1058] = "ConcatExpr"; c.ruleDepth = _1058 + 1; }
 const _1057 = R[56](c);
 if (c.track) c.ruleDepth = _1058;
-if (_1057 === F) { c.idx = _1054; break; }
-if (_1053 === null) _1053 = { left: null, suffix: null };
-_1053.left = _1052; _1053.suffix = _1057;
-_1052 = H[44](_1053, c);
+if (_1057 === F) { _1052 = F; break L_1053; }
+let _1054 = _1057;
+let _1055 = null;
+for (;;) {
+const _1056 = c.idx;
+
+const _1060 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1060] = "PredicateTail"; c.ruleDepth = _1060 + 1; }
+const _1059 = R[57](c);
+if (c.track) c.ruleDepth = _1060;
+if (_1059 === F) { c.idx = _1056; break; }
+if (_1055 === null) _1055 = { left: null, suffix: null };
+_1055.left = _1054; _1055.suffix = _1059;
+_1054 = H[44](_1055, c);
 }
-_1050 = _1052;
+_1052 = _1054;
 }
-return _1050;
+return _1052;
 }
 
 // ParenExpr
 R[47] = (c) => {
 
-let _1059;
-L_1060: {
-const _1061 = c.idx;
-let _1062;
-const _1063 = c.tokens[c.idx];
-if (_1063 !== undefined && (_1063.id === 80 || (_1063.id === undefined && _1063.type === "LParen"))) { c.idx++; _1062 = _1063; }
-else { if (c.track) { E(c, "LParen"); } _1062 = F; }
-if (_1062 === F) { c.idx = _1061; _1059 = F; break L_1060; }
-
+let _1061;
+L_1062: {
+const _1063 = c.idx;
 let _1064;
-L_1065: {
-const _1066 = c.tokens[c.idx];
-if (_1066 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1064 = F; break L_1065; }
-const _1067 = _1066.id !== undefined ? _1066.id : I[_1066.type];
-switch (_1067) {
+const _1065 = c.tokens[c.idx];
+if (_1065 !== undefined && (_1065.id === 82 || (_1065.id === undefined && _1065.type === "LParen"))) { c.idx++; _1064 = _1065; }
+else { if (c.track) { E(c, "LParen"); } _1064 = F; }
+if (_1064 === F) { c.idx = _1063; _1061 = F; break L_1062; }
+
+let _1066;
+L_1067: {
+const _1068 = c.tokens[c.idx];
+if (_1068 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1066 = F; break L_1067; }
+const _1069 = _1068.id !== undefined ? _1068.id : I[_1068.type];
+switch (_1069) {
 case 46: case 3: case 38: {
 
-const _1071 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1071] = "Query"; c.ruleDepth = _1071 + 1; }
-const _1070 = R[2](c);
-if (c.track) c.ruleDepth = _1071;
-const _1069 = _1070 === F ? F : H[45](_1070, c);
-_1064 = _1069; break L_1065;
+const _1073 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1073] = "Query"; c.ruleDepth = _1073 + 1; }
+const _1072 = R[2](c);
+if (c.track) c.ruleDepth = _1073;
+const _1071 = _1072 === F ? F : H[45](_1072, c);
+_1066 = _1071; break L_1067;
 }
-case 80: {
-let _1072;
-L_1073: {
-const _1074 = c.idx;
-let _1075 = 3;
+case 82: {
+let _1074;
+L_1075: {
+const _1076 = c.idx;
+let _1077 = 3;
 if (!c.track) {
-const _1076 = c.tokens[_1074 + 1];
-switch (_1076 === undefined ? -1 : (_1076.id !== undefined ? _1076.id : I[_1076.type])) {
-case 46: case 3: case 80: case 38: _1075 = 3; break;
-case 11: case 76: case 75: case 39: case 40: case 14: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: case 50: case 41: _1075 = 2; break;
-default: _1075 = 0; break;
+const _1078 = c.tokens[_1076 + 1];
+switch (_1078 === undefined ? -1 : (_1078.id !== undefined ? _1078.id : I[_1078.type])) {
+case 46: case 3: case 82: case 38: _1077 = 3; break;
+case 11: case 78: case 77: case 39: case 40: case 14: case 51: case 52: case 57: case 62: case 60: case 61: case 19: case 20: case 58: case 59: case 89: case 63: case 67: case 50: case 41: _1077 = 2; break;
+default: _1077 = 0; break;
 }
 }
-if (_1075 & 1) {
-
-const _1080 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1080] = "Query"; c.ruleDepth = _1080 + 1; }
-const _1079 = R[2](c);
-if (c.track) c.ruleDepth = _1080;
-const _1078 = _1079 === F ? F : H[46](_1079, c);
-if (_1078 !== F) { _1072 = _1078; break L_1073; }
-c.idx = _1074;
-}
-if (_1075 & 2) {
+if (_1077 & 1) {
 
 const _1082 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1082] = "Expression"; c.ruleDepth = _1082 + 1; }
-const _1081 = R[19](c);
+if (c.track) { c.ruleNames[_1082] = "Query"; c.ruleDepth = _1082 + 1; }
+const _1081 = R[2](c);
 if (c.track) c.ruleDepth = _1082;
-if (_1081 !== F) { _1072 = _1081; break L_1073; }
-c.idx = _1074;
+const _1080 = _1081 === F ? F : H[46](_1081, c);
+if (_1080 !== F) { _1074 = _1080; break L_1075; }
+c.idx = _1076;
 }
-_1072 = F;
-}
-_1064 = _1072; break L_1065;
-}
-case 11: case 76: case 75: case 39: case 40: case 14: case 50: case 41: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
+if (_1077 & 2) {
 
 const _1084 = c.ruleDepth;
 if (c.track) { c.ruleNames[_1084] = "Expression"; c.ruleDepth = _1084 + 1; }
 const _1083 = R[19](c);
 if (c.track) c.ruleDepth = _1084;
-_1064 = _1083; break L_1065;
+if (_1083 !== F) { _1074 = _1083; break L_1075; }
+c.idx = _1076;
 }
-default: { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1064 = F; break L_1065; }
+_1074 = F;
+}
+_1066 = _1074; break L_1067;
+}
+case 11: case 78: case 77: case 39: case 40: case 14: case 50: case 41: case 51: case 52: case 57: case 62: case 60: case 61: case 19: case 20: case 58: case 59: case 89: case 63: case 67: {
+
+const _1086 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1086] = "Expression"; c.ruleDepth = _1086 + 1; }
+const _1085 = R[19](c);
+if (c.track) c.ruleDepth = _1086;
+_1066 = _1085; break L_1067;
+}
+default: { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1066 = F; break L_1067; }
 }
 }
-if (_1064 === F) { c.idx = _1061; _1059 = F; break L_1060; }
-let _1085;
-const _1086 = c.tokens[c.idx];
-if (_1086 !== undefined && (_1086.id === 81 || (_1086.id === undefined && _1086.type === "RParen"))) { c.idx++; _1085 = _1086; }
-else { if (c.track) { E(c, "RParen"); } _1085 = F; }
-if (_1085 === F) { c.idx = _1061; _1059 = F; break L_1060; }
-_1059 = _1064;
+if (_1066 === F) { c.idx = _1063; _1061 = F; break L_1062; }
+let _1087;
+const _1088 = c.tokens[c.idx];
+if (_1088 !== undefined && (_1088.id === 83 || (_1088.id === undefined && _1088.type === "RParen"))) { c.idx++; _1087 = _1088; }
+else { if (c.track) { E(c, "RParen"); } _1087 = F; }
+if (_1087 === F) { c.idx = _1063; _1061 = F; break L_1062; }
+_1061 = _1066;
 }
-return _1059;
+return _1061;
 }
 
 // ExistsExpr
 R[48] = (c) => {
 
-let _1087;
-L_1089: {
-const _1088 = c.idx;
-const _1091 = c.bindings;
-const _1090 = {};
-c.bindings = _1090;
-let _1092;
-const _1093 = c.tokens[c.idx];
-if (_1093 !== undefined && (_1093.id === 50 || (_1093.id === undefined && _1093.type === "Exists"))) { c.idx++; _1092 = _1093; }
-else { if (c.track) { E(c, "Exists"); } _1092 = F; }
-if (_1092 === F) { c.idx = _1088; c.bindings = _1091; _1087 = F; break L_1089; }
+let _1089;
+L_1091: {
+const _1090 = c.idx;
+const _1093 = c.bindings;
+const _1092 = {};
+c.bindings = _1092;
+let _1094;
+const _1095 = c.tokens[c.idx];
+if (_1095 !== undefined && (_1095.id === 50 || (_1095.id === undefined && _1095.type === "Exists"))) { c.idx++; _1094 = _1095; }
+else { if (c.track) { E(c, "Exists"); } _1094 = F; }
+if (_1094 === F) { c.idx = _1090; c.bindings = _1093; _1089 = F; break L_1091; }
 
-let _1095;
-L_1096: {
-const _1097 = c.idx;
-let _1098;
-const _1099 = c.tokens[c.idx];
-if (_1099 !== undefined && (_1099.id === 80 || (_1099.id === undefined && _1099.type === "LParen"))) { c.idx++; _1098 = _1099; }
-else { if (c.track) { E(c, "LParen"); } _1098 = F; }
-if (_1098 === F) { c.idx = _1097; _1095 = F; break L_1096; }
+let _1097;
+L_1098: {
+const _1099 = c.idx;
+let _1100;
+const _1101 = c.tokens[c.idx];
+if (_1101 !== undefined && (_1101.id === 82 || (_1101.id === undefined && _1101.type === "LParen"))) { c.idx++; _1100 = _1101; }
+else { if (c.track) { E(c, "LParen"); } _1100 = F; }
+if (_1100 === F) { c.idx = _1099; _1097 = F; break L_1098; }
 
-const _1101 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1101] = "Query"; c.ruleDepth = _1101 + 1; }
-const _1100 = R[2](c);
-if (c.track) c.ruleDepth = _1101;
-if (_1100 === F) { c.idx = _1097; _1095 = F; break L_1096; }
-let _1102;
-const _1103 = c.tokens[c.idx];
-if (_1103 !== undefined && (_1103.id === 81 || (_1103.id === undefined && _1103.type === "RParen"))) { c.idx++; _1102 = _1103; }
-else { if (c.track) { E(c, "RParen"); } _1102 = F; }
-if (_1102 === F) { c.idx = _1097; _1095 = F; break L_1096; }
-_1095 = _1100;
+const _1103 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1103] = "Query"; c.ruleDepth = _1103 + 1; }
+const _1102 = R[2](c);
+if (c.track) c.ruleDepth = _1103;
+if (_1102 === F) { c.idx = _1099; _1097 = F; break L_1098; }
+let _1104;
+const _1105 = c.tokens[c.idx];
+if (_1105 !== undefined && (_1105.id === 83 || (_1105.id === undefined && _1105.type === "RParen"))) { c.idx++; _1104 = _1105; }
+else { if (c.track) { E(c, "RParen"); } _1104 = F; }
+if (_1104 === F) { c.idx = _1099; _1097 = F; break L_1098; }
+_1097 = _1102;
 }
-if (_1095 !== F) _1090["q"] = _1095;
-const _1094 = _1095;
-if (_1094 === F) { c.idx = _1088; c.bindings = _1091; _1087 = F; break L_1089; }
-const _1104 = H[47](_1090, c);
-c.bindings = _1091;
-_1087 = _1104;
+if (_1097 !== F) _1092["q"] = _1097;
+const _1096 = _1097;
+if (_1096 === F) { c.idx = _1090; c.bindings = _1093; _1089 = F; break L_1091; }
+const _1106 = H[47](_1092, c);
+c.bindings = _1093;
+_1089 = _1106;
 }
-return _1087;
+return _1089;
 }
 
 // CaseExpr
 R[49] = (c) => {
 
-let _1105;
-L_1107: {
-const _1106 = c.idx;
-const _1109 = c.bindings;
-const _1108 = {};
-c.bindings = _1108;
-let _1110;
-const _1111 = c.tokens[c.idx];
-if (_1111 !== undefined && (_1111.id === 41 || (_1111.id === undefined && _1111.type === "Case"))) { c.idx++; _1110 = _1111; }
-else { if (c.track) { E(c, "Case"); } _1110 = F; }
-if (_1110 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
-let _1113;
-const _1114 = c.idx;
+let _1107;
+L_1109: {
+const _1108 = c.idx;
+const _1111 = c.bindings;
+const _1110 = {};
+c.bindings = _1110;
+let _1112;
+const _1113 = c.tokens[c.idx];
+if (_1113 !== undefined && (_1113.id === 41 || (_1113.id === undefined && _1113.type === "Case"))) { c.idx++; _1112 = _1113; }
+else { if (c.track) { E(c, "Case"); } _1112 = F; }
+if (_1112 === F) { c.idx = _1108; c.bindings = _1111; _1107 = F; break L_1109; }
+let _1115;
+const _1116 = c.idx;
 {
 
-const _1116 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1116] = "Expression"; c.ruleDepth = _1116 + 1; }
-const _1115 = R[19](c);
-if (c.track) c.ruleDepth = _1116;
-if (_1115 === F) { c.idx = _1114; _1113 = null; } else _1113 = _1115;
+const _1118 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1118] = "Expression"; c.ruleDepth = _1118 + 1; }
+const _1117 = R[19](c);
+if (c.track) c.ruleDepth = _1118;
+if (_1117 === F) { c.idx = _1116; _1115 = null; } else _1115 = _1117;
 }
-if (_1113 !== F) _1108["subject"] = _1113;
-const _1112 = _1113;
-if (_1112 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
+if (_1115 !== F) _1110["subject"] = _1115;
+const _1114 = _1115;
+if (_1114 === F) { c.idx = _1108; c.bindings = _1111; _1107 = F; break L_1109; }
 
-let _1118 = [];
-L_1120: {
-const _1121 = c.idx;
-
-const _1123 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1123] = "WhenClause"; c.ruleDepth = _1123 + 1; }
-const _1122 = R[57](c);
-if (c.track) c.ruleDepth = _1123;
-if (_1122 === F) { c.idx = _1121; _1118 = F; break L_1120; }
-if (c.idx === _1121) P("many1", _1121);
-_1118.push(_1122);
-for (;;) {
-const _1119 = c.idx;
+let _1120 = [];
+L_1122: {
+const _1123 = c.idx;
 
 const _1125 = c.ruleDepth;
 if (c.track) { c.ruleNames[_1125] = "WhenClause"; c.ruleDepth = _1125 + 1; }
-const _1124 = R[57](c);
+const _1124 = R[58](c);
 if (c.track) c.ruleDepth = _1125;
-if (_1124 === F) { c.idx = _1119; break; }
-if (c.idx === _1119) P("many1", _1119);
-_1118.push(_1124);
+if (_1124 === F) { c.idx = _1123; _1120 = F; break L_1122; }
+if (c.idx === _1123) P("many1", _1123);
+_1120.push(_1124);
+for (;;) {
+const _1121 = c.idx;
+
+const _1127 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1127] = "WhenClause"; c.ruleDepth = _1127 + 1; }
+const _1126 = R[58](c);
+if (c.track) c.ruleDepth = _1127;
+if (_1126 === F) { c.idx = _1121; break; }
+if (c.idx === _1121) P("many1", _1121);
+_1120.push(_1126);
 }
 }
-if (_1118 !== F) _1108["whens"] = _1118;
-const _1117 = _1118;
-if (_1117 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
-let _1127;
-const _1128 = c.idx;
+if (_1120 !== F) _1110["whens"] = _1120;
+const _1119 = _1120;
+if (_1119 === F) { c.idx = _1108; c.bindings = _1111; _1107 = F; break L_1109; }
+let _1129;
+const _1130 = c.idx;
 {
 
-let _1129;
-L_1130: {
-const _1131 = c.idx;
-let _1132;
-const _1133 = c.tokens[c.idx];
-if (_1133 !== undefined && (_1133.id === 44 || (_1133.id === undefined && _1133.type === "Else"))) { c.idx++; _1132 = _1133; }
-else { if (c.track) { E(c, "Else"); } _1132 = F; }
-if (_1132 === F) { c.idx = _1131; _1129 = F; break L_1130; }
+let _1131;
+L_1132: {
+const _1133 = c.idx;
+let _1134;
+const _1135 = c.tokens[c.idx];
+if (_1135 !== undefined && (_1135.id === 44 || (_1135.id === undefined && _1135.type === "Else"))) { c.idx++; _1134 = _1135; }
+else { if (c.track) { E(c, "Else"); } _1134 = F; }
+if (_1134 === F) { c.idx = _1133; _1131 = F; break L_1132; }
 
-const _1135 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1135] = "Expression"; c.ruleDepth = _1135 + 1; }
-const _1134 = R[19](c);
-if (c.track) c.ruleDepth = _1135;
-if (_1134 === F) { c.idx = _1131; _1129 = F; break L_1130; }
-_1129 = _1134;
+const _1137 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1137] = "Expression"; c.ruleDepth = _1137 + 1; }
+const _1136 = R[19](c);
+if (c.track) c.ruleDepth = _1137;
+if (_1136 === F) { c.idx = _1133; _1131 = F; break L_1132; }
+_1131 = _1136;
 }
-if (_1129 === F) { c.idx = _1128; _1127 = null; } else _1127 = _1129;
+if (_1131 === F) { c.idx = _1130; _1129 = null; } else _1129 = _1131;
 }
-if (_1127 !== F) _1108["otherwise"] = _1127;
-const _1126 = _1127;
-if (_1126 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
-let _1136;
-const _1137 = c.tokens[c.idx];
-if (_1137 !== undefined && (_1137.id === 45 || (_1137.id === undefined && _1137.type === "End"))) { c.idx++; _1136 = _1137; }
-else { if (c.track) { E(c, "End"); } _1136 = F; }
-if (_1136 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
-const _1138 = H[48](_1108, c);
-c.bindings = _1109;
-_1105 = _1138;
+if (_1129 !== F) _1110["otherwise"] = _1129;
+const _1128 = _1129;
+if (_1128 === F) { c.idx = _1108; c.bindings = _1111; _1107 = F; break L_1109; }
+let _1138;
+const _1139 = c.tokens[c.idx];
+if (_1139 !== undefined && (_1139.id === 45 || (_1139.id === undefined && _1139.type === "End"))) { c.idx++; _1138 = _1139; }
+else { if (c.track) { E(c, "End"); } _1138 = F; }
+if (_1138 === F) { c.idx = _1108; c.bindings = _1111; _1107 = F; break L_1109; }
+const _1140 = H[48](_1110, c);
+c.bindings = _1111;
+_1107 = _1140;
 }
-return _1105;
+return _1107;
 }
 
 // CastExpr
 R[50] = (c) => {
 
-let _1139;
-L_1141: {
-const _1140 = c.idx;
-const _1143 = c.bindings;
-const _1142 = {};
-c.bindings = _1142;
-let _1144;
-const _1145 = c.tokens[c.idx];
-if (_1145 !== undefined && (_1145.id === 51 || (_1145.id === undefined && _1145.type === "Cast"))) { c.idx++; _1144 = _1145; }
-else { if (c.track) { E(c, "Cast"); } _1144 = F; }
-if (_1144 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+let _1141;
+L_1143: {
+const _1142 = c.idx;
+const _1145 = c.bindings;
+const _1144 = {};
+c.bindings = _1144;
 let _1146;
 const _1147 = c.tokens[c.idx];
-if (_1147 !== undefined && (_1147.id === 80 || (_1147.id === undefined && _1147.type === "LParen"))) { c.idx++; _1146 = _1147; }
-else { if (c.track) { E(c, "LParen"); } _1146 = F; }
-if (_1146 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+if (_1147 !== undefined && (_1147.id === 51 || (_1147.id === undefined && _1147.type === "Cast"))) { c.idx++; _1146 = _1147; }
+else { if (c.track) { E(c, "Cast"); } _1146 = F; }
+if (_1146 === F) { c.idx = _1142; c.bindings = _1145; _1141 = F; break L_1143; }
+let _1148;
+const _1149 = c.tokens[c.idx];
+if (_1149 !== undefined && (_1149.id === 82 || (_1149.id === undefined && _1149.type === "LParen"))) { c.idx++; _1148 = _1149; }
+else { if (c.track) { E(c, "LParen"); } _1148 = F; }
+if (_1148 === F) { c.idx = _1142; c.bindings = _1145; _1141 = F; break L_1143; }
 
-const _1150 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1150] = "Expression"; c.ruleDepth = _1150 + 1; }
-const _1149 = R[19](c);
-if (c.track) c.ruleDepth = _1150;
-if (_1149 !== F) _1142["e"] = _1149;
-const _1148 = _1149;
-if (_1148 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
-let _1151;
-const _1152 = c.tokens[c.idx];
-if (_1152 !== undefined && (_1152.id === 6 || (_1152.id === undefined && _1152.type === "As"))) { c.idx++; _1151 = _1152; }
-else { if (c.track) { E(c, "As"); } _1151 = F; }
-if (_1151 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+const _1152 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1152] = "Expression"; c.ruleDepth = _1152 + 1; }
+const _1151 = R[19](c);
+if (c.track) c.ruleDepth = _1152;
+if (_1151 !== F) _1144["e"] = _1151;
+const _1150 = _1151;
+if (_1150 === F) { c.idx = _1142; c.bindings = _1145; _1141 = F; break L_1143; }
+let _1153;
+const _1154 = c.tokens[c.idx];
+if (_1154 !== undefined && (_1154.id === 6 || (_1154.id === undefined && _1154.type === "As"))) { c.idx++; _1153 = _1154; }
+else { if (c.track) { E(c, "As"); } _1153 = F; }
+if (_1153 === F) { c.idx = _1142; c.bindings = _1145; _1141 = F; break L_1143; }
 
-const _1155 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1155] = "TypeName"; c.ruleDepth = _1155 + 1; }
-const _1154 = R[44](c);
-if (c.track) c.ruleDepth = _1155;
-if (_1154 !== F) _1142["t"] = _1154;
-const _1153 = _1154;
-if (_1153 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
-let _1156;
-const _1157 = c.tokens[c.idx];
-if (_1157 !== undefined && (_1157.id === 81 || (_1157.id === undefined && _1157.type === "RParen"))) { c.idx++; _1156 = _1157; }
-else { if (c.track) { E(c, "RParen"); } _1156 = F; }
-if (_1156 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
-const _1158 = H[49](_1142, c);
-c.bindings = _1143;
-_1139 = _1158;
+const _1157 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1157] = "TypeName"; c.ruleDepth = _1157 + 1; }
+const _1156 = R[44](c);
+if (c.track) c.ruleDepth = _1157;
+if (_1156 !== F) _1144["t"] = _1156;
+const _1155 = _1156;
+if (_1155 === F) { c.idx = _1142; c.bindings = _1145; _1141 = F; break L_1143; }
+let _1158;
+const _1159 = c.tokens[c.idx];
+if (_1159 !== undefined && (_1159.id === 83 || (_1159.id === undefined && _1159.type === "RParen"))) { c.idx++; _1158 = _1159; }
+else { if (c.track) { E(c, "RParen"); } _1158 = F; }
+if (_1158 === F) { c.idx = _1142; c.bindings = _1145; _1141 = F; break L_1143; }
+const _1160 = H[49](_1144, c);
+c.bindings = _1145;
+_1141 = _1160;
 }
-return _1139;
+return _1141;
 }
 
 // ExtractExpr
 R[51] = (c) => {
 
-let _1159;
-L_1161: {
-const _1160 = c.idx;
-const _1163 = c.bindings;
-const _1162 = {};
-c.bindings = _1162;
-let _1164;
-const _1165 = c.tokens[c.idx];
-if (_1165 !== undefined && (_1165.id === 52 || (_1165.id === undefined && _1165.type === "Extract"))) { c.idx++; _1164 = _1165; }
-else { if (c.track) { E(c, "Extract"); } _1164 = F; }
-if (_1164 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
+let _1161;
+L_1163: {
+const _1162 = c.idx;
+const _1165 = c.bindings;
+const _1164 = {};
+c.bindings = _1164;
 let _1166;
 const _1167 = c.tokens[c.idx];
-if (_1167 !== undefined && (_1167.id === 80 || (_1167.id === undefined && _1167.type === "LParen"))) { c.idx++; _1166 = _1167; }
-else { if (c.track) { E(c, "LParen"); } _1166 = F; }
-if (_1166 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
+if (_1167 !== undefined && (_1167.id === 52 || (_1167.id === undefined && _1167.type === "Extract"))) { c.idx++; _1166 = _1167; }
+else { if (c.track) { E(c, "Extract"); } _1166 = F; }
+if (_1166 === F) { c.idx = _1162; c.bindings = _1165; _1161 = F; break L_1163; }
+let _1168;
+const _1169 = c.tokens[c.idx];
+if (_1169 !== undefined && (_1169.id === 82 || (_1169.id === undefined && _1169.type === "LParen"))) { c.idx++; _1168 = _1169; }
+else { if (c.track) { E(c, "LParen"); } _1168 = F; }
+if (_1168 === F) { c.idx = _1162; c.bindings = _1165; _1161 = F; break L_1163; }
 
-const _1170 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1170] = "Ident"; c.ruleDepth = _1170 + 1; }
-const _1169 = R[15](c);
-if (c.track) c.ruleDepth = _1170;
-if (_1169 !== F) _1162["field"] = _1169;
-const _1168 = _1169;
-if (_1168 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
-let _1171;
-const _1172 = c.tokens[c.idx];
-if (_1172 !== undefined && (_1172.id === 4 || (_1172.id === undefined && _1172.type === "From"))) { c.idx++; _1171 = _1172; }
-else { if (c.track) { E(c, "From"); } _1171 = F; }
-if (_1171 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
+const _1172 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1172] = "Ident"; c.ruleDepth = _1172 + 1; }
+const _1171 = R[15](c);
+if (c.track) c.ruleDepth = _1172;
+if (_1171 !== F) _1164["field"] = _1171;
+const _1170 = _1171;
+if (_1170 === F) { c.idx = _1162; c.bindings = _1165; _1161 = F; break L_1163; }
+let _1173;
+const _1174 = c.tokens[c.idx];
+if (_1174 !== undefined && (_1174.id === 4 || (_1174.id === undefined && _1174.type === "From"))) { c.idx++; _1173 = _1174; }
+else { if (c.track) { E(c, "From"); } _1173 = F; }
+if (_1173 === F) { c.idx = _1162; c.bindings = _1165; _1161 = F; break L_1163; }
 
-const _1175 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1175] = "Expression"; c.ruleDepth = _1175 + 1; }
-const _1174 = R[19](c);
-if (c.track) c.ruleDepth = _1175;
-if (_1174 !== F) _1162["e"] = _1174;
-const _1173 = _1174;
-if (_1173 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
-let _1176;
-const _1177 = c.tokens[c.idx];
-if (_1177 !== undefined && (_1177.id === 81 || (_1177.id === undefined && _1177.type === "RParen"))) { c.idx++; _1176 = _1177; }
-else { if (c.track) { E(c, "RParen"); } _1176 = F; }
-if (_1176 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
-const _1178 = H[50](_1162, c);
-c.bindings = _1163;
-_1159 = _1178;
+const _1177 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1177] = "Expression"; c.ruleDepth = _1177 + 1; }
+const _1176 = R[19](c);
+if (c.track) c.ruleDepth = _1177;
+if (_1176 !== F) _1164["e"] = _1176;
+const _1175 = _1176;
+if (_1175 === F) { c.idx = _1162; c.bindings = _1165; _1161 = F; break L_1163; }
+let _1178;
+const _1179 = c.tokens[c.idx];
+if (_1179 !== undefined && (_1179.id === 83 || (_1179.id === undefined && _1179.type === "RParen"))) { c.idx++; _1178 = _1179; }
+else { if (c.track) { E(c, "RParen"); } _1178 = F; }
+if (_1178 === F) { c.idx = _1162; c.bindings = _1165; _1161 = F; break L_1163; }
+const _1180 = H[50](_1164, c);
+c.bindings = _1165;
+_1161 = _1180;
 }
-return _1159;
+return _1161;
 }
 
-// FunctionCall
+// PivotExpr
 R[52] = (c) => {
 
-let _1179;
-L_1181: {
-const _1180 = c.idx;
-const _1183 = c.bindings;
-const _1182 = {};
-c.bindings = _1182;
-
-let _1185;
-L_1186: {
+let _1181;
+L_1183: {
+const _1182 = c.idx;
+const _1185 = c.bindings;
+const _1184 = {};
+c.bindings = _1184;
+let _1186;
 const _1187 = c.tokens[c.idx];
-if (_1187 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); } _1185 = F; break L_1186; }
-const _1188 = _1187.id !== undefined ? _1187.id : I[_1187.type];
-switch (_1188) {
-case 60: case 58: case 59: {
+if (_1187 !== undefined && (_1187.id === 57 || (_1187.id === undefined && _1187.type === "Pivot"))) { c.idx++; _1186 = _1187; }
+else { if (c.track) { E(c, "Pivot"); } _1186 = F; }
+if (_1186 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
+let _1188;
+const _1189 = c.tokens[c.idx];
+if (_1189 !== undefined && (_1189.id === 82 || (_1189.id === undefined && _1189.type === "LParen"))) { c.idx++; _1188 = _1189; }
+else { if (c.track) { E(c, "LParen"); } _1188 = F; }
+if (_1188 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
 
-const _1190 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1190] = "Ident"; c.ruleDepth = _1190 + 1; }
-const _1189 = R[15](c);
-if (c.track) c.ruleDepth = _1190;
-_1185 = _1189; break L_1186;
-}
-case 19: case 20: {
-let _1192;
-const _1193 = c.tokens[c.idx];
-if (_1193 !== undefined && ((_1193.id === 19 || (_1193.id === undefined && _1193.type === "Left")) || (_1193.id === 20 || (_1193.id === undefined && _1193.type === "Right")))) { c.idx++; _1192 = _1193; }
-else { if (c.track) { E(c, "Left"); E(c, "Right"); } _1192 = F; }
-const _1191 = _1192 === F ? F : H[51](_1192, c);
-_1185 = _1191; break L_1186;
-}
-default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); } _1185 = F; break L_1186; }
-}
-}
-if (_1185 !== F) _1182["name"] = _1185;
-const _1184 = _1185;
-if (_1184 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
-let _1194;
-const _1195 = c.tokens[c.idx];
-if (_1195 !== undefined && (_1195.id === 80 || (_1195.id === undefined && _1195.type === "LParen"))) { c.idx++; _1194 = _1195; }
-else { if (c.track) { E(c, "LParen"); } _1194 = F; }
-if (_1194 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
-let _1197;
-const _1198 = c.idx;
-{
-let _1199;
-const _1200 = c.tokens[c.idx];
-if (_1200 !== undefined && (_1200.id === 7 || (_1200.id === undefined && _1200.type === "Distinct"))) { c.idx++; _1199 = _1200; }
-else { if (c.track) { E(c, "Distinct"); } _1199 = F; }
-if (_1199 === F) { c.idx = _1198; _1197 = false; } else _1197 = true;
-}
-if (_1197 !== F) _1182["distinct"] = _1197;
-const _1196 = _1197;
-if (_1196 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
-let _1202;
-const _1203 = c.idx;
-{
-let _1204;
-const _1205 = c.tokens[c.idx];
-if (_1205 !== undefined && (_1205.id === 77 || (_1205.id === undefined && _1205.type === "Star"))) { c.idx++; _1204 = _1205; }
-else { if (c.track) { E(c, "Star"); } _1204 = F; }
-if (_1204 === F) { c.idx = _1203; _1202 = false; } else _1202 = true;
-}
-if (_1202 !== F) _1182["star"] = _1202;
-const _1201 = _1202;
-if (_1201 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+const _1192 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1192] = "Expression"; c.ruleDepth = _1192 + 1; }
+const _1191 = R[19](c);
+if (c.track) c.ruleDepth = _1192;
+if (_1191 !== F) _1184["agg"] = _1191;
+const _1190 = _1191;
+if (_1190 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
+let _1193;
+const _1194 = c.tokens[c.idx];
+if (_1194 !== undefined && (_1194.id === 56 || (_1194.id === undefined && _1194.type === "For"))) { c.idx++; _1193 = _1194; }
+else { if (c.track) { E(c, "For"); } _1193 = F; }
+if (_1193 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
 
-let _1207 = [];
-L_1211: {
-const _1208 = c.idx;
+const _1197 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1197] = "ConcatExpr"; c.ruleDepth = _1197 + 1; }
+const _1196 = R[56](c);
+if (c.track) c.ruleDepth = _1197;
+if (_1196 !== F) _1184["col"] = _1196;
+const _1195 = _1196;
+if (_1195 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
+let _1198;
+const _1199 = c.tokens[c.idx];
+if (_1199 !== undefined && (_1199.id === 12 || (_1199.id === undefined && _1199.type === "In"))) { c.idx++; _1198 = _1199; }
+else { if (c.track) { E(c, "In"); } _1198 = F; }
+if (_1198 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
+let _1200;
+const _1201 = c.tokens[c.idx];
+if (_1201 !== undefined && (_1201.id === 82 || (_1201.id === undefined && _1201.type === "LParen"))) { c.idx++; _1200 = _1201; }
+else { if (c.track) { E(c, "LParen"); } _1200 = F; }
+if (_1200 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
+
+let _1203 = [];
+L_1207: {
+const _1204 = c.idx;
+
+const _1209 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1209] = "Expression"; c.ruleDepth = _1209 + 1; }
+const _1208 = R[19](c);
+if (c.track) c.ruleDepth = _1209;
+if (_1208 === F) { c.idx = _1204; _1203 = F; break L_1207; }
+_1203.push(_1208);
+for (;;) {
+const _1205 = c.idx;
+let _1210;
+const _1211 = c.tokens[c.idx];
+if (_1211 !== undefined && (_1211.id === 86 || (_1211.id === undefined && _1211.type === "Comma"))) { c.idx++; _1210 = _1211; }
+else { if (c.track) { E(c, "Comma"); } _1210 = F; }
+if (_1210 === F) { c.idx = _1205; break; }
+const _1206 = c.idx;
 
 const _1213 = c.ruleDepth;
 if (c.track) { c.ruleNames[_1213] = "Expression"; c.ruleDepth = _1213 + 1; }
 const _1212 = R[19](c);
 if (c.track) c.ruleDepth = _1213;
-if (_1212 === F) { c.idx = _1208; _1207 = []; break L_1211; }
-_1207.push(_1212);
-for (;;) {
-const _1209 = c.idx;
+if (_1212 === F) { c.idx = _1205; break; }
+_1203.push(_1212);
+}
+}
+if (_1203 !== F) _1184["values"] = _1203;
+const _1202 = _1203;
+if (_1202 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
 let _1214;
 const _1215 = c.tokens[c.idx];
-if (_1215 !== undefined && (_1215.id === 84 || (_1215.id === undefined && _1215.type === "Comma"))) { c.idx++; _1214 = _1215; }
-else { if (c.track) { E(c, "Comma"); } _1214 = F; }
-if (_1214 === F) { c.idx = _1209; break; }
-const _1210 = c.idx;
+if (_1215 !== undefined && (_1215.id === 83 || (_1215.id === undefined && _1215.type === "RParen"))) { c.idx++; _1214 = _1215; }
+else { if (c.track) { E(c, "RParen"); } _1214 = F; }
+if (_1214 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
+let _1216;
+const _1217 = c.tokens[c.idx];
+if (_1217 !== undefined && (_1217.id === 83 || (_1217.id === undefined && _1217.type === "RParen"))) { c.idx++; _1216 = _1217; }
+else { if (c.track) { E(c, "RParen"); } _1216 = F; }
+if (_1216 === F) { c.idx = _1182; c.bindings = _1185; _1181 = F; break L_1183; }
+const _1218 = H[51](_1184, c);
+c.bindings = _1185;
+_1181 = _1218;
+}
+return _1181;
+}
 
-const _1217 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1217] = "Expression"; c.ruleDepth = _1217 + 1; }
-const _1216 = R[19](c);
-if (c.track) c.ruleDepth = _1217;
-if (_1216 === F) { c.idx = _1209; break; }
-_1207.push(_1216);
-}
-}
-if (_1207 !== F) _1182["args"] = _1207;
-const _1206 = _1207;
-if (_1206 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+// FunctionCall
+R[53] = (c) => {
+
 let _1219;
+L_1221: {
 const _1220 = c.idx;
-{
+const _1223 = c.bindings;
+const _1222 = {};
+c.bindings = _1222;
 
-const _1222 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1222] = "OrderByClause"; c.ruleDepth = _1222 + 1; }
-const _1221 = R[6](c);
-if (c.track) c.ruleDepth = _1222;
-if (_1221 === F) { c.idx = _1220; _1219 = null; } else _1219 = _1221;
+let _1225;
+L_1226: {
+const _1227 = c.tokens[c.idx];
+if (_1227 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); } _1225 = F; break L_1226; }
+const _1228 = _1227.id !== undefined ? _1227.id : I[_1227.type];
+switch (_1228) {
+case 62: case 60: case 61: {
+
+const _1230 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1230] = "Ident"; c.ruleDepth = _1230 + 1; }
+const _1229 = R[15](c);
+if (c.track) c.ruleDepth = _1230;
+_1225 = _1229; break L_1226;
 }
-if (_1219 !== F) _1182["orderBy"] = _1219;
-const _1218 = _1219;
-if (_1218 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
-let _1223;
-const _1224 = c.tokens[c.idx];
-if (_1224 !== undefined && (_1224.id === 81 || (_1224.id === undefined && _1224.type === "RParen"))) { c.idx++; _1223 = _1224; }
-else { if (c.track) { E(c, "RParen"); } _1223 = F; }
-if (_1223 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
-let _1226;
-const _1227 = c.idx;
+case 19: case 20: {
+let _1232;
+const _1233 = c.tokens[c.idx];
+if (_1233 !== undefined && ((_1233.id === 19 || (_1233.id === undefined && _1233.type === "Left")) || (_1233.id === 20 || (_1233.id === undefined && _1233.type === "Right")))) { c.idx++; _1232 = _1233; }
+else { if (c.track) { E(c, "Left"); E(c, "Right"); } _1232 = F; }
+const _1231 = _1232 === F ? F : H[52](_1232, c);
+_1225 = _1231; break L_1226;
+}
+default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); } _1225 = F; break L_1226; }
+}
+}
+if (_1225 !== F) _1222["name"] = _1225;
+const _1224 = _1225;
+if (_1224 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
+let _1234;
+const _1235 = c.tokens[c.idx];
+if (_1235 !== undefined && (_1235.id === 82 || (_1235.id === undefined && _1235.type === "LParen"))) { c.idx++; _1234 = _1235; }
+else { if (c.track) { E(c, "LParen"); } _1234 = F; }
+if (_1234 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
+let _1237;
+const _1238 = c.idx;
 {
-
-let _1228;
-L_1229: {
-const _1230 = c.idx;
-let _1231;
-const _1232 = c.tokens[c.idx];
-if (_1232 !== undefined && (_1232.id === 55 || (_1232.id === undefined && _1232.type === "Filter"))) { c.idx++; _1231 = _1232; }
-else { if (c.track) { E(c, "Filter"); } _1231 = F; }
-if (_1231 === F) { c.idx = _1230; _1228 = F; break L_1229; }
-let _1233;
-const _1234 = c.tokens[c.idx];
-if (_1234 !== undefined && (_1234.id === 80 || (_1234.id === undefined && _1234.type === "LParen"))) { c.idx++; _1233 = _1234; }
-else { if (c.track) { E(c, "LParen"); } _1233 = F; }
-if (_1233 === F) { c.idx = _1230; _1228 = F; break L_1229; }
-let _1235;
-const _1236 = c.tokens[c.idx];
-if (_1236 !== undefined && (_1236.id === 5 || (_1236.id === undefined && _1236.type === "Where"))) { c.idx++; _1235 = _1236; }
-else { if (c.track) { E(c, "Where"); } _1235 = F; }
-if (_1235 === F) { c.idx = _1230; _1228 = F; break L_1229; }
-
-const _1238 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1238] = "Expression"; c.ruleDepth = _1238 + 1; }
-const _1237 = R[19](c);
-if (c.track) c.ruleDepth = _1238;
-if (_1237 === F) { c.idx = _1230; _1228 = F; break L_1229; }
 let _1239;
 const _1240 = c.tokens[c.idx];
-if (_1240 !== undefined && (_1240.id === 81 || (_1240.id === undefined && _1240.type === "RParen"))) { c.idx++; _1239 = _1240; }
-else { if (c.track) { E(c, "RParen"); } _1239 = F; }
-if (_1239 === F) { c.idx = _1230; _1228 = F; break L_1229; }
-_1228 = _1237;
+if (_1240 !== undefined && (_1240.id === 7 || (_1240.id === undefined && _1240.type === "Distinct"))) { c.idx++; _1239 = _1240; }
+else { if (c.track) { E(c, "Distinct"); } _1239 = F; }
+if (_1239 === F) { c.idx = _1238; _1237 = false; } else _1237 = true;
 }
-if (_1228 === F) { c.idx = _1227; _1226 = null; } else _1226 = _1228;
-}
-if (_1226 !== F) _1182["filter"] = _1226;
-const _1225 = _1226;
-if (_1225 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+if (_1237 !== F) _1222["distinct"] = _1237;
+const _1236 = _1237;
+if (_1236 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
 let _1242;
 const _1243 = c.idx;
 {
-
 let _1244;
-L_1245: {
-const _1246 = c.idx;
-let _1247;
-const _1248 = c.tokens[c.idx];
-if (_1248 !== undefined && (_1248.id === 53 || (_1248.id === undefined && _1248.type === "Over"))) { c.idx++; _1247 = _1248; }
-else { if (c.track) { E(c, "Over"); } _1247 = F; }
-if (_1247 === F) { c.idx = _1246; _1244 = F; break L_1245; }
-
-const _1250 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1250] = "WindowSpec"; c.ruleDepth = _1250 + 1; }
-const _1249 = R[58](c);
-if (c.track) c.ruleDepth = _1250;
-if (_1249 === F) { c.idx = _1246; _1244 = F; break L_1245; }
-_1244 = _1249;
+const _1245 = c.tokens[c.idx];
+if (_1245 !== undefined && (_1245.id === 79 || (_1245.id === undefined && _1245.type === "Star"))) { c.idx++; _1244 = _1245; }
+else { if (c.track) { E(c, "Star"); } _1244 = F; }
+if (_1244 === F) { c.idx = _1243; _1242 = false; } else _1242 = true;
 }
-if (_1244 === F) { c.idx = _1243; _1242 = null; } else _1242 = _1244;
-}
-if (_1242 !== F) _1182["over"] = _1242;
+if (_1242 !== F) _1222["star"] = _1242;
 const _1241 = _1242;
-if (_1241 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
-const _1251 = H[52](_1182, c);
-c.bindings = _1183;
-_1179 = _1251;
-}
-return _1179;
-}
+if (_1241 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
 
-// ColumnRef
-R[53] = (c) => {
+let _1247 = [];
+L_1251: {
+const _1248 = c.idx;
 
-const _1255 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1255] = "PathSegments"; c.ruleDepth = _1255 + 1; }
-const _1254 = R[8](c);
-if (c.track) c.ruleDepth = _1255;
-const _1253 = _1254 === F ? F : H[53](_1254, c);
-return _1253;
-}
+const _1253 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1253] = "Expression"; c.ruleDepth = _1253 + 1; }
+const _1252 = R[19](c);
+if (c.track) c.ruleDepth = _1253;
+if (_1252 === F) { c.idx = _1248; _1247 = []; break L_1251; }
+_1247.push(_1252);
+for (;;) {
+const _1249 = c.idx;
+let _1254;
+const _1255 = c.tokens[c.idx];
+if (_1255 !== undefined && (_1255.id === 86 || (_1255.id === undefined && _1255.type === "Comma"))) { c.idx++; _1254 = _1255; }
+else { if (c.track) { E(c, "Comma"); } _1254 = F; }
+if (_1254 === F) { c.idx = _1249; break; }
+const _1250 = c.idx;
 
-// Param
-R[54] = (c) => {
+const _1257 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1257] = "Expression"; c.ruleDepth = _1257 + 1; }
+const _1256 = R[19](c);
+if (c.track) c.ruleDepth = _1257;
+if (_1256 === F) { c.idx = _1249; break; }
+_1247.push(_1256);
+}
+}
+if (_1247 !== F) _1222["args"] = _1247;
+const _1246 = _1247;
+if (_1246 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
+let _1259;
+const _1260 = c.idx;
+{
 
-let _1256;
-L_1257: {
-const _1258 = c.tokens[c.idx];
-if (_1258 === undefined) { if (c.track) { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1256 = F; break L_1257; }
-const _1259 = _1258.id !== undefined ? _1258.id : I[_1258.type];
-switch (_1259) {
-case 87: {
+const _1262 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1262] = "OrderByClause"; c.ruleDepth = _1262 + 1; }
+const _1261 = R[6](c);
+if (c.track) c.ruleDepth = _1262;
+if (_1261 === F) { c.idx = _1260; _1259 = null; } else _1259 = _1261;
+}
+if (_1259 !== F) _1222["orderBy"] = _1259;
+const _1258 = _1259;
+if (_1258 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
+let _1263;
+const _1264 = c.tokens[c.idx];
+if (_1264 !== undefined && (_1264.id === 83 || (_1264.id === undefined && _1264.type === "RParen"))) { c.idx++; _1263 = _1264; }
+else { if (c.track) { E(c, "RParen"); } _1263 = F; }
+if (_1263 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
+let _1266;
+const _1267 = c.idx;
+{
 
-let _1260;
-L_1262: {
-const _1261 = c.idx;
-const _1264 = c.bindings;
-const _1263 = {};
-c.bindings = _1263;
-let _1265;
-const _1266 = c.tokens[c.idx];
-if (_1266 !== undefined && (_1266.id === 87 || (_1266.id === undefined && _1266.type === "QMark"))) { c.idx++; _1265 = _1266; }
-else { if (c.track) { E(c, "QMark"); } _1265 = F; }
-if (_1265 === F) { c.idx = _1261; c.bindings = _1264; _1260 = F; break L_1262; }
-const _1267 = H[54](_1263, c);
-c.bindings = _1264;
-_1260 = _1267;
-}
-_1256 = _1260; break L_1257;
-}
-case 61: {
-let _1269;
-const _1270 = c.tokens[c.idx];
-if (_1270 !== undefined && (_1270.id === 61 || (_1270.id === undefined && _1270.type === "DollarParam"))) { c.idx++; _1269 = _1270; }
-else { if (c.track) { E(c, "DollarParam"); } _1269 = F; }
-const _1268 = _1269 === F ? F : H[55](_1269, c);
-_1256 = _1268; break L_1257;
-}
-case 65: {
-let _1272;
-const _1273 = c.tokens[c.idx];
-if (_1273 !== undefined && (_1273.id === 65 || (_1273.id === undefined && _1273.type === "NamedParam"))) { c.idx++; _1272 = _1273; }
-else { if (c.track) { E(c, "NamedParam"); } _1272 = F; }
-const _1271 = _1272 === F ? F : H[56](_1272, c);
-_1256 = _1271; break L_1257;
-}
-default: { if (c.track) { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1256 = F; break L_1257; }
-}
-}
-return _1256;
-}
-
-// ConcatExpr
-R[55] = (c) => c.track ? R[59](c) : R[21](c, 0)
-
-// PredicateTail
-R[56] = (c) => {
-
-let _1274;
-L_1275: {
+let _1268;
+L_1269: {
+const _1270 = c.idx;
+let _1271;
+const _1272 = c.tokens[c.idx];
+if (_1272 !== undefined && (_1272.id === 55 || (_1272.id === undefined && _1272.type === "Filter"))) { c.idx++; _1271 = _1272; }
+else { if (c.track) { E(c, "Filter"); } _1271 = F; }
+if (_1271 === F) { c.idx = _1270; _1268 = F; break L_1269; }
+let _1273;
+const _1274 = c.tokens[c.idx];
+if (_1274 !== undefined && (_1274.id === 82 || (_1274.id === undefined && _1274.type === "LParen"))) { c.idx++; _1273 = _1274; }
+else { if (c.track) { E(c, "LParen"); } _1273 = F; }
+if (_1273 === F) { c.idx = _1270; _1268 = F; break L_1269; }
+let _1275;
 const _1276 = c.tokens[c.idx];
-if (_1276 === undefined) { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); } _1274 = F; break L_1275; }
-const _1277 = _1276.id !== undefined ? _1276.id : I[_1276.type];
-switch (_1277) {
-case 74: case 71: case 67: case 70: case 68: case 69: case 72: case 73: {
+if (_1276 !== undefined && (_1276.id === 5 || (_1276.id === undefined && _1276.type === "Where"))) { c.idx++; _1275 = _1276; }
+else { if (c.track) { E(c, "Where"); } _1275 = F; }
+if (_1275 === F) { c.idx = _1270; _1268 = F; break L_1269; }
 
-let _1278;
-L_1280: {
-const _1279 = c.idx;
-const _1282 = c.bindings;
-const _1281 = {};
-c.bindings = _1281;
+const _1278 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1278] = "Expression"; c.ruleDepth = _1278 + 1; }
+const _1277 = R[19](c);
+if (c.track) c.ruleDepth = _1278;
+if (_1277 === F) { c.idx = _1270; _1268 = F; break L_1269; }
+let _1279;
+const _1280 = c.tokens[c.idx];
+if (_1280 !== undefined && (_1280.id === 83 || (_1280.id === undefined && _1280.type === "RParen"))) { c.idx++; _1279 = _1280; }
+else { if (c.track) { E(c, "RParen"); } _1279 = F; }
+if (_1279 === F) { c.idx = _1270; _1268 = F; break L_1269; }
+_1268 = _1277;
+}
+if (_1268 === F) { c.idx = _1267; _1266 = null; } else _1266 = _1268;
+}
+if (_1266 !== F) _1222["filter"] = _1266;
+const _1265 = _1266;
+if (_1265 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
+let _1282;
+const _1283 = c.idx;
+{
 
 let _1284;
 L_1285: {
-const _1286 = c.tokens[c.idx];
-if (_1286 === undefined) { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); } _1284 = F; break L_1285; }
-const _1287 = _1286.id !== undefined ? _1286.id : I[_1286.type];
-switch (_1287) {
-case 74: {
+const _1286 = c.idx;
+let _1287;
+const _1288 = c.tokens[c.idx];
+if (_1288 !== undefined && (_1288.id === 53 || (_1288.id === undefined && _1288.type === "Over"))) { c.idx++; _1287 = _1288; }
+else { if (c.track) { E(c, "Over"); } _1287 = F; }
+if (_1287 === F) { c.idx = _1286; _1284 = F; break L_1285; }
 
-let _1288;
-L_1289: {
-const _1290 = c.idx;
-let _1291;
-const _1292 = c.tokens[c.idx];
-if (_1292 !== undefined && (_1292.id === 74 || (_1292.id === undefined && _1292.type === "Eq"))) { c.idx++; _1291 = _1292; }
-else { if (c.track) { E(c, "Eq"); } _1291 = F; }
-if (_1291 === F) { c.idx = _1290; _1288 = F; break L_1289; }
-_1288 = "EQ";
+const _1290 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1290] = "WindowSpec"; c.ruleDepth = _1290 + 1; }
+const _1289 = R[59](c);
+if (c.track) c.ruleDepth = _1290;
+if (_1289 === F) { c.idx = _1286; _1284 = F; break L_1285; }
+_1284 = _1289;
 }
-_1284 = _1288; break L_1285;
+if (_1284 === F) { c.idx = _1283; _1282 = null; } else _1282 = _1284;
 }
-case 71: {
+if (_1282 !== F) _1222["over"] = _1282;
+const _1281 = _1282;
+if (_1281 === F) { c.idx = _1220; c.bindings = _1223; _1219 = F; break L_1221; }
+const _1291 = H[53](_1222, c);
+c.bindings = _1223;
+_1219 = _1291;
+}
+return _1219;
+}
 
-let _1293;
-L_1294: {
-const _1295 = c.idx;
+// ColumnRef
+R[54] = (c) => {
+
+const _1295 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1295] = "PathSegments"; c.ruleDepth = _1295 + 1; }
+const _1294 = R[8](c);
+if (c.track) c.ruleDepth = _1295;
+const _1293 = _1294 === F ? F : H[54](_1294, c);
+return _1293;
+}
+
+// Param
+R[55] = (c) => {
+
 let _1296;
-const _1297 = c.tokens[c.idx];
-if (_1297 !== undefined && (_1297.id === 71 || (_1297.id === undefined && _1297.type === "EqEq"))) { c.idx++; _1296 = _1297; }
-else { if (c.track) { E(c, "EqEq"); } _1296 = F; }
-if (_1296 === F) { c.idx = _1295; _1293 = F; break L_1294; }
-_1293 = "EQ";
+L_1297: {
+const _1298 = c.tokens[c.idx];
+if (_1298 === undefined) { if (c.track) { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1296 = F; break L_1297; }
+const _1299 = _1298.id !== undefined ? _1298.id : I[_1298.type];
+switch (_1299) {
+case 89: {
+
+let _1300;
+L_1302: {
+const _1301 = c.idx;
+const _1304 = c.bindings;
+const _1303 = {};
+c.bindings = _1303;
+let _1305;
+const _1306 = c.tokens[c.idx];
+if (_1306 !== undefined && (_1306.id === 89 || (_1306.id === undefined && _1306.type === "QMark"))) { c.idx++; _1305 = _1306; }
+else { if (c.track) { E(c, "QMark"); } _1305 = F; }
+if (_1305 === F) { c.idx = _1301; c.bindings = _1304; _1300 = F; break L_1302; }
+const _1307 = H[55](_1303, c);
+c.bindings = _1304;
+_1300 = _1307;
 }
-_1284 = _1293; break L_1285;
+_1296 = _1300; break L_1297;
+}
+case 63: {
+let _1309;
+const _1310 = c.tokens[c.idx];
+if (_1310 !== undefined && (_1310.id === 63 || (_1310.id === undefined && _1310.type === "DollarParam"))) { c.idx++; _1309 = _1310; }
+else { if (c.track) { E(c, "DollarParam"); } _1309 = F; }
+const _1308 = _1309 === F ? F : H[56](_1309, c);
+_1296 = _1308; break L_1297;
 }
 case 67: {
+let _1312;
+const _1313 = c.tokens[c.idx];
+if (_1313 !== undefined && (_1313.id === 67 || (_1313.id === undefined && _1313.type === "NamedParam"))) { c.idx++; _1312 = _1313; }
+else { if (c.track) { E(c, "NamedParam"); } _1312 = F; }
+const _1311 = _1312 === F ? F : H[57](_1312, c);
+_1296 = _1311; break L_1297;
+}
+default: { if (c.track) { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1296 = F; break L_1297; }
+}
+}
+return _1296;
+}
 
-let _1298;
-L_1299: {
-const _1300 = c.idx;
-let _1301;
-const _1302 = c.tokens[c.idx];
-if (_1302 !== undefined && (_1302.id === 67 || (_1302.id === undefined && _1302.type === "NotEq"))) { c.idx++; _1301 = _1302; }
-else { if (c.track) { E(c, "NotEq"); } _1301 = F; }
-if (_1301 === F) { c.idx = _1300; _1298 = F; break L_1299; }
-_1298 = "NE";
-}
-_1284 = _1298; break L_1285;
-}
-case 70: {
+// ConcatExpr
+R[56] = (c) => c.track ? R[60](c) : R[21](c, 0)
 
-let _1303;
-L_1304: {
-const _1305 = c.idx;
-let _1306;
-const _1307 = c.tokens[c.idx];
-if (_1307 !== undefined && (_1307.id === 70 || (_1307.id === undefined && _1307.type === "BangEq"))) { c.idx++; _1306 = _1307; }
-else { if (c.track) { E(c, "BangEq"); } _1306 = F; }
-if (_1306 === F) { c.idx = _1305; _1303 = F; break L_1304; }
-_1303 = "NE";
-}
-_1284 = _1303; break L_1285;
-}
-case 68: {
+// PredicateTail
+R[57] = (c) => {
 
-let _1308;
-L_1309: {
-const _1310 = c.idx;
-let _1311;
-const _1312 = c.tokens[c.idx];
-if (_1312 !== undefined && (_1312.id === 68 || (_1312.id === undefined && _1312.type === "LtEq"))) { c.idx++; _1311 = _1312; }
-else { if (c.track) { E(c, "LtEq"); } _1311 = F; }
-if (_1311 === F) { c.idx = _1310; _1308 = F; break L_1309; }
-_1308 = "LE";
-}
-_1284 = _1308; break L_1285;
-}
-case 69: {
-
-let _1313;
-L_1314: {
-const _1315 = c.idx;
-let _1316;
-const _1317 = c.tokens[c.idx];
-if (_1317 !== undefined && (_1317.id === 69 || (_1317.id === undefined && _1317.type === "GtEq"))) { c.idx++; _1316 = _1317; }
-else { if (c.track) { E(c, "GtEq"); } _1316 = F; }
-if (_1316 === F) { c.idx = _1315; _1313 = F; break L_1314; }
-_1313 = "GE";
-}
-_1284 = _1313; break L_1285;
-}
-case 72: {
+let _1314;
+L_1315: {
+const _1316 = c.tokens[c.idx];
+if (_1316 === undefined) { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); } _1314 = F; break L_1315; }
+const _1317 = _1316.id !== undefined ? _1316.id : I[_1316.type];
+switch (_1317) {
+case 76: case 73: case 69: case 72: case 70: case 71: case 74: case 75: {
 
 let _1318;
-L_1319: {
-const _1320 = c.idx;
-let _1321;
-const _1322 = c.tokens[c.idx];
-if (_1322 !== undefined && (_1322.id === 72 || (_1322.id === undefined && _1322.type === "Lt"))) { c.idx++; _1321 = _1322; }
-else { if (c.track) { E(c, "Lt"); } _1321 = F; }
-if (_1321 === F) { c.idx = _1320; _1318 = F; break L_1319; }
-_1318 = "LT";
+L_1320: {
+const _1319 = c.idx;
+const _1322 = c.bindings;
+const _1321 = {};
+c.bindings = _1321;
+
+let _1324;
+L_1325: {
+const _1326 = c.tokens[c.idx];
+if (_1326 === undefined) { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); } _1324 = F; break L_1325; }
+const _1327 = _1326.id !== undefined ? _1326.id : I[_1326.type];
+switch (_1327) {
+case 76: {
+
+let _1328;
+L_1329: {
+const _1330 = c.idx;
+let _1331;
+const _1332 = c.tokens[c.idx];
+if (_1332 !== undefined && (_1332.id === 76 || (_1332.id === undefined && _1332.type === "Eq"))) { c.idx++; _1331 = _1332; }
+else { if (c.track) { E(c, "Eq"); } _1331 = F; }
+if (_1331 === F) { c.idx = _1330; _1328 = F; break L_1329; }
+_1328 = "EQ";
 }
-_1284 = _1318; break L_1285;
+_1324 = _1328; break L_1325;
 }
 case 73: {
 
-let _1323;
-L_1324: {
-const _1325 = c.idx;
-let _1326;
-const _1327 = c.tokens[c.idx];
-if (_1327 !== undefined && (_1327.id === 73 || (_1327.id === undefined && _1327.type === "Gt"))) { c.idx++; _1326 = _1327; }
-else { if (c.track) { E(c, "Gt"); } _1326 = F; }
-if (_1326 === F) { c.idx = _1325; _1323 = F; break L_1324; }
-_1323 = "GT";
-}
-_1284 = _1323; break L_1285;
-}
-default: { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); } _1284 = F; break L_1285; }
-}
-}
-if (_1284 !== F) _1281["op"] = _1284;
-const _1283 = _1284;
-if (_1283 === F) { c.idx = _1279; c.bindings = _1282; _1278 = F; break L_1280; }
-
-const _1330 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1330] = "ConcatExpr"; c.ruleDepth = _1330 + 1; }
-const _1329 = R[55](c);
-if (c.track) c.ruleDepth = _1330;
-if (_1329 !== F) _1281["right"] = _1329;
-const _1328 = _1329;
-if (_1328 === F) { c.idx = _1279; c.bindings = _1282; _1278 = F; break L_1280; }
-const _1331 = H[57](_1281, c);
-c.bindings = _1282;
-_1278 = _1331;
-}
-_1274 = _1278; break L_1275;
-}
-case 11: case 12: case 17: case 15: case 16: {
-
-let _1332;
+let _1333;
 L_1334: {
-const _1333 = c.idx;
-const _1336 = c.bindings;
-const _1335 = {};
-c.bindings = _1335;
-let _1338;
-const _1339 = c.idx;
-{
-let _1340;
-const _1341 = c.tokens[c.idx];
-if (_1341 !== undefined && (_1341.id === 11 || (_1341.id === undefined && _1341.type === "Not"))) { c.idx++; _1340 = _1341; }
-else { if (c.track) { E(c, "Not"); } _1340 = F; }
-if (_1340 === F) { c.idx = _1339; _1338 = false; } else _1338 = true;
+const _1335 = c.idx;
+let _1336;
+const _1337 = c.tokens[c.idx];
+if (_1337 !== undefined && (_1337.id === 73 || (_1337.id === undefined && _1337.type === "EqEq"))) { c.idx++; _1336 = _1337; }
+else { if (c.track) { E(c, "EqEq"); } _1336 = F; }
+if (_1336 === F) { c.idx = _1335; _1333 = F; break L_1334; }
+_1333 = "EQ";
 }
-if (_1338 !== F) _1335["negated"] = _1338;
-const _1337 = _1338;
-if (_1337 === F) { c.idx = _1333; c.bindings = _1336; _1332 = F; break L_1334; }
+_1324 = _1333; break L_1325;
+}
+case 69: {
+
+let _1338;
+L_1339: {
+const _1340 = c.idx;
+let _1341;
+const _1342 = c.tokens[c.idx];
+if (_1342 !== undefined && (_1342.id === 69 || (_1342.id === undefined && _1342.type === "NotEq"))) { c.idx++; _1341 = _1342; }
+else { if (c.track) { E(c, "NotEq"); } _1341 = F; }
+if (_1341 === F) { c.idx = _1340; _1338 = F; break L_1339; }
+_1338 = "NE";
+}
+_1324 = _1338; break L_1325;
+}
+case 72: {
 
 let _1343;
 L_1344: {
-const _1345 = c.tokens[c.idx];
-if (_1345 === undefined) { if (c.track) { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); } _1343 = F; break L_1344; }
-const _1346 = _1345.id !== undefined ? _1345.id : I[_1345.type];
-switch (_1346) {
+const _1345 = c.idx;
+let _1346;
+const _1347 = c.tokens[c.idx];
+if (_1347 !== undefined && (_1347.id === 72 || (_1347.id === undefined && _1347.type === "BangEq"))) { c.idx++; _1346 = _1347; }
+else { if (c.track) { E(c, "BangEq"); } _1346 = F; }
+if (_1346 === F) { c.idx = _1345; _1343 = F; break L_1344; }
+_1343 = "NE";
+}
+_1324 = _1343; break L_1325;
+}
+case 70: {
+
+let _1348;
+L_1349: {
+const _1350 = c.idx;
+let _1351;
+const _1352 = c.tokens[c.idx];
+if (_1352 !== undefined && (_1352.id === 70 || (_1352.id === undefined && _1352.type === "LtEq"))) { c.idx++; _1351 = _1352; }
+else { if (c.track) { E(c, "LtEq"); } _1351 = F; }
+if (_1351 === F) { c.idx = _1350; _1348 = F; break L_1349; }
+_1348 = "LE";
+}
+_1324 = _1348; break L_1325;
+}
+case 71: {
+
+let _1353;
+L_1354: {
+const _1355 = c.idx;
+let _1356;
+const _1357 = c.tokens[c.idx];
+if (_1357 !== undefined && (_1357.id === 71 || (_1357.id === undefined && _1357.type === "GtEq"))) { c.idx++; _1356 = _1357; }
+else { if (c.track) { E(c, "GtEq"); } _1356 = F; }
+if (_1356 === F) { c.idx = _1355; _1353 = F; break L_1354; }
+_1353 = "GE";
+}
+_1324 = _1353; break L_1325;
+}
+case 74: {
+
+let _1358;
+L_1359: {
+const _1360 = c.idx;
+let _1361;
+const _1362 = c.tokens[c.idx];
+if (_1362 !== undefined && (_1362.id === 74 || (_1362.id === undefined && _1362.type === "Lt"))) { c.idx++; _1361 = _1362; }
+else { if (c.track) { E(c, "Lt"); } _1361 = F; }
+if (_1361 === F) { c.idx = _1360; _1358 = F; break L_1359; }
+_1358 = "LT";
+}
+_1324 = _1358; break L_1325;
+}
+case 75: {
+
+let _1363;
+L_1364: {
+const _1365 = c.idx;
+let _1366;
+const _1367 = c.tokens[c.idx];
+if (_1367 !== undefined && (_1367.id === 75 || (_1367.id === undefined && _1367.type === "Gt"))) { c.idx++; _1366 = _1367; }
+else { if (c.track) { E(c, "Gt"); } _1366 = F; }
+if (_1366 === F) { c.idx = _1365; _1363 = F; break L_1364; }
+_1363 = "GT";
+}
+_1324 = _1363; break L_1325;
+}
+default: { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); } _1324 = F; break L_1325; }
+}
+}
+if (_1324 !== F) _1321["op"] = _1324;
+const _1323 = _1324;
+if (_1323 === F) { c.idx = _1319; c.bindings = _1322; _1318 = F; break L_1320; }
+
+const _1370 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1370] = "ConcatExpr"; c.ruleDepth = _1370 + 1; }
+const _1369 = R[56](c);
+if (c.track) c.ruleDepth = _1370;
+if (_1369 !== F) _1321["right"] = _1369;
+const _1368 = _1369;
+if (_1368 === F) { c.idx = _1319; c.bindings = _1322; _1318 = F; break L_1320; }
+const _1371 = H[58](_1321, c);
+c.bindings = _1322;
+_1318 = _1371;
+}
+_1314 = _1318; break L_1315;
+}
+case 11: case 12: case 17: case 15: case 16: {
+
+let _1372;
+L_1374: {
+const _1373 = c.idx;
+const _1376 = c.bindings;
+const _1375 = {};
+c.bindings = _1375;
+let _1378;
+const _1379 = c.idx;
+{
+let _1380;
+const _1381 = c.tokens[c.idx];
+if (_1381 !== undefined && (_1381.id === 11 || (_1381.id === undefined && _1381.type === "Not"))) { c.idx++; _1380 = _1381; }
+else { if (c.track) { E(c, "Not"); } _1380 = F; }
+if (_1380 === F) { c.idx = _1379; _1378 = false; } else _1378 = true;
+}
+if (_1378 !== F) _1375["negated"] = _1378;
+const _1377 = _1378;
+if (_1377 === F) { c.idx = _1373; c.bindings = _1376; _1372 = F; break L_1374; }
+
+let _1383;
+L_1384: {
+const _1385 = c.tokens[c.idx];
+if (_1385 === undefined) { if (c.track) { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); } _1383 = F; break L_1384; }
+const _1386 = _1385.id !== undefined ? _1385.id : I[_1385.type];
+switch (_1386) {
 case 12: {
 
-const _1348 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1348] = "InTail"; c.ruleDepth = _1348 + 1; }
-const _1347 = R[60](c);
-if (c.track) c.ruleDepth = _1348;
-_1343 = _1347; break L_1344;
+const _1388 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1388] = "InTail"; c.ruleDepth = _1388 + 1; }
+const _1387 = R[61](c);
+if (c.track) c.ruleDepth = _1388;
+_1383 = _1387; break L_1384;
 }
 case 17: {
 
-const _1350 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1350] = "BetweenTail"; c.ruleDepth = _1350 + 1; }
-const _1349 = R[61](c);
-if (c.track) c.ruleDepth = _1350;
-_1343 = _1349; break L_1344;
+const _1390 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1390] = "BetweenTail"; c.ruleDepth = _1390 + 1; }
+const _1389 = R[62](c);
+if (c.track) c.ruleDepth = _1390;
+_1383 = _1389; break L_1384;
 }
 case 15: case 16: {
 
-const _1352 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1352] = "LikeTail"; c.ruleDepth = _1352 + 1; }
-const _1351 = R[62](c);
-if (c.track) c.ruleDepth = _1352;
-_1343 = _1351; break L_1344;
+const _1392 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1392] = "LikeTail"; c.ruleDepth = _1392 + 1; }
+const _1391 = R[63](c);
+if (c.track) c.ruleDepth = _1392;
+_1383 = _1391; break L_1384;
 }
-default: { if (c.track) { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); } _1343 = F; break L_1344; }
+default: { if (c.track) { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); } _1383 = F; break L_1384; }
 }
 }
-if (_1343 !== F) _1335["t"] = _1343;
-const _1342 = _1343;
-if (_1342 === F) { c.idx = _1333; c.bindings = _1336; _1332 = F; break L_1334; }
-const _1353 = H[58](_1335, c);
-c.bindings = _1336;
-_1332 = _1353;
+if (_1383 !== F) _1375["t"] = _1383;
+const _1382 = _1383;
+if (_1382 === F) { c.idx = _1373; c.bindings = _1376; _1372 = F; break L_1374; }
+const _1393 = H[59](_1375, c);
+c.bindings = _1376;
+_1372 = _1393;
 }
-_1274 = _1332; break L_1275;
+_1314 = _1372; break L_1315;
 }
 case 13: {
 
-let _1354;
-L_1356: {
-const _1355 = c.idx;
-const _1358 = c.bindings;
-const _1357 = {};
-c.bindings = _1357;
-let _1359;
-const _1360 = c.tokens[c.idx];
-if (_1360 !== undefined && (_1360.id === 13 || (_1360.id === undefined && _1360.type === "Is"))) { c.idx++; _1359 = _1360; }
-else { if (c.track) { E(c, "Is"); } _1359 = F; }
-if (_1359 === F) { c.idx = _1355; c.bindings = _1358; _1354 = F; break L_1356; }
-let _1362;
-const _1363 = c.idx;
+let _1394;
+L_1396: {
+const _1395 = c.idx;
+const _1398 = c.bindings;
+const _1397 = {};
+c.bindings = _1397;
+let _1399;
+const _1400 = c.tokens[c.idx];
+if (_1400 !== undefined && (_1400.id === 13 || (_1400.id === undefined && _1400.type === "Is"))) { c.idx++; _1399 = _1400; }
+else { if (c.track) { E(c, "Is"); } _1399 = F; }
+if (_1399 === F) { c.idx = _1395; c.bindings = _1398; _1394 = F; break L_1396; }
+let _1402;
+const _1403 = c.idx;
 {
-let _1364;
-const _1365 = c.tokens[c.idx];
-if (_1365 !== undefined && (_1365.id === 11 || (_1365.id === undefined && _1365.type === "Not"))) { c.idx++; _1364 = _1365; }
-else { if (c.track) { E(c, "Not"); } _1364 = F; }
-if (_1364 === F) { c.idx = _1363; _1362 = false; } else _1362 = true;
+let _1404;
+const _1405 = c.tokens[c.idx];
+if (_1405 !== undefined && (_1405.id === 11 || (_1405.id === undefined && _1405.type === "Not"))) { c.idx++; _1404 = _1405; }
+else { if (c.track) { E(c, "Not"); } _1404 = F; }
+if (_1404 === F) { c.idx = _1403; _1402 = false; } else _1402 = true;
 }
-if (_1362 !== F) _1357["negated"] = _1362;
-const _1361 = _1362;
-if (_1361 === F) { c.idx = _1355; c.bindings = _1358; _1354 = F; break L_1356; }
+if (_1402 !== F) _1397["negated"] = _1402;
+const _1401 = _1402;
+if (_1401 === F) { c.idx = _1395; c.bindings = _1398; _1394 = F; break L_1396; }
 
-let _1367;
-L_1368: {
-const _1369 = c.tokens[c.idx];
-if (_1369 === undefined) { if (c.track) { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); } _1367 = F; break L_1368; }
-const _1370 = _1369.id !== undefined ? _1369.id : I[_1369.type];
-switch (_1370) {
+let _1407;
+L_1408: {
+const _1409 = c.tokens[c.idx];
+if (_1409 === undefined) { if (c.track) { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); } _1407 = F; break L_1408; }
+const _1410 = _1409.id !== undefined ? _1409.id : I[_1409.type];
+switch (_1410) {
 case 14: {
 
-let _1371;
-L_1373: {
-const _1372 = c.idx;
-const _1375 = c.bindings;
-const _1374 = {};
-c.bindings = _1374;
-let _1376;
-const _1377 = c.tokens[c.idx];
-if (_1377 !== undefined && (_1377.id === 14 || (_1377.id === undefined && _1377.type === "Null"))) { c.idx++; _1376 = _1377; }
-else { if (c.track) { E(c, "Null"); } _1376 = F; }
-if (_1376 === F) { c.idx = _1372; c.bindings = _1375; _1371 = F; break L_1373; }
-const _1378 = H[59](_1374, c);
-c.bindings = _1375;
-_1371 = _1378;
+let _1411;
+L_1413: {
+const _1412 = c.idx;
+const _1415 = c.bindings;
+const _1414 = {};
+c.bindings = _1414;
+let _1416;
+const _1417 = c.tokens[c.idx];
+if (_1417 !== undefined && (_1417.id === 14 || (_1417.id === undefined && _1417.type === "Null"))) { c.idx++; _1416 = _1417; }
+else { if (c.track) { E(c, "Null"); } _1416 = F; }
+if (_1416 === F) { c.idx = _1412; c.bindings = _1415; _1411 = F; break L_1413; }
+const _1418 = H[60](_1414, c);
+c.bindings = _1415;
+_1411 = _1418;
 }
-_1367 = _1371; break L_1368;
+_1407 = _1411; break L_1408;
 }
 case 39: {
 
-let _1379;
-L_1381: {
-const _1380 = c.idx;
-const _1383 = c.bindings;
-const _1382 = {};
-c.bindings = _1382;
-let _1384;
-const _1385 = c.tokens[c.idx];
-if (_1385 !== undefined && (_1385.id === 39 || (_1385.id === undefined && _1385.type === "True"))) { c.idx++; _1384 = _1385; }
-else { if (c.track) { E(c, "True"); } _1384 = F; }
-if (_1384 === F) { c.idx = _1380; c.bindings = _1383; _1379 = F; break L_1381; }
-const _1386 = H[60](_1382, c);
-c.bindings = _1383;
-_1379 = _1386;
+let _1419;
+L_1421: {
+const _1420 = c.idx;
+const _1423 = c.bindings;
+const _1422 = {};
+c.bindings = _1422;
+let _1424;
+const _1425 = c.tokens[c.idx];
+if (_1425 !== undefined && (_1425.id === 39 || (_1425.id === undefined && _1425.type === "True"))) { c.idx++; _1424 = _1425; }
+else { if (c.track) { E(c, "True"); } _1424 = F; }
+if (_1424 === F) { c.idx = _1420; c.bindings = _1423; _1419 = F; break L_1421; }
+const _1426 = H[61](_1422, c);
+c.bindings = _1423;
+_1419 = _1426;
 }
-_1367 = _1379; break L_1368;
+_1407 = _1419; break L_1408;
 }
 case 40: {
 
-let _1387;
-L_1389: {
-const _1388 = c.idx;
-const _1391 = c.bindings;
-const _1390 = {};
-c.bindings = _1390;
-let _1392;
-const _1393 = c.tokens[c.idx];
-if (_1393 !== undefined && (_1393.id === 40 || (_1393.id === undefined && _1393.type === "False"))) { c.idx++; _1392 = _1393; }
-else { if (c.track) { E(c, "False"); } _1392 = F; }
-if (_1392 === F) { c.idx = _1388; c.bindings = _1391; _1387 = F; break L_1389; }
-const _1394 = H[61](_1390, c);
-c.bindings = _1391;
-_1387 = _1394;
+let _1427;
+L_1429: {
+const _1428 = c.idx;
+const _1431 = c.bindings;
+const _1430 = {};
+c.bindings = _1430;
+let _1432;
+const _1433 = c.tokens[c.idx];
+if (_1433 !== undefined && (_1433.id === 40 || (_1433.id === undefined && _1433.type === "False"))) { c.idx++; _1432 = _1433; }
+else { if (c.track) { E(c, "False"); } _1432 = F; }
+if (_1432 === F) { c.idx = _1428; c.bindings = _1431; _1427 = F; break L_1429; }
+const _1434 = H[62](_1430, c);
+c.bindings = _1431;
+_1427 = _1434;
 }
-_1367 = _1387; break L_1368;
+_1407 = _1427; break L_1408;
 }
 case 7: {
 
-let _1395;
-L_1397: {
-const _1396 = c.idx;
-const _1399 = c.bindings;
-const _1398 = {};
-c.bindings = _1398;
-let _1400;
-const _1401 = c.tokens[c.idx];
-if (_1401 !== undefined && (_1401.id === 7 || (_1401.id === undefined && _1401.type === "Distinct"))) { c.idx++; _1400 = _1401; }
-else { if (c.track) { E(c, "Distinct"); } _1400 = F; }
-if (_1400 === F) { c.idx = _1396; c.bindings = _1399; _1395 = F; break L_1397; }
-let _1402;
-const _1403 = c.tokens[c.idx];
-if (_1403 !== undefined && (_1403.id === 4 || (_1403.id === undefined && _1403.type === "From"))) { c.idx++; _1402 = _1403; }
-else { if (c.track) { E(c, "From"); } _1402 = F; }
-if (_1402 === F) { c.idx = _1396; c.bindings = _1399; _1395 = F; break L_1397; }
+let _1435;
+L_1437: {
+const _1436 = c.idx;
+const _1439 = c.bindings;
+const _1438 = {};
+c.bindings = _1438;
+let _1440;
+const _1441 = c.tokens[c.idx];
+if (_1441 !== undefined && (_1441.id === 7 || (_1441.id === undefined && _1441.type === "Distinct"))) { c.idx++; _1440 = _1441; }
+else { if (c.track) { E(c, "Distinct"); } _1440 = F; }
+if (_1440 === F) { c.idx = _1436; c.bindings = _1439; _1435 = F; break L_1437; }
+let _1442;
+const _1443 = c.tokens[c.idx];
+if (_1443 !== undefined && (_1443.id === 4 || (_1443.id === undefined && _1443.type === "From"))) { c.idx++; _1442 = _1443; }
+else { if (c.track) { E(c, "From"); } _1442 = F; }
+if (_1442 === F) { c.idx = _1436; c.bindings = _1439; _1435 = F; break L_1437; }
 
-const _1406 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1406] = "ConcatExpr"; c.ruleDepth = _1406 + 1; }
-const _1405 = R[55](c);
-if (c.track) c.ruleDepth = _1406;
-if (_1405 !== F) _1398["e"] = _1405;
-const _1404 = _1405;
-if (_1404 === F) { c.idx = _1396; c.bindings = _1399; _1395 = F; break L_1397; }
-const _1407 = H[62](_1398, c);
-c.bindings = _1399;
-_1395 = _1407;
+const _1446 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1446] = "ConcatExpr"; c.ruleDepth = _1446 + 1; }
+const _1445 = R[56](c);
+if (c.track) c.ruleDepth = _1446;
+if (_1445 !== F) _1438["e"] = _1445;
+const _1444 = _1445;
+if (_1444 === F) { c.idx = _1436; c.bindings = _1439; _1435 = F; break L_1437; }
+const _1447 = H[63](_1438, c);
+c.bindings = _1439;
+_1435 = _1447;
 }
-_1367 = _1395; break L_1368;
+_1407 = _1435; break L_1408;
 }
-default: { if (c.track) { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); } _1367 = F; break L_1368; }
-}
-}
-if (_1367 !== F) _1357["t"] = _1367;
-const _1366 = _1367;
-if (_1366 === F) { c.idx = _1355; c.bindings = _1358; _1354 = F; break L_1356; }
-const _1408 = H[63](_1357, c);
-c.bindings = _1358;
-_1354 = _1408;
-}
-_1274 = _1354; break L_1275;
-}
-default: { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); } _1274 = F; break L_1275; }
+default: { if (c.track) { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); } _1407 = F; break L_1408; }
 }
 }
-return _1274;
+if (_1407 !== F) _1397["t"] = _1407;
+const _1406 = _1407;
+if (_1406 === F) { c.idx = _1395; c.bindings = _1398; _1394 = F; break L_1396; }
+const _1448 = H[64](_1397, c);
+c.bindings = _1398;
+_1394 = _1448;
+}
+_1314 = _1394; break L_1315;
+}
+default: { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); } _1314 = F; break L_1315; }
+}
+}
+return _1314;
 }
 
 // WhenClause
-R[57] = (c) => {
+R[58] = (c) => {
 
-let _1409;
-L_1411: {
-const _1410 = c.idx;
-const _1413 = c.bindings;
-const _1412 = {};
-c.bindings = _1412;
-let _1414;
-const _1415 = c.tokens[c.idx];
-if (_1415 !== undefined && (_1415.id === 42 || (_1415.id === undefined && _1415.type === "When"))) { c.idx++; _1414 = _1415; }
-else { if (c.track) { E(c, "When"); } _1414 = F; }
-if (_1414 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
+let _1449;
+L_1451: {
+const _1450 = c.idx;
+const _1453 = c.bindings;
+const _1452 = {};
+c.bindings = _1452;
+let _1454;
+const _1455 = c.tokens[c.idx];
+if (_1455 !== undefined && (_1455.id === 42 || (_1455.id === undefined && _1455.type === "When"))) { c.idx++; _1454 = _1455; }
+else { if (c.track) { E(c, "When"); } _1454 = F; }
+if (_1454 === F) { c.idx = _1450; c.bindings = _1453; _1449 = F; break L_1451; }
 
-const _1418 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1418] = "Expression"; c.ruleDepth = _1418 + 1; }
-const _1417 = R[19](c);
-if (c.track) c.ruleDepth = _1418;
-if (_1417 !== F) _1412["cond"] = _1417;
-const _1416 = _1417;
-if (_1416 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
-let _1419;
-const _1420 = c.tokens[c.idx];
-if (_1420 !== undefined && (_1420.id === 43 || (_1420.id === undefined && _1420.type === "Then"))) { c.idx++; _1419 = _1420; }
-else { if (c.track) { E(c, "Then"); } _1419 = F; }
-if (_1419 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
+const _1458 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1458] = "Expression"; c.ruleDepth = _1458 + 1; }
+const _1457 = R[19](c);
+if (c.track) c.ruleDepth = _1458;
+if (_1457 !== F) _1452["cond"] = _1457;
+const _1456 = _1457;
+if (_1456 === F) { c.idx = _1450; c.bindings = _1453; _1449 = F; break L_1451; }
+let _1459;
+const _1460 = c.tokens[c.idx];
+if (_1460 !== undefined && (_1460.id === 43 || (_1460.id === undefined && _1460.type === "Then"))) { c.idx++; _1459 = _1460; }
+else { if (c.track) { E(c, "Then"); } _1459 = F; }
+if (_1459 === F) { c.idx = _1450; c.bindings = _1453; _1449 = F; break L_1451; }
 
-const _1423 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1423] = "Expression"; c.ruleDepth = _1423 + 1; }
-const _1422 = R[19](c);
-if (c.track) c.ruleDepth = _1423;
-if (_1422 !== F) _1412["result"] = _1422;
-const _1421 = _1422;
-if (_1421 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
-const _1424 = H[64](_1412, c);
-c.bindings = _1413;
-_1409 = _1424;
+const _1463 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1463] = "Expression"; c.ruleDepth = _1463 + 1; }
+const _1462 = R[19](c);
+if (c.track) c.ruleDepth = _1463;
+if (_1462 !== F) _1452["result"] = _1462;
+const _1461 = _1462;
+if (_1461 === F) { c.idx = _1450; c.bindings = _1453; _1449 = F; break L_1451; }
+const _1464 = H[65](_1452, c);
+c.bindings = _1453;
+_1449 = _1464;
 }
-return _1409;
+return _1449;
 }
 
 // WindowSpec
-R[58] = (c) => {
+R[59] = (c) => {
 
-let _1425;
-L_1427: {
-const _1426 = c.idx;
-const _1429 = c.bindings;
-const _1428 = {};
-c.bindings = _1428;
-let _1430;
-const _1431 = c.tokens[c.idx];
-if (_1431 !== undefined && (_1431.id === 80 || (_1431.id === undefined && _1431.type === "LParen"))) { c.idx++; _1430 = _1431; }
-else { if (c.track) { E(c, "LParen"); } _1430 = F; }
-if (_1430 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
-let _1433;
-const _1434 = c.idx;
+let _1465;
+L_1467: {
+const _1466 = c.idx;
+const _1469 = c.bindings;
+const _1468 = {};
+c.bindings = _1468;
+let _1470;
+const _1471 = c.tokens[c.idx];
+if (_1471 !== undefined && (_1471.id === 82 || (_1471.id === undefined && _1471.type === "LParen"))) { c.idx++; _1470 = _1471; }
+else { if (c.track) { E(c, "LParen"); } _1470 = F; }
+if (_1470 === F) { c.idx = _1466; c.bindings = _1469; _1465 = F; break L_1467; }
+let _1473;
+const _1474 = c.idx;
 {
 
-let _1435;
-L_1436: {
-const _1437 = c.idx;
-let _1438;
-const _1439 = c.tokens[c.idx];
-if (_1439 !== undefined && (_1439.id === 54 || (_1439.id === undefined && _1439.type === "Partition"))) { c.idx++; _1438 = _1439; }
-else { if (c.track) { E(c, "Partition"); } _1438 = F; }
-if (_1438 === F) { c.idx = _1437; _1435 = F; break L_1436; }
-let _1440;
-const _1441 = c.tokens[c.idx];
-if (_1441 !== undefined && (_1441.id === 28 || (_1441.id === undefined && _1441.type === "By"))) { c.idx++; _1440 = _1441; }
-else { if (c.track) { E(c, "By"); } _1440 = F; }
-if (_1440 === F) { c.idx = _1437; _1435 = F; break L_1436; }
+let _1475;
+L_1476: {
+const _1477 = c.idx;
+let _1478;
+const _1479 = c.tokens[c.idx];
+if (_1479 !== undefined && (_1479.id === 54 || (_1479.id === undefined && _1479.type === "Partition"))) { c.idx++; _1478 = _1479; }
+else { if (c.track) { E(c, "Partition"); } _1478 = F; }
+if (_1478 === F) { c.idx = _1477; _1475 = F; break L_1476; }
+let _1480;
+const _1481 = c.tokens[c.idx];
+if (_1481 !== undefined && (_1481.id === 28 || (_1481.id === undefined && _1481.type === "By"))) { c.idx++; _1480 = _1481; }
+else { if (c.track) { E(c, "By"); } _1480 = F; }
+if (_1480 === F) { c.idx = _1477; _1475 = F; break L_1476; }
 
-let _1442 = [];
-L_1446: {
-const _1443 = c.idx;
+let _1482 = [];
+L_1486: {
+const _1483 = c.idx;
 
-const _1448 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1448] = "Expression"; c.ruleDepth = _1448 + 1; }
-const _1447 = R[19](c);
-if (c.track) c.ruleDepth = _1448;
-if (_1447 === F) { c.idx = _1443; _1442 = F; break L_1446; }
-_1442.push(_1447);
+const _1488 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1488] = "Expression"; c.ruleDepth = _1488 + 1; }
+const _1487 = R[19](c);
+if (c.track) c.ruleDepth = _1488;
+if (_1487 === F) { c.idx = _1483; _1482 = F; break L_1486; }
+_1482.push(_1487);
 for (;;) {
-const _1444 = c.idx;
-let _1449;
-const _1450 = c.tokens[c.idx];
-if (_1450 !== undefined && (_1450.id === 84 || (_1450.id === undefined && _1450.type === "Comma"))) { c.idx++; _1449 = _1450; }
-else { if (c.track) { E(c, "Comma"); } _1449 = F; }
-if (_1449 === F) { c.idx = _1444; break; }
-const _1445 = c.idx;
+const _1484 = c.idx;
+let _1489;
+const _1490 = c.tokens[c.idx];
+if (_1490 !== undefined && (_1490.id === 86 || (_1490.id === undefined && _1490.type === "Comma"))) { c.idx++; _1489 = _1490; }
+else { if (c.track) { E(c, "Comma"); } _1489 = F; }
+if (_1489 === F) { c.idx = _1484; break; }
+const _1485 = c.idx;
 
-const _1452 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1452] = "Expression"; c.ruleDepth = _1452 + 1; }
-const _1451 = R[19](c);
-if (c.track) c.ruleDepth = _1452;
-if (_1451 === F) { c.idx = _1444; break; }
-_1442.push(_1451);
+const _1492 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1492] = "Expression"; c.ruleDepth = _1492 + 1; }
+const _1491 = R[19](c);
+if (c.track) c.ruleDepth = _1492;
+if (_1491 === F) { c.idx = _1484; break; }
+_1482.push(_1491);
 }
 }
-if (_1442 === F) { c.idx = _1437; _1435 = F; break L_1436; }
-_1435 = _1442;
+if (_1482 === F) { c.idx = _1477; _1475 = F; break L_1476; }
+_1475 = _1482;
 }
-if (_1435 === F) { c.idx = _1434; _1433 = null; } else _1433 = _1435;
+if (_1475 === F) { c.idx = _1474; _1473 = null; } else _1473 = _1475;
 }
-if (_1433 !== F) _1428["partitionBy"] = _1433;
-const _1432 = _1433;
-if (_1432 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
-let _1454;
-const _1455 = c.idx;
+if (_1473 !== F) _1468["partitionBy"] = _1473;
+const _1472 = _1473;
+if (_1472 === F) { c.idx = _1466; c.bindings = _1469; _1465 = F; break L_1467; }
+let _1494;
+const _1495 = c.idx;
 {
 
-const _1457 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1457] = "OrderByClause"; c.ruleDepth = _1457 + 1; }
-const _1456 = R[6](c);
-if (c.track) c.ruleDepth = _1457;
-if (_1456 === F) { c.idx = _1455; _1454 = null; } else _1454 = _1456;
+const _1497 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1497] = "OrderByClause"; c.ruleDepth = _1497 + 1; }
+const _1496 = R[6](c);
+if (c.track) c.ruleDepth = _1497;
+if (_1496 === F) { c.idx = _1495; _1494 = null; } else _1494 = _1496;
 }
-if (_1454 !== F) _1428["orderBy"] = _1454;
-const _1453 = _1454;
-if (_1453 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
-let _1458;
-const _1459 = c.tokens[c.idx];
-if (_1459 !== undefined && (_1459.id === 81 || (_1459.id === undefined && _1459.type === "RParen"))) { c.idx++; _1458 = _1459; }
-else { if (c.track) { E(c, "RParen"); } _1458 = F; }
-if (_1458 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
-const _1460 = H[65](_1428, c);
-c.bindings = _1429;
-_1425 = _1460;
+if (_1494 !== F) _1468["orderBy"] = _1494;
+const _1493 = _1494;
+if (_1493 === F) { c.idx = _1466; c.bindings = _1469; _1465 = F; break L_1467; }
+let _1498;
+const _1499 = c.tokens[c.idx];
+if (_1499 !== undefined && (_1499.id === 83 || (_1499.id === undefined && _1499.type === "RParen"))) { c.idx++; _1498 = _1499; }
+else { if (c.track) { E(c, "RParen"); } _1498 = F; }
+if (_1498 === F) { c.idx = _1466; c.bindings = _1469; _1465 = F; break L_1467; }
+const _1500 = H[66](_1468, c);
+c.bindings = _1469;
+_1465 = _1500;
 }
-return _1425;
+return _1465;
 }
 
 // ConcatExpr$tower
-R[59] = (c) => {
+R[60] = (c) => {
 
-let _1461;
-L_1462: {
+let _1501;
+L_1502: {
 
-const _1467 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1467] = "Additive"; c.ruleDepth = _1467 + 1; }
-const _1466 = R[14](c);
-if (c.track) c.ruleDepth = _1467;
-if (_1466 === F) { _1461 = F; break L_1462; }
-let _1463 = _1466;
-let _1464 = null;
+const _1507 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1507] = "Additive"; c.ruleDepth = _1507 + 1; }
+const _1506 = R[14](c);
+if (c.track) c.ruleDepth = _1507;
+if (_1506 === F) { _1501 = F; break L_1502; }
+let _1503 = _1506;
+let _1504 = null;
 for (;;) {
-const _1465 = c.idx;
-let _1468;
-const _1469 = c.tokens[c.idx];
-if (_1469 !== undefined && (_1469.id === 66 || (_1469.id === undefined && _1469.type === "Concat"))) { c.idx++; _1468 = _1469; }
-else { if (c.track) { E(c, "Concat"); } _1468 = F; }
-if (_1468 === F) { c.idx = _1465; break; }
+const _1505 = c.idx;
+let _1508;
+const _1509 = c.tokens[c.idx];
+if (_1509 !== undefined && (_1509.id === 68 || (_1509.id === undefined && _1509.type === "Concat"))) { c.idx++; _1508 = _1509; }
+else { if (c.track) { E(c, "Concat"); } _1508 = F; }
+if (_1508 === F) { c.idx = _1505; break; }
 
-const _1471 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1471] = "Additive"; c.ruleDepth = _1471 + 1; }
-const _1470 = R[14](c);
-if (c.track) c.ruleDepth = _1471;
-if (_1470 === F) { c.idx = _1465; break; }
-if (_1464 === null) _1464 = { left: null, op: null, right: null };
-_1464.left = _1463; _1464.op = _1468; _1464.right = _1470;
-_1463 = H[66](_1464, c);
+const _1511 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1511] = "Additive"; c.ruleDepth = _1511 + 1; }
+const _1510 = R[14](c);
+if (c.track) c.ruleDepth = _1511;
+if (_1510 === F) { c.idx = _1505; break; }
+if (_1504 === null) _1504 = { left: null, op: null, right: null };
+_1504.left = _1503; _1504.op = _1508; _1504.right = _1510;
+_1503 = H[67](_1504, c);
 }
-_1461 = _1463;
+_1501 = _1503;
 }
-return _1461;
+return _1501;
 }
 
 // InTail
-R[60] = (c) => {
+R[61] = (c) => {
 
-let _1473;
-L_1474: {
-const _1475 = c.idx;
-let _1476;
-const _1477 = c.tokens[c.idx];
-if (_1477 !== undefined && (_1477.id === 12 || (_1477.id === undefined && _1477.type === "In"))) { c.idx++; _1476 = _1477; }
-else { if (c.track) { E(c, "In"); } _1476 = F; }
-if (_1476 === F) { c.idx = _1475; _1473 = F; break L_1474; }
-let _1478;
-const _1479 = c.tokens[c.idx];
-if (_1479 !== undefined && (_1479.id === 80 || (_1479.id === undefined && _1479.type === "LParen"))) { c.idx++; _1478 = _1479; }
-else { if (c.track) { E(c, "LParen"); } _1478 = F; }
-if (_1478 === F) { c.idx = _1475; _1473 = F; break L_1474; }
+let _1513;
+L_1514: {
+const _1515 = c.idx;
+let _1516;
+const _1517 = c.tokens[c.idx];
+if (_1517 !== undefined && (_1517.id === 12 || (_1517.id === undefined && _1517.type === "In"))) { c.idx++; _1516 = _1517; }
+else { if (c.track) { E(c, "In"); } _1516 = F; }
+if (_1516 === F) { c.idx = _1515; _1513 = F; break L_1514; }
+let _1518;
+const _1519 = c.tokens[c.idx];
+if (_1519 !== undefined && (_1519.id === 82 || (_1519.id === undefined && _1519.type === "LParen"))) { c.idx++; _1518 = _1519; }
+else { if (c.track) { E(c, "LParen"); } _1518 = F; }
+if (_1518 === F) { c.idx = _1515; _1513 = F; break L_1514; }
 
-let _1480;
-L_1481: {
-const _1482 = c.tokens[c.idx];
-if (_1482 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1480 = F; break L_1481; }
-const _1483 = _1482.id !== undefined ? _1482.id : I[_1482.type];
-switch (_1483) {
+let _1520;
+L_1521: {
+const _1522 = c.tokens[c.idx];
+if (_1522 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1520 = F; break L_1521; }
+const _1523 = _1522.id !== undefined ? _1522.id : I[_1522.type];
+switch (_1523) {
 case 46: case 3: case 38: {
 
-const _1487 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1487] = "Query"; c.ruleDepth = _1487 + 1; }
-const _1486 = R[2](c);
-if (c.track) c.ruleDepth = _1487;
-const _1485 = _1486 === F ? F : H[67](_1486, c);
-_1480 = _1485; break L_1481;
+const _1527 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1527] = "Query"; c.ruleDepth = _1527 + 1; }
+const _1526 = R[2](c);
+if (c.track) c.ruleDepth = _1527;
+const _1525 = _1526 === F ? F : H[68](_1526, c);
+_1520 = _1525; break L_1521;
 }
-case 80: {
-let _1488;
-L_1489: {
-const _1490 = c.idx;
-let _1491 = 3;
+case 82: {
+let _1528;
+L_1529: {
+const _1530 = c.idx;
+let _1531 = 3;
 if (!c.track) {
-const _1492 = c.tokens[_1490 + 1];
-switch (_1492 === undefined ? -1 : (_1492.id !== undefined ? _1492.id : I[_1492.type])) {
-case 46: case 3: case 80: case 38: _1491 = 3; break;
-case 11: case 76: case 75: case 39: case 40: case 14: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: case 50: case 41: _1491 = 2; break;
-default: _1491 = 0; break;
+const _1532 = c.tokens[_1530 + 1];
+switch (_1532 === undefined ? -1 : (_1532.id !== undefined ? _1532.id : I[_1532.type])) {
+case 46: case 3: case 82: case 38: _1531 = 3; break;
+case 11: case 78: case 77: case 39: case 40: case 14: case 51: case 52: case 57: case 62: case 60: case 61: case 19: case 20: case 58: case 59: case 89: case 63: case 67: case 50: case 41: _1531 = 2; break;
+default: _1531 = 0; break;
 }
 }
-if (_1491 & 1) {
+if (_1531 & 1) {
 
-const _1496 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1496] = "Query"; c.ruleDepth = _1496 + 1; }
-const _1495 = R[2](c);
-if (c.track) c.ruleDepth = _1496;
-const _1494 = _1495 === F ? F : H[68](_1495, c);
-if (_1494 !== F) { _1488 = _1494; break L_1489; }
-c.idx = _1490;
+const _1536 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1536] = "Query"; c.ruleDepth = _1536 + 1; }
+const _1535 = R[2](c);
+if (c.track) c.ruleDepth = _1536;
+const _1534 = _1535 === F ? F : H[69](_1535, c);
+if (_1534 !== F) { _1528 = _1534; break L_1529; }
+c.idx = _1530;
 }
-if (_1491 & 2) {
+if (_1531 & 2) {
 
-let _1499 = [];
-L_1503: {
-const _1500 = c.idx;
+let _1539 = [];
+L_1543: {
+const _1540 = c.idx;
 
-const _1505 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1505] = "Expression"; c.ruleDepth = _1505 + 1; }
-const _1504 = R[19](c);
-if (c.track) c.ruleDepth = _1505;
-if (_1504 === F) { c.idx = _1500; _1499 = F; break L_1503; }
-_1499.push(_1504);
+const _1545 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1545] = "Expression"; c.ruleDepth = _1545 + 1; }
+const _1544 = R[19](c);
+if (c.track) c.ruleDepth = _1545;
+if (_1544 === F) { c.idx = _1540; _1539 = F; break L_1543; }
+_1539.push(_1544);
 for (;;) {
-const _1501 = c.idx;
-let _1506;
-const _1507 = c.tokens[c.idx];
-if (_1507 !== undefined && (_1507.id === 84 || (_1507.id === undefined && _1507.type === "Comma"))) { c.idx++; _1506 = _1507; }
-else { if (c.track) { E(c, "Comma"); } _1506 = F; }
-if (_1506 === F) { c.idx = _1501; break; }
-const _1502 = c.idx;
+const _1541 = c.idx;
+let _1546;
+const _1547 = c.tokens[c.idx];
+if (_1547 !== undefined && (_1547.id === 86 || (_1547.id === undefined && _1547.type === "Comma"))) { c.idx++; _1546 = _1547; }
+else { if (c.track) { E(c, "Comma"); } _1546 = F; }
+if (_1546 === F) { c.idx = _1541; break; }
+const _1542 = c.idx;
 
-const _1509 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1509] = "Expression"; c.ruleDepth = _1509 + 1; }
-const _1508 = R[19](c);
-if (c.track) c.ruleDepth = _1509;
-if (_1508 === F) { c.idx = _1501; break; }
-_1499.push(_1508);
+const _1549 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1549] = "Expression"; c.ruleDepth = _1549 + 1; }
+const _1548 = R[19](c);
+if (c.track) c.ruleDepth = _1549;
+if (_1548 === F) { c.idx = _1541; break; }
+_1539.push(_1548);
 }
 }
-const _1498 = _1499 === F ? F : H[69](_1499, c);
-if (_1498 !== F) { _1488 = _1498; break L_1489; }
-c.idx = _1490;
+const _1538 = _1539 === F ? F : H[70](_1539, c);
+if (_1538 !== F) { _1528 = _1538; break L_1529; }
+c.idx = _1530;
 }
-_1488 = F;
+_1528 = F;
 }
-_1480 = _1488; break L_1481;
+_1520 = _1528; break L_1521;
 }
-case 11: case 76: case 75: case 39: case 40: case 14: case 50: case 41: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
+case 11: case 78: case 77: case 39: case 40: case 14: case 50: case 41: case 51: case 52: case 57: case 62: case 60: case 61: case 19: case 20: case 58: case 59: case 89: case 63: case 67: {
 
-let _1512 = [];
-L_1516: {
-const _1513 = c.idx;
+let _1552 = [];
+L_1556: {
+const _1553 = c.idx;
 
-const _1518 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1518] = "Expression"; c.ruleDepth = _1518 + 1; }
-const _1517 = R[19](c);
-if (c.track) c.ruleDepth = _1518;
-if (_1517 === F) { c.idx = _1513; _1512 = F; break L_1516; }
-_1512.push(_1517);
+const _1558 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1558] = "Expression"; c.ruleDepth = _1558 + 1; }
+const _1557 = R[19](c);
+if (c.track) c.ruleDepth = _1558;
+if (_1557 === F) { c.idx = _1553; _1552 = F; break L_1556; }
+_1552.push(_1557);
 for (;;) {
-const _1514 = c.idx;
-let _1519;
-const _1520 = c.tokens[c.idx];
-if (_1520 !== undefined && (_1520.id === 84 || (_1520.id === undefined && _1520.type === "Comma"))) { c.idx++; _1519 = _1520; }
-else { if (c.track) { E(c, "Comma"); } _1519 = F; }
-if (_1519 === F) { c.idx = _1514; break; }
-const _1515 = c.idx;
+const _1554 = c.idx;
+let _1559;
+const _1560 = c.tokens[c.idx];
+if (_1560 !== undefined && (_1560.id === 86 || (_1560.id === undefined && _1560.type === "Comma"))) { c.idx++; _1559 = _1560; }
+else { if (c.track) { E(c, "Comma"); } _1559 = F; }
+if (_1559 === F) { c.idx = _1554; break; }
+const _1555 = c.idx;
 
-const _1522 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1522] = "Expression"; c.ruleDepth = _1522 + 1; }
-const _1521 = R[19](c);
-if (c.track) c.ruleDepth = _1522;
-if (_1521 === F) { c.idx = _1514; break; }
-_1512.push(_1521);
+const _1562 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1562] = "Expression"; c.ruleDepth = _1562 + 1; }
+const _1561 = R[19](c);
+if (c.track) c.ruleDepth = _1562;
+if (_1561 === F) { c.idx = _1554; break; }
+_1552.push(_1561);
 }
 }
-const _1511 = _1512 === F ? F : H[70](_1512, c);
-_1480 = _1511; break L_1481;
+const _1551 = _1552 === F ? F : H[71](_1552, c);
+_1520 = _1551; break L_1521;
 }
-default: { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1480 = F; break L_1481; }
+default: { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Pivot"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1520 = F; break L_1521; }
 }
 }
-if (_1480 === F) { c.idx = _1475; _1473 = F; break L_1474; }
-let _1523;
-const _1524 = c.tokens[c.idx];
-if (_1524 !== undefined && (_1524.id === 81 || (_1524.id === undefined && _1524.type === "RParen"))) { c.idx++; _1523 = _1524; }
-else { if (c.track) { E(c, "RParen"); } _1523 = F; }
-if (_1523 === F) { c.idx = _1475; _1473 = F; break L_1474; }
-_1473 = _1480;
+if (_1520 === F) { c.idx = _1515; _1513 = F; break L_1514; }
+let _1563;
+const _1564 = c.tokens[c.idx];
+if (_1564 !== undefined && (_1564.id === 83 || (_1564.id === undefined && _1564.type === "RParen"))) { c.idx++; _1563 = _1564; }
+else { if (c.track) { E(c, "RParen"); } _1563 = F; }
+if (_1563 === F) { c.idx = _1515; _1513 = F; break L_1514; }
+_1513 = _1520;
 }
-return _1473;
+return _1513;
 }
 
 // BetweenTail
-R[61] = (c) => {
+R[62] = (c) => {
 
-let _1525;
-L_1527: {
-const _1526 = c.idx;
-const _1529 = c.bindings;
-const _1528 = {};
-c.bindings = _1528;
-let _1530;
-const _1531 = c.tokens[c.idx];
-if (_1531 !== undefined && (_1531.id === 17 || (_1531.id === undefined && _1531.type === "Between"))) { c.idx++; _1530 = _1531; }
-else { if (c.track) { E(c, "Between"); } _1530 = F; }
-if (_1530 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
+let _1565;
+L_1567: {
+const _1566 = c.idx;
+const _1569 = c.bindings;
+const _1568 = {};
+c.bindings = _1568;
+let _1570;
+const _1571 = c.tokens[c.idx];
+if (_1571 !== undefined && (_1571.id === 17 || (_1571.id === undefined && _1571.type === "Between"))) { c.idx++; _1570 = _1571; }
+else { if (c.track) { E(c, "Between"); } _1570 = F; }
+if (_1570 === F) { c.idx = _1566; c.bindings = _1569; _1565 = F; break L_1567; }
 
-const _1534 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1534] = "ConcatExpr"; c.ruleDepth = _1534 + 1; }
-const _1533 = R[55](c);
-if (c.track) c.ruleDepth = _1534;
-if (_1533 !== F) _1528["low"] = _1533;
-const _1532 = _1533;
-if (_1532 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
-let _1535;
-const _1536 = c.tokens[c.idx];
-if (_1536 !== undefined && (_1536.id === 9 || (_1536.id === undefined && _1536.type === "And"))) { c.idx++; _1535 = _1536; }
-else { if (c.track) { E(c, "And"); } _1535 = F; }
-if (_1535 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
+const _1574 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1574] = "ConcatExpr"; c.ruleDepth = _1574 + 1; }
+const _1573 = R[56](c);
+if (c.track) c.ruleDepth = _1574;
+if (_1573 !== F) _1568["low"] = _1573;
+const _1572 = _1573;
+if (_1572 === F) { c.idx = _1566; c.bindings = _1569; _1565 = F; break L_1567; }
+let _1575;
+const _1576 = c.tokens[c.idx];
+if (_1576 !== undefined && (_1576.id === 9 || (_1576.id === undefined && _1576.type === "And"))) { c.idx++; _1575 = _1576; }
+else { if (c.track) { E(c, "And"); } _1575 = F; }
+if (_1575 === F) { c.idx = _1566; c.bindings = _1569; _1565 = F; break L_1567; }
 
-const _1539 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1539] = "ConcatExpr"; c.ruleDepth = _1539 + 1; }
-const _1538 = R[55](c);
-if (c.track) c.ruleDepth = _1539;
-if (_1538 !== F) _1528["high"] = _1538;
-const _1537 = _1538;
-if (_1537 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
-const _1540 = H[71](_1528, c);
-c.bindings = _1529;
-_1525 = _1540;
+const _1579 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1579] = "ConcatExpr"; c.ruleDepth = _1579 + 1; }
+const _1578 = R[56](c);
+if (c.track) c.ruleDepth = _1579;
+if (_1578 !== F) _1568["high"] = _1578;
+const _1577 = _1578;
+if (_1577 === F) { c.idx = _1566; c.bindings = _1569; _1565 = F; break L_1567; }
+const _1580 = H[72](_1568, c);
+c.bindings = _1569;
+_1565 = _1580;
 }
-return _1525;
+return _1565;
 }
 
 // LikeTail
-R[62] = (c) => {
+R[63] = (c) => {
 
-let _1541;
-L_1543: {
-const _1542 = c.idx;
-const _1545 = c.bindings;
-const _1544 = {};
-c.bindings = _1544;
+let _1581;
+L_1583: {
+const _1582 = c.idx;
+const _1585 = c.bindings;
+const _1584 = {};
+c.bindings = _1584;
 
-let _1547;
-L_1548: {
-const _1549 = c.tokens[c.idx];
-if (_1549 === undefined) { if (c.track) { E(c, "Like"); E(c, "Ilike"); } _1547 = F; break L_1548; }
-const _1550 = _1549.id !== undefined ? _1549.id : I[_1549.type];
-switch (_1550) {
+let _1587;
+L_1588: {
+const _1589 = c.tokens[c.idx];
+if (_1589 === undefined) { if (c.track) { E(c, "Like"); E(c, "Ilike"); } _1587 = F; break L_1588; }
+const _1590 = _1589.id !== undefined ? _1589.id : I[_1589.type];
+switch (_1590) {
 case 15: {
 
-let _1551;
-L_1552: {
-const _1553 = c.idx;
-let _1554;
-const _1555 = c.tokens[c.idx];
-if (_1555 !== undefined && (_1555.id === 15 || (_1555.id === undefined && _1555.type === "Like"))) { c.idx++; _1554 = _1555; }
-else { if (c.track) { E(c, "Like"); } _1554 = F; }
-if (_1554 === F) { c.idx = _1553; _1551 = F; break L_1552; }
-_1551 = "LIKE";
+let _1591;
+L_1592: {
+const _1593 = c.idx;
+let _1594;
+const _1595 = c.tokens[c.idx];
+if (_1595 !== undefined && (_1595.id === 15 || (_1595.id === undefined && _1595.type === "Like"))) { c.idx++; _1594 = _1595; }
+else { if (c.track) { E(c, "Like"); } _1594 = F; }
+if (_1594 === F) { c.idx = _1593; _1591 = F; break L_1592; }
+_1591 = "LIKE";
 }
-_1547 = _1551; break L_1548;
+_1587 = _1591; break L_1588;
 }
 case 16: {
 
-let _1556;
-L_1557: {
-const _1558 = c.idx;
-let _1559;
-const _1560 = c.tokens[c.idx];
-if (_1560 !== undefined && (_1560.id === 16 || (_1560.id === undefined && _1560.type === "Ilike"))) { c.idx++; _1559 = _1560; }
-else { if (c.track) { E(c, "Ilike"); } _1559 = F; }
-if (_1559 === F) { c.idx = _1558; _1556 = F; break L_1557; }
-_1556 = "ILIKE";
+let _1596;
+L_1597: {
+const _1598 = c.idx;
+let _1599;
+const _1600 = c.tokens[c.idx];
+if (_1600 !== undefined && (_1600.id === 16 || (_1600.id === undefined && _1600.type === "Ilike"))) { c.idx++; _1599 = _1600; }
+else { if (c.track) { E(c, "Ilike"); } _1599 = F; }
+if (_1599 === F) { c.idx = _1598; _1596 = F; break L_1597; }
+_1596 = "ILIKE";
 }
-_1547 = _1556; break L_1548;
+_1587 = _1596; break L_1588;
 }
-default: { if (c.track) { E(c, "Like"); E(c, "Ilike"); } _1547 = F; break L_1548; }
+default: { if (c.track) { E(c, "Like"); E(c, "Ilike"); } _1587 = F; break L_1588; }
 }
 }
-if (_1547 !== F) _1544["op"] = _1547;
-const _1546 = _1547;
-if (_1546 === F) { c.idx = _1542; c.bindings = _1545; _1541 = F; break L_1543; }
+if (_1587 !== F) _1584["op"] = _1587;
+const _1586 = _1587;
+if (_1586 === F) { c.idx = _1582; c.bindings = _1585; _1581 = F; break L_1583; }
 
-const _1563 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1563] = "ConcatExpr"; c.ruleDepth = _1563 + 1; }
-const _1562 = R[55](c);
-if (c.track) c.ruleDepth = _1563;
-if (_1562 !== F) _1544["p"] = _1562;
-const _1561 = _1562;
-if (_1561 === F) { c.idx = _1542; c.bindings = _1545; _1541 = F; break L_1543; }
-const _1564 = H[72](_1544, c);
-c.bindings = _1545;
-_1541 = _1564;
+const _1603 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1603] = "ConcatExpr"; c.ruleDepth = _1603 + 1; }
+const _1602 = R[56](c);
+if (c.track) c.ruleDepth = _1603;
+if (_1602 !== F) _1584["p"] = _1602;
+const _1601 = _1602;
+if (_1601 === F) { c.idx = _1582; c.bindings = _1585; _1581 = F; break L_1583; }
+const _1604 = H[73](_1584, c);
+c.bindings = _1585;
+_1581 = _1604;
 }
-return _1541;
+return _1581;
 }
 
 const RULES = {
@@ -5434,17 +5555,18 @@ const RULES = {
   "CaseExpr": 49,
   "CastExpr": 50,
   "ExtractExpr": 51,
-  "FunctionCall": 52,
-  "ColumnRef": 53,
-  "Param": 54,
-  "ConcatExpr": 55,
-  "PredicateTail": 56,
-  "WhenClause": 57,
-  "WindowSpec": 58,
-  "ConcatExpr$tower": 59,
-  "InTail": 60,
-  "BetweenTail": 61,
-  "LikeTail": 62
+  "PivotExpr": 52,
+  "FunctionCall": 53,
+  "ColumnRef": 54,
+  "Param": 55,
+  "ConcatExpr": 56,
+  "PredicateTail": 57,
+  "WhenClause": 58,
+  "WindowSpec": 59,
+  "ConcatExpr$tower": 60,
+  "InTail": 61,
+  "BetweenTail": 62,
+  "LikeTail": 63
 }
 
 /**
