@@ -49,3 +49,61 @@ describe('inlined operators match the general functions', () => {
     assert.deepEqual([...query('SELECT 1 AS x FROM t WHERE FALSE AND v = 1 AND w = 2', data)], [])
   })
 })
+
+describe('compiled GROUP BY matches the general path', () => {
+  const g = Array.from({ length: 400 }, (_, i) => ({
+    i,
+    a: [null, 'x', 'y', 1, 2, '1', true][i % 7],
+    b: i % 3 === 0 ? null : i % 5,
+    v: [null, 1, 2.5, '3', 'abc', -4, 10, NaN, undefined][i % 9],
+    s: [null, 'p', 'q', 'a'][i % 4]
+  }))
+  const gdata = { t: g, empty: [] }
+  const sameGroups = (sql) => {
+    const norm = (rows) => JSON.stringify([...rows].sort((x, y) => JSON.stringify(x) < JSON.stringify(y) ? -1 : 1))
+    assert.equal(norm(query(sql, gdata)), norm(query(sql, gdata, { interpreted: true })), sql)
+  }
+  const aggs = 'COUNT(*) AS n, COUNT(v) AS c, SUM(v) AS s, AVG(v) AS m, MIN(v) AS lo, MAX(v) AS hi, MIN(s) AS ls, MAX(s) AS hs'
+  test('one, two and three keys, with WHERE and FILTER', () => {
+    sameGroups(`SELECT a, ${aggs} FROM t GROUP BY a`)
+    sameGroups(`SELECT a, b, ${aggs} FROM t GROUP BY a, b`)
+    sameGroups(`SELECT a, b, s, ${aggs} FROM t GROUP BY a, b, s`)
+    sameGroups(`SELECT a, ${aggs} FROM t WHERE i % 2 = 0 AND v IS NOT NULL GROUP BY a`)
+    sameGroups('SELECT b, COUNT(*) FILTER (WHERE v > 1) AS big, SUM(v) FILTER (WHERE a = \'x\') AS sx FROM t GROUP BY b')
+    sameGroups('SELECT a, COUNT(*) AS n FROM t GROUP BY a HAVING COUNT(*) > 50')
+    sameGroups('SELECT b + 1 AS k, SUM(i) AS s FROM t GROUP BY b + 1')
+  })
+  test('no GROUP BY: one row, even over nothing', () => {
+    sameGroups(`SELECT ${aggs} FROM t`)
+    sameGroups(`SELECT ${aggs} FROM t WHERE i < 0`)
+    sameGroups(`SELECT ${aggs} FROM empty`)
+    assert.deepEqual([...query('SELECT COUNT(*) AS n, SUM(v) AS s FROM empty', gdata)], [{ n: 0, s: null }])
+    assert.deepEqual([...query('SELECT a, COUNT(*) AS n FROM empty GROUP BY a', gdata)], [])
+  })
+})
+
+describe('GROUP BY on one integer-like key', () => {
+  // The compiled path indexes small non-negative integers into an array and keeps every
+  // other key in a Map; both must group the same as the general path, in the same order.
+  const keys = [0, -0, 1, 2, 1048575, 1048576, 1048577, 4294967296, -1, 1.5, 2.5, NaN, Infinity, '0', '1', '', null, undefined, true, false, 7, 7, 0, 1]
+  const kdata = { k: keys.map((v, i) => ({ v, i })) }
+  const rows = (sql, options) => JSON.stringify([...query(sql, kdata, options)])
+  test('same groups, same order as the general path', () => {
+    for (const sql of [
+      'SELECT v, COUNT(*) AS n, SUM(i) AS s, MIN(i) AS lo, MAX(i) AS hi FROM k GROUP BY v',
+      'SELECT v, COUNT(*) AS n FROM k WHERE i % 2 = 0 GROUP BY v',
+      'SELECT v + 0 AS w, COUNT(*) AS n FROM k GROUP BY v + 0'
+    ]) assert.equal(rows(sql), rows(sql, { interpreted: true }), sql)
+  })
+  test('0 and -0 are one group; 1 and "1" are two; 7 repeats', () => {
+    const r = [...query('SELECT v, COUNT(*) AS n FROM k GROUP BY v', kdata)]
+    const n = (pick) => r.filter((x) => pick(x.v)).map((x) => x.n)
+    assert.deepEqual(n((v) => v === 0), [3]) // 0, -0, 0
+    assert.deepEqual(n((v) => v === '0'), [1])
+    assert.deepEqual(n((v) => v === 1), [2])
+    assert.deepEqual(n((v) => v === '1'), [1])
+    assert.deepEqual(n((v) => v === 7), [2])
+    assert.deepEqual(n((v) => v === null), [2]) // null and undefined are one NULL group
+    assert.equal(r.reduce((t, x) => t + x.n, 0), keys.length)
+  })
+})

@@ -47,14 +47,40 @@ export function prepare (sql, options = {}) {
  * @returns {object[] & { columns: string[] }}
  */
 export function query (sql, data, options = {}) {
-  return prepare(sql, options).query(data, options.params)
+  const engine = options.engine ?? defaultEngine
+  return asRows(last(executePlan(planFor(sql, engine, options), data, { ...options, engine }).results))
 }
 
 /**
  * Run a script and get every statement's result, and the tables it created.
  */
 export function execute (sql, data, options = {}) {
-  return prepare(sql, options).execute(data, options.params)
+  const engine = options.engine ?? defaultEngine
+  return executePlan(planFor(sql, engine, options), data, { ...options, engine })
+}
+
+// The same SQL text compiles to the same plan, and a plan carries the functions the
+// engine built for it, so `query()` keeps the most recent ones. `limits` shape the
+// plan at compile time, so a call that passes them compiles its own.
+const plans = new WeakMap()
+const PLAN_CACHE_SIZE = 256
+const PLAN_CACHE_MAX_SQL = 8192
+
+function planFor (sql, engine, options) {
+  const fresh = () => compile(sql, { functions: engine.sqlFunctions, limits: options.limits })
+  if (options.limits || typeof sql !== 'string' || sql.length > PLAN_CACHE_MAX_SQL) return fresh()
+  let cache = plans.get(engine)
+  if (!cache) plans.set(engine, cache = new Map())
+  let plan = cache.get(sql)
+  if (plan !== undefined) {
+    cache.delete(sql) // least recently used first
+    cache.set(sql, plan)
+    return plan
+  }
+  plan = fresh()
+  cache.set(sql, plan)
+  if (cache.size > PLAN_CACHE_SIZE) cache.delete(cache.keys().next().value)
+  return plan
 }
 
 function last (results) {

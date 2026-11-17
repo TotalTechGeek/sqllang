@@ -26,6 +26,67 @@ const internal = {
   // One output row from `[name, value, name, value, ...]`. Compiled, it is a single
   // object literal, so a whole select list costs one call per row. Not
   // deterministic: each row needs its own object, never a folded shared one.
+  // A one-table GROUP BY as one function: [alias, where | null, keys, aggregates], each
+  // aggregate { kind, star, arg, filter }. The loop, the group lookup and the running
+  // totals are one piece of code. Rows come in as `context.$scan`, the group table as
+  // `context.$grp`. COUNT, SUM, AVG, MIN and MAX only: the incremental ones.
+  GROUPSCAN: {
+    method: () => { throw new SqlError('GROUPSCAN runs compiled only') },
+    compile: ([alias, where, keys, aggs], bs) => {
+      const raw = (text) => bs.compile([text])
+      // `alias.column` reads straight off the row, with the same guard the engine puts on
+      // a column read; anything else reads the context, so the row is stored there too.
+      const simple = (logic) => {
+        const v = logic !== null && typeof logic === 'object' ? logic.val : null
+        return Array.isArray(v) && v.length === 2 && v[0] === alias && typeof v[1] === 'string' ? v[1] : null
+      }
+      const read = (logic) => {
+        const column = simple(logic)
+        return column === null ? logic : raw(`(typeof (p = (r?.[${JSON.stringify(column)}] ?? null)) === "function" ? null : p)`)
+      }
+      const exprs = [...keys, ...aggs.flatMap((a) => [a.arg, a.filter])].filter((e) => e !== null)
+      const needsContext = where !== null || exprs.some((e) => simple(e) === null)
+
+      let res = raw('(() => { const rows = context["$scan"], grp = context["$grp"], root = grp.root, open = grp.open; let single = null, p, prev; const ints = []; for (let i = 0; i < rows.length; i++) { ')
+      res = bs.compile`${res}if ((i & 1023) === 0) ${sync(tick)}(Math.min(1024, rows.length - i)); const r = rows[i]; `
+      if (needsContext) res = bs.compile`${res}context[${alias}] = r; `
+      if (where !== null) res = bs.compile`${res}if (!${sync(isTrue)}(${where})) continue; `
+      const fresh = raw(`{ ${aggs.map((_, j) => `c${j}: 0, s${j}: 0, n${j}: 0, b${j}: null`).join(', ')}${aggs.length ? ', ' : ''}first: null }`)
+      if (!keys.length) {
+        res = bs.compile`${res}if (single === null) { single = ${fresh}; open(single, r) } const g = single; `
+      } else {
+        const key = (logic) => bs.compile`(p = ${read(logic)}) === undefined ? null : (p !== null && typeof p === "object") ? ${sync(keyOf)}(p) : p`
+        if (keys.length === 1) {
+          // One key: small non-negative integers index an array, which V8 reads faster than a Map.
+          res = bs.compile`${res}let g; { const k = ${key(keys[0])}; if (typeof k === "number" && k >= 0 && k < 1048576 && (k | 0) === k) { g = ints[k]; if (g === undefined) { g = ${fresh}; open(g, r); ints[k] = g } } else { g = root.get(k); if (g === undefined) { g = ${fresh}; open(g, r); root.set(k, g) } } } `
+        }
+        res = bs.compile`${res}${raw(keys.length === 1 ? '' : 'let level = root; ')}`
+        for (let d = 0; keys.length > 1 && d < keys.length - 1; d++) {
+          res = bs.compile`${res}{ const k = ${key(keys[d])}; let next = level.get(k); if (next === undefined) { next = new Map(); level.set(k, next) } level = next } `
+        }
+        if (keys.length > 1) res = bs.compile`${res}let g; { const k = ${key(keys[keys.length - 1])}; g = level.get(k); if (g === undefined) { g = ${fresh}; open(g, r); level.set(k, g) } } `
+      }
+      aggs.forEach((a, j) => {
+        let body
+        if (a.star) body = raw(`g.c${j}++; `)
+        else {
+          const kindCode = a.kind === SUM || a.kind === AVG
+            ? bs.compile`${raw('const x = typeof v === "number" ? v : ')}${sync(toNumber)}(v); if (x !== null) ${raw(`{ g.s${j} += x; g.n${j}++ }`)} `
+            : a.kind === MIN || a.kind === MAX
+              ? bs.compile`${raw(`if (g.b${j} === null || (typeof v === "number" && typeof g.b${j} === "number" ? v ${a.kind === MIN ? '<' : '>'} g.b${j} : `)}${sync(sortCompare)}(v, ${raw(`g.b${j}`)}, false, null) ${raw(a.kind === MIN ? '< 0' : '> 0')})) ${raw(`g.b${j} = v; `)}`
+              : raw('')
+          body = bs.compile`${raw('const v = ')}${read(a.arg)}; if (v !== null && v !== undefined) { ${raw(`g.c${j}++; `)}${kindCode} } `
+        }
+        if (a.filter !== null) body = bs.compile`if (${sync(isTrue)}(${read(a.filter)})) { ${body} } `
+        res = bs.compile`${res}{ ${body} } `
+      })
+      return bs.compile`${res}} })()`
+    },
+    traverse: false,
+    deterministic: false
+  },
+  // (Both scans declare their own `prev`, the engine's scratch variable, so the snippets inside
+  // them use a local instead of the enclosing function's, which a closure would keep in memory.)
   // A whole single-table scan as one function: [alias, where | null, row]. Compiled, the
   // loop, the filter and the projection are one piece of code, with the rows passed in
   // as `context.$scan`. Only used compiled; the interpreted path runs the loop itself.
@@ -33,7 +94,7 @@ const internal = {
     method: () => { throw new SqlError('SCAN runs compiled only') },
     compile: ([alias, where, row], bs) => {
       const skip = where === null ? bs.compile`` : bs.compile`if (!${sync(isTrue)}(${where})) continue;`
-      return bs.compile`(() => { const rows = context["$scan"]; const out = []; for (let i = 0; i < rows.length; i++) { if ((i & 1023) === 0) ${sync(tick)}(Math.min(1024, rows.length - i)); context[${alias}] = rows[i]; ${skip} out.push(${row}) } return out })()`
+      return bs.compile`(() => { let prev; const rows = context["$scan"]; const out = []; for (let i = 0; i < rows.length; i++) { if ((i & 1023) === 0) ${sync(tick)}(Math.min(1024, rows.length - i)); context[${alias}] = rows[i]; ${skip} out.push(${row}) } return out })()`
     },
     traverse: false,
     deterministic: false
@@ -420,8 +481,11 @@ function extend (env, aliases, alias, row) {
 
 function runSelect (p, state, outer, keep = null) {
   const base = outer ? Object.create(outer) : {}
-  const projector = makeProjector(p, state)
   const orderFns = p.orderBy ? p.orderBy.map((o) => fnOf(state, o.expr)) : null
+  // A plain one-table scan runs as one compiled function, which has its own copy of
+  // the select list, so the projector need not build (and eval) another.
+  const scan = orderFns === null && !p.grouped && p.having === null && scannable(p, state)
+  const projector = makeProjector(p, state, scan)
   // DISTINCT must see every row before the first k are known, so it sorts fully.
   const top = orderFns && keep !== null && !p.distinct ? topK(keep, comparatorFor(p.orderBy)) : null
 
@@ -445,8 +509,8 @@ function runSelect (p, state, outer, keep = null) {
       items = top.best
     } else if (orderFns === null) {
       // No ORDER BY: nothing needs the `{ row, keys }` wrapper, so keep the rows.
-      plain = scanRows(p, state, base)
-      if (plain === null) {
+      if (scan) plain = scanRows(p, state, base)
+      else {
         plain = []
         streamRows(p, state, base, (env) => { plain.push(projector.project(env)) })
       }
@@ -462,7 +526,9 @@ function runSelect (p, state, outer, keep = null) {
   } else {
     let envs
     if (single && p.grouped) {
-      envs = group(p, state, base, (visit) => streamRows(p, state, base, visit))
+      envs = groupScannable(p, state)
+        ? groupScan(p, state, base)
+        : group(p, state, base, (visit) => streamRows(p, state, base, visit))
     } else {
       envs = [base]
       for (const step of p.steps) envs = joinStep(step, envs, base, state)
@@ -535,11 +601,54 @@ function sourceRows (p, state, base) {
   return source.kind === 'expr' ? toRows(fnOf(state, source.expr)(base), false) : materialize(source, state)
 }
 
+const groupLogics = new WeakMap()
+
+/** Whether a one-table GROUP BY can run as one compiled function. */
+function groupScannable (p, state) {
+  return !state.interpreted && p.aggregates.every((spec) => INCREMENTAL.has(spec.name) && !spec.distinct && !spec.orderBy)
+}
+
+/** The groups of a one-table GROUP BY, as the contexts `group()` would give. */
+function groupScan (p, state, base) {
+  let logic = groupLogics.get(p)
+  if (!logic) {
+    const aggs = p.aggregates.map((spec) => ({
+      kind: KIND[spec.name], star: spec.star, arg: spec.star ? null : spec.args[0], filter: spec.filter
+    }))
+    groupLogics.set(p, logic = { GROUPSCAN: [p.steps[0].alias, p.where, p.groupBy ?? [], aggs] })
+  }
+  const alias = p.steps[0].alias
+  const aggs = p.aggregates.map((spec) => ({ incremental: true, kind: KIND[spec.name] }))
+  const list = []
+  const open = (g, row) => {
+    g.first = snapshot(base)
+    g.first[alias] = row
+    list.push(g)
+    checkRows(list.length)
+  }
+  const env = snapshot(base)
+  env.$scan = sourceRows(p, state, base)
+  env.$grp = { root: new Map(), open }
+  fnOf(state, logic)(env)
+  if (!(p.groupBy && p.groupBy.length) && list.length === 0) list.push({ first: base, accs: newAccumulators(aggs) })
+  // The generated code keeps each total as a field on its group; `finish` reads accumulator objects.
+  for (let i = 0; i < list.length; i++) {
+    const g = list[i]
+    if (g.accs) continue
+    g.accs = aggs.map((_, j) => ({ count: g[`c${j}`], sum: g[`s${j}`], numeric: g[`n${j}`], best: g[`b${j}`] }))
+  }
+  return finishGroups(list, aggs)
+}
+
 const scanLogics = new WeakMap()
 
-/** The projected rows of a one-table scan, run as one compiled function; null when it cannot be. */
+/** Whether a one-table select can run as one compiled scan. */
+function scannable (p, state) {
+  return !state.interpreted && p.row !== null && p.steps.length === 1 && p.steps[0].join === 'FROM' && !p.windows.length
+}
+
+/** The projected rows of a one-table scan, run as one compiled function. */
 function scanRows (p, state, base) {
-  if (state.interpreted || !p.row) return null
   let logic = scanLogics.get(p)
   if (!logic) scanLogics.set(p, logic = { SCAN: [p.steps[0].alias, p.where, p.row] })
   const env = snapshot(base)
@@ -570,19 +679,19 @@ function orderKeys (p, env, row, projector, orderFns) {
 }
 
 /** Builds output rows from contexts, and collects the column list as it goes. */
-function makeProjector (p, state) {
+function makeProjector (p, state, skipBuild = false) {
   const cols = p.columns
-  const exprFns = cols.map((c) => (c.kind === 'expr' ? fnOf(state, c.expr) : null))
   const hasStar = cols.some((c) => c.kind === 'star')
+  // No `*` and no `__proto__`: the whole select list is one compiled object literal.
+  const rowFn = !skipBuild && !hasStar && p.row ? fnOf(state, p.row) : null
+  // Per-column functions are only the fallback for that, so they are built only when needed.
+  const exprFns = skipBuild || rowFn ? [] : cols.map((c) => (c.kind === 'expr' ? fnOf(state, c.expr) : null))
   const columnSet = new Set()
   const columns = []
   const addColumn = (name) => { if (!columnSet.has(name)) { columnSet.add(name); columns.push(name) } }
   if (!hasStar) for (const c of cols) addColumn(c.name)
   // Names are fixed per query; only `__proto__` needs the careful path.
   const plain = cols.map((c) => c.kind === 'expr' && c.name !== '__proto__')
-
-  // No `*` and no `__proto__`: the whole select list is one compiled object literal.
-  const rowFn = !hasStar && p.row ? fnOf(state, p.row) : null
 
   const project = rowFn ?? ((env) => {
     const out = {}
@@ -1232,6 +1341,11 @@ function group (p, state, base, each) {
     })
   }
 
+  return finishGroups(list, aggs)
+}
+
+/** One context per group: its first row, with the finished aggregates as `$agg`. */
+function finishGroups (list, aggs) {
   const out = new Array(list.length)
   for (let gi = 0; gi < list.length; gi++) {
     const g = list[gi]

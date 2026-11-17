@@ -1,6 +1,6 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { query, execute, compile, prepare, SqlError, SqlSyntaxError } from '../src/index.js'
+import { query, execute, compile, prepare, createEngine, SqlError, SqlSyntaxError } from '../src/index.js'
 
 /** Rows as a plain array, so deepEqual ignores the non-enumerable `columns`. */
 const q = (sql, data = {}, options) => [...query(sql, data, options)]
@@ -930,5 +930,28 @@ describe('PIVOT', () => {
     assert.throws(() => query("SELECT PIVOT(amount FOR region IN ('a')) FROM s", data), SqlError)
     assert.throws(() => query('SELECT PIVOT(SUM(amount) FOR region IN (month)) FROM s', data), SqlError)
     assert.throws(() => query("SELECT month FROM s WHERE PIVOT(SUM(amount) FOR region IN ('a')) > 1", data), SqlError)
+  })
+})
+
+describe('plan cache', () => {
+  test('repeated query() calls give the same answers, with fresh params and data each time', () => {
+    const sql = 'SELECT name FROM p WHERE age > ? ORDER BY name'
+    const a = q(sql, { p: people }, { params: [30] })
+    assert.deepEqual(q(sql, { p: people }, { params: [30] }), a)
+    assert.notDeepEqual(q(sql, { p: people }, { params: [0] }), a)
+    assert.deepEqual(q(sql, { p: [{ name: 'Zed', age: 99 }] }, { params: [30] }), [{ name: 'Zed' }])
+  })
+  test('a failed compile is not remembered', () => {
+    assert.throws(() => query('SELECT FROM WHERE', {}), SqlSyntaxError)
+    assert.throws(() => query('SELECT FROM WHERE', {}), SqlSyntaxError)
+  })
+  test('engines do not share plans, and limits compile their own', () => {
+    const sql = 'SELECT DOUBLE(2) AS d'
+    assert.throws(() => query(sql, {}), SqlError)
+    const engine = createEngine({ functions: { DOUBLE: ([x]) => x * 2 } })
+    assert.deepEqual(q(sql, {}, { engine }), [{ d: 4 }])
+    assert.throws(() => query(sql, {}), SqlError)
+    assert.throws(() => query('SELECT 1 AS x', {}, { limits: { maxQueryLength: 3 } }), SqlError)
+    assert.deepEqual(q('SELECT 1 AS x', {}), [{ x: 1 }])
   })
 })
