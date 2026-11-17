@@ -426,6 +426,7 @@ const start = "Script"
 const lexer = (() => {
   const NAMES = tokens.map((t) => t.name)
   const SKIP = tokens.map((t) => (t.skip ? 1 : 0))
+  
   const DISPATCH = "ĀĀĀĀĀĀĀĀĀāāāāāĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀāĂăĀĄąĀĆćĈĉĊċČčĎďďďďďďďďďďĐđĒēĔĕĀĖėĘęĚěĜĝĞğĠġĠĢģĤĠĥĦħĨĩĪĠĠĠīĀĬĀĠĭĖėĘęĚěĜĝĞğĠġĠĢģĤĠĥĦħĨĩĪĠĠĠĀĮĀĀĀā"
   
   // Patterns are read from the token table above rather than repeated here.
@@ -857,63 +858,68 @@ const H = [
   /* 8 */ (context) => { let prev; return ({["name"]: (typeof (prev = (context?.["name"] ?? null)) === 'function' ? null : prev), ["query"]: (typeof (prev = (context?.["query"] ?? null)) === 'function' ? null : prev)}) },
   /* 9 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["all"]: (typeof (prev = (context?.["all"] ?? null)) === 'function' ? null : prev)}) },
   /* 10 */ (context) => { let prev; return ({["expr"]: (typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev), ["dir"]: (typeof (prev = (context?.["dir"] ?? null)) === 'function' ? null : prev), ["nulls"]: (typeof (prev = (context?.["nulls"] ?? null)) === 'function' ? null : prev)}) },
-  /* 11 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 12 */ (context) => { let prev; return (typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev) },
-  /* 13 */ (context) => { let prev; return engine.methods["unquoteIdent"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
-  /* 14 */ (context) => { let prev; return engine.methods["unquoteBacktick"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
-  /* 15 */ (context) => { let prev; return ({["type"]: "Select", ["distinct"]: (typeof (prev = (context?.["distinct"] ?? null)) === 'function' ? null : prev), ["columns"]: (typeof (prev = (context?.["columns"] ?? null)) === 'function' ? null : prev), ["from"]: (typeof (prev = (context?.["from"] ?? null)) === 'function' ? null : prev), ["where"]: (typeof (prev = (context?.["where"] ?? null)) === 'function' ? null : prev), ["groupBy"]: (typeof (prev = (context?.["groupBy"] ?? null)) === 'function' ? null : prev), ["having"]: (typeof (prev = (context?.["having"] ?? null)) === 'function' ? null : prev)}) },
-  /* 16 */ (context) => { let prev; return ({["type"]: "Values", ["rows"]: (typeof (prev = (context?.["rows"] ?? null)) === 'function' ? null : prev)}) },
-  /* 17 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 18 */ (context) => { let prev; return engine.methods["num"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
-  /* 19 */ (context) => { let prev; return engine.methods["unquote"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
-  /* 20 */ (context) => { let prev; return ({["type"]: "Star", ["table"]: (typeof (prev = (context?.["table"] ?? null)) === 'function' ? null : prev)}) },
-  /* 21 */ (context) => { let prev; return ({["type"]: "Column", ["expr"]: (typeof (prev = (context?.["expr"] ?? null)) === 'function' ? null : prev), ["alias"]: (typeof (prev = (context?.["alias"] ?? null)) === 'function' ? null : prev)}) },
-  /* 22 */ (context) => { let prev; return ({["type"]: "Star", ["table"]: null}) },
+  /* 11 */ (context) => { let prev; return (typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev) },
+  /* 12 */ (context) => { let prev; return engine.methods["unquoteIdent"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
+  /* 13 */ (context) => { let prev; return engine.methods["unquoteBacktick"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
+  /* 14 */ (context) => { let prev; return ({["type"]: "Select", ["distinct"]: (typeof (prev = (context?.["distinct"] ?? null)) === 'function' ? null : prev), ["columns"]: (typeof (prev = (context?.["columns"] ?? null)) === 'function' ? null : prev), ["from"]: (typeof (prev = (context?.["from"] ?? null)) === 'function' ? null : prev), ["where"]: (typeof (prev = (context?.["where"] ?? null)) === 'function' ? null : prev), ["groupBy"]: (typeof (prev = (context?.["groupBy"] ?? null)) === 'function' ? null : prev), ["having"]: (typeof (prev = (context?.["having"] ?? null)) === 'function' ? null : prev)}) },
+  /* 15 */ (context) => { let prev; return ({["type"]: "Values", ["rows"]: (typeof (prev = (context?.["rows"] ?? null)) === 'function' ? null : prev)}) },
+  /* 16 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 17 */ (context) => { let prev; return ({["STRCAT"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 18 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 19 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 20 */ (context) => { let prev; return engine.methods["num"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
+  /* 21 */ (context) => { let prev; return engine.methods["unquote"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context) },
+  /* 22 */ (context) => { let prev; return ({["type"]: "Star", ["table"]: (typeof (prev = (context?.["table"] ?? null)) === 'function' ? null : prev)}) },
   /* 23 */ (context) => { let prev; return ({["type"]: "Column", ["expr"]: (typeof (prev = (context?.["expr"] ?? null)) === 'function' ? null : prev), ["alias"]: (typeof (prev = (context?.["alias"] ?? null)) === 'function' ? null : prev)}) },
-  /* 24 */ (context) => { let prev; return ({["base"]: (typeof (prev = (context?.["base"] ?? null)) === 'function' ? null : prev), ["joins"]: (typeof (prev = (context?.["joins"] ?? null)) === 'function' ? null : prev)}) },
-  /* 25 */ (context) => { let prev; return ({["OR"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 26 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["operand"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 27 */ (context) => { let prev; return ({["source"]: (typeof (prev = (context?.["source"] ?? null)) === 'function' ? null : prev), ["alias"]: (typeof (prev = (context?.["alias"] ?? null)) === 'function' ? null : prev)}) },
-  /* 28 */ (context) => { let prev; return ({["type"]: "Join", ["joinType"]: "CROSS", ["item"]: (typeof (prev = (context?.["item"] ?? null)) === 'function' ? null : prev), ["on"]: null, ["using"]: null}) },
-  /* 29 */ (context) => { let prev; return ({["type"]: "Join", ["joinType"]: (typeof (prev = (context?.["joinType"] ?? null)) === 'function' ? null : prev), ["item"]: (typeof (prev = (context?.["item"] ?? null)) === 'function' ? null : prev), ["on"]: (typeof (prev = (context?.["on"] ?? null)) === 'function' ? null : prev), ["using"]: (typeof (prev = (context?.["using"] ?? null)) === 'function' ? null : prev)}) },
-  /* 30 */ (context) => { let prev; return ({["AND"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 31 */ (context) => { let prev; return ({[(typeof (prev = ((context?.["suffix"]?.["op"]) ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = ((context?.["suffix"]?.["arg"]) ?? null)) === 'function' ? null : prev)]}) },
-  /* 32 */ (context) => { let prev; return ({["op"]: "CAST", ["arg"]: (typeof (prev = (context?.["t"] ?? null)) === 'function' ? null : prev)}) },
-  /* 33 */ (context) => { let prev; return ({["op"]: "JSON_TEXT", ["arg"]: (typeof (prev = (context?.["k"] ?? null)) === 'function' ? null : prev)}) },
-  /* 34 */ (context) => { let prev; return ({["op"]: "JSON_GET", ["arg"]: (typeof (prev = (context?.["k"] ?? null)) === 'function' ? null : prev)}) },
-  /* 35 */ (context) => { let prev; return ({["type"]: "Subquery", ["query"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 36 */ (context) => { let prev; return ({["type"]: "Function", ["name"]: (typeof (prev = (context?.["name"] ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = (context?.["args"] ?? null)) === 'function' ? null : prev)}) },
-  /* 37 */ (context) => { let prev; return ({["type"]: "Path", ["path"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 38 */ (context) => { let prev; return ({["NOT"]: [(typeof (prev = (context?.["operand"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 39 */ (context) => { let prev; return engine.methods["pred"].method(([(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["suffix"] ?? null)) === 'function' ? null : prev)]), context) },
-  /* 40 */ (context) => { let prev; return ({["$subquery"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 41 */ (context) => { let prev; return ({["$subquery"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 42 */ (context) => { let prev; return ({["$exists"]: (typeof (prev = (context?.["q"] ?? null)) === 'function' ? null : prev)}) },
-  /* 43 */ (context) => { let prev; return engine.methods["caseOf"].method(([(typeof (prev = (context?.["subject"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["whens"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["otherwise"] ?? null)) === 'function' ? null : prev)]), context) },
-  /* 44 */ (context) => { let prev; return ({["CAST"]: [(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["t"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 45 */ (context) => { let prev; return ({["DATE_PART"]: [(typeof (prev = (context?.["field"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 46 */ (context) => { let prev; return (typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev) },
-  /* 47 */ (context) => { let prev; return ({["$call"]: ({["name"]: (typeof (prev = (context?.["name"] ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = (context?.["args"] ?? null)) === 'function' ? null : prev), ["distinct"]: (typeof (prev = (context?.["distinct"] ?? null)) === 'function' ? null : prev), ["star"]: (typeof (prev = (context?.["star"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev), ["filter"]: (typeof (prev = (context?.["filter"] ?? null)) === 'function' ? null : prev), ["over"]: (typeof (prev = (context?.["over"] ?? null)) === 'function' ? null : prev)})}) },
-  /* 48 */ (context) => { let prev; return ({["$ref"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 49 */ (context) => { let prev; return ({["$param"]: null}) },
-  /* 50 */ (context) => { let prev; return ({["$param"]: engine.methods["paramName"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context)}) },
-  /* 51 */ (context) => { let prev; return ({["$param"]: engine.methods["paramName"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context)}) },
-  /* 52 */ (context) => { let prev; return ({["STRCAT"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 53 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)], ["negated"]: false}) },
-  /* 54 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
-  /* 55 */ (context) => { let prev; return ({["op"]: "IS_NULL", ["args"]: []}) },
-  /* 56 */ (context) => { let prev; return ({["op"]: "IS_TRUE", ["args"]: []}) },
-  /* 57 */ (context) => { let prev; return ({["op"]: "IS_FALSE", ["args"]: []}) },
-  /* 58 */ (context) => { let prev; return ({["op"]: "IS_DISTINCT", ["args"]: [(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 59 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
-  /* 60 */ (context) => { let prev; return [(typeof (prev = (context?.["cond"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["result"] ?? null)) === 'function' ? null : prev)] },
-  /* 61 */ (context) => { let prev; return ({["partitionBy"]: (typeof (prev = (context?.["partitionBy"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev)}) },
-  /* 62 */ (context) => { let prev; return ({["op"]: "$inSub", ["args"]: [(typeof (prev = ((context) ?? null)) === 'function' ? null : prev)]}) },
-  /* 63 */ (context) => { let prev; return ({["op"]: "$inSub", ["args"]: [(typeof (prev = ((context) ?? null)) === 'function' ? null : prev)]}) },
-  /* 64 */ (context) => { let prev; return ({["op"]: "IN", ["args"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 65 */ (context) => { let prev; return ({["op"]: "IN", ["args"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
-  /* 66 */ (context) => { let prev; return ({["op"]: "BETWEEN", ["args"]: [(typeof (prev = (context?.["low"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["high"] ?? null)) === 'function' ? null : prev)]}) },
-  /* 67 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["p"] ?? null)) === 'function' ? null : prev)]}) }
+  /* 24 */ (context) => { let prev; return ({["type"]: "Star", ["table"]: null}) },
+  /* 25 */ (context) => { let prev; return ({["type"]: "Column", ["expr"]: (typeof (prev = (context?.["expr"] ?? null)) === 'function' ? null : prev), ["alias"]: (typeof (prev = (context?.["alias"] ?? null)) === 'function' ? null : prev)}) },
+  /* 26 */ (context) => { let prev; return ({["base"]: (typeof (prev = (context?.["base"] ?? null)) === 'function' ? null : prev), ["joins"]: (typeof (prev = (context?.["joins"] ?? null)) === 'function' ? null : prev)}) },
+  /* 27 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["operand"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 28 */ (context) => { let prev; return ({["source"]: (typeof (prev = (context?.["source"] ?? null)) === 'function' ? null : prev), ["alias"]: (typeof (prev = (context?.["alias"] ?? null)) === 'function' ? null : prev)}) },
+  /* 29 */ (context) => { let prev; return ({["type"]: "Join", ["joinType"]: "CROSS", ["item"]: (typeof (prev = (context?.["item"] ?? null)) === 'function' ? null : prev), ["on"]: null, ["using"]: null}) },
+  /* 30 */ (context) => { let prev; return ({["type"]: "Join", ["joinType"]: (typeof (prev = (context?.["joinType"] ?? null)) === 'function' ? null : prev), ["item"]: (typeof (prev = (context?.["item"] ?? null)) === 'function' ? null : prev), ["on"]: (typeof (prev = (context?.["on"] ?? null)) === 'function' ? null : prev), ["using"]: (typeof (prev = (context?.["using"] ?? null)) === 'function' ? null : prev)}) },
+  /* 31 */ (context) => { let prev; return ({["OR"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 32 */ (context) => { let prev; return ({["OR"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 33 */ (context) => { let prev; return ({["AND"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 34 */ (context) => { let prev; return ({[(typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 35 */ (context) => { let prev; return ({[(typeof (prev = ((context?.["suffix"]?.["op"]) ?? null)) === 'function' ? null : prev)]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = ((context?.["suffix"]?.["arg"]) ?? null)) === 'function' ? null : prev)]}) },
+  /* 36 */ (context) => { let prev; return ({["op"]: "CAST", ["arg"]: (typeof (prev = (context?.["t"] ?? null)) === 'function' ? null : prev)}) },
+  /* 37 */ (context) => { let prev; return ({["op"]: "JSON_TEXT", ["arg"]: (typeof (prev = (context?.["k"] ?? null)) === 'function' ? null : prev)}) },
+  /* 38 */ (context) => { let prev; return ({["op"]: "JSON_GET", ["arg"]: (typeof (prev = (context?.["k"] ?? null)) === 'function' ? null : prev)}) },
+  /* 39 */ (context) => { let prev; return ({["type"]: "Subquery", ["query"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 40 */ (context) => { let prev; return ({["type"]: "Function", ["name"]: (typeof (prev = (context?.["name"] ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = (context?.["args"] ?? null)) === 'function' ? null : prev)}) },
+  /* 41 */ (context) => { let prev; return ({["type"]: "Path", ["path"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 42 */ (context) => { let prev; return ({["NOT"]: [(typeof (prev = (context?.["operand"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 43 */ (context) => { let prev; return ({["AND"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 44 */ (context) => { let prev; return engine.methods["pred"].method(([(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["suffix"] ?? null)) === 'function' ? null : prev)]), context) },
+  /* 45 */ (context) => { let prev; return ({["$subquery"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 46 */ (context) => { let prev; return ({["$subquery"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 47 */ (context) => { let prev; return ({["$exists"]: (typeof (prev = (context?.["q"] ?? null)) === 'function' ? null : prev)}) },
+  /* 48 */ (context) => { let prev; return engine.methods["caseOf"].method(([(typeof (prev = (context?.["subject"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["whens"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["otherwise"] ?? null)) === 'function' ? null : prev)]), context) },
+  /* 49 */ (context) => { let prev; return ({["CAST"]: [(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["t"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 50 */ (context) => { let prev; return ({["DATE_PART"]: [(typeof (prev = (context?.["field"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 51 */ (context) => { let prev; return (typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev) },
+  /* 52 */ (context) => { let prev; return ({["$call"]: ({["name"]: (typeof (prev = (context?.["name"] ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = (context?.["args"] ?? null)) === 'function' ? null : prev), ["distinct"]: (typeof (prev = (context?.["distinct"] ?? null)) === 'function' ? null : prev), ["star"]: (typeof (prev = (context?.["star"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev), ["filter"]: (typeof (prev = (context?.["filter"] ?? null)) === 'function' ? null : prev), ["over"]: (typeof (prev = (context?.["over"] ?? null)) === 'function' ? null : prev)})}) },
+  /* 53 */ (context) => { let prev; return ({["$ref"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 54 */ (context) => { let prev; return ({["$param"]: null}) },
+  /* 55 */ (context) => { let prev; return ({["$param"]: engine.methods["paramName"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context)}) },
+  /* 56 */ (context) => { let prev; return ({["$param"]: engine.methods["paramName"].method(((typeof (prev = (context?.["image"] ?? null)) === 'function' ? null : prev)), context)}) },
+  /* 57 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)], ["negated"]: false}) },
+  /* 58 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
+  /* 59 */ (context) => { let prev; return ({["op"]: "IS_NULL", ["args"]: []}) },
+  /* 60 */ (context) => { let prev; return ({["op"]: "IS_TRUE", ["args"]: []}) },
+  /* 61 */ (context) => { let prev; return ({["op"]: "IS_FALSE", ["args"]: []}) },
+  /* 62 */ (context) => { let prev; return ({["op"]: "IS_DISTINCT", ["args"]: [(typeof (prev = (context?.["e"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 63 */ (context) => { let prev; return ({["op"]: (typeof (prev = ((context?.["t"]?.["op"]) ?? null)) === 'function' ? null : prev), ["args"]: (typeof (prev = ((context?.["t"]?.["args"]) ?? null)) === 'function' ? null : prev), ["negated"]: (typeof (prev = (context?.["negated"] ?? null)) === 'function' ? null : prev)}) },
+  /* 64 */ (context) => { let prev; return [(typeof (prev = (context?.["cond"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["result"] ?? null)) === 'function' ? null : prev)] },
+  /* 65 */ (context) => { let prev; return ({["partitionBy"]: (typeof (prev = (context?.["partitionBy"] ?? null)) === 'function' ? null : prev), ["orderBy"]: (typeof (prev = (context?.["orderBy"] ?? null)) === 'function' ? null : prev)}) },
+  /* 66 */ (context) => { let prev; return ({["STRCAT"]: [(typeof (prev = (context?.["left"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["right"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 67 */ (context) => { let prev; return ({["op"]: "$inSub", ["args"]: [(typeof (prev = ((context) ?? null)) === 'function' ? null : prev)]}) },
+  /* 68 */ (context) => { let prev; return ({["op"]: "$inSub", ["args"]: [(typeof (prev = ((context) ?? null)) === 'function' ? null : prev)]}) },
+  /* 69 */ (context) => { let prev; return ({["op"]: "IN", ["args"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 70 */ (context) => { let prev; return ({["op"]: "IN", ["args"]: (typeof (prev = ((context) ?? null)) === 'function' ? null : prev)}) },
+  /* 71 */ (context) => { let prev; return ({["op"]: "BETWEEN", ["args"]: [(typeof (prev = (context?.["low"] ?? null)) === 'function' ? null : prev),(typeof (prev = (context?.["high"] ?? null)) === 'function' ? null : prev)]}) },
+  /* 72 */ (context) => { let prev; return ({["op"]: (typeof (prev = (context?.["op"] ?? null)) === 'function' ? null : prev), ["args"]: [(typeof (prev = (context?.["p"] ?? null)) === 'function' ? null : prev)]}) }
 ]
 
 /**
@@ -1030,7 +1036,7 @@ const _6 = c.idx;
 let _8;
 const _9 = c.tokens[c.idx];
 if (_9 !== undefined && (_9.id === 86 || (_9.id === undefined && _9.type === "Semicolon"))) { c.idx++; _8 = _9; }
-else { E(c, "Semicolon"); _8 = F; }
+else { if (c.track) { E(c, "Semicolon"); } _8 = F; }
 if (_8 === F) { c.idx = _6; break; }
 if (c.idx === _6) P("many", _6);
 _5.push(_8);
@@ -1057,7 +1063,7 @@ const _19 = c.idx;
 let _20;
 const _21 = c.tokens[c.idx];
 if (_21 !== undefined && (_21.id === 86 || (_21.id === undefined && _21.type === "Semicolon"))) { c.idx++; _20 = _21; }
-else { E(c, "Semicolon"); _20 = F; }
+else { if (c.track) { E(c, "Semicolon"); } _20 = F; }
 if (_20 === F) { c.idx = _19; _17 = F; break L_18; }
 let _22;
 const _23 = c.idx;
@@ -1082,7 +1088,7 @@ const _13 = _14;
 if (_13 === F) { c.idx = _1; c.bindings = _4; _0 = F; break L_2; }
 let _26;
 if (c.idx >= c.tokens.length) _26 = null;
-else { E(c, "end of input"); _26 = F; }
+else { if (c.track) { E(c, "end of input"); } _26 = F; }
 if (_26 === F) { c.idx = _1; c.bindings = _4; _0 = F; break L_2; }
 const _27 = H[0](_3, c);
 c.bindings = _4;
@@ -1097,7 +1103,7 @@ R[1] = (c) => {
 let _28;
 L_29: {
 const _30 = c.tokens[c.idx];
-if (_30 === undefined) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Insert"); _28 = F; break L_29; }
+if (_30 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Insert"); } _28 = F; break L_29; }
 const _31 = _30.id !== undefined ? _30.id : I[_30.type];
 switch (_31) {
 case 46: case 80: case 3: case 38: {
@@ -1116,7 +1122,7 @@ const _34 = R[3](c);
 if (c.track) c.ruleDepth = _35;
 _28 = _34; break L_29;
 }
-default: { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Insert"); _28 = F; break L_29; }
+default: { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Insert"); } _28 = F; break L_29; }
 }
 }
 return _28;
@@ -1197,12 +1203,12 @@ c.bindings = _63;
 let _65;
 const _66 = c.tokens[c.idx];
 if (_66 !== undefined && (_66.id === 36 || (_66.id === undefined && _66.type === "Insert"))) { c.idx++; _65 = _66; }
-else { E(c, "Insert"); _65 = F; }
+else { if (c.track) { E(c, "Insert"); } _65 = F; }
 if (_65 === F) { c.idx = _61; c.bindings = _64; _60 = F; break L_62; }
 let _67;
 const _68 = c.tokens[c.idx];
 if (_68 !== undefined && (_68.id === 37 || (_68.id === undefined && _68.type === "Into"))) { c.idx++; _67 = _68; }
-else { E(c, "Into"); _67 = F; }
+else { if (c.track) { E(c, "Into"); } _67 = F; }
 if (_67 === F) { c.idx = _61; c.bindings = _64; _60 = F; break L_62; }
 
 const _71 = c.ruleDepth;
@@ -1222,7 +1228,7 @@ const _77 = c.idx;
 let _78;
 const _79 = c.tokens[c.idx];
 if (_79 !== undefined && (_79.id === 80 || (_79.id === undefined && _79.type === "LParen"))) { c.idx++; _78 = _79; }
-else { E(c, "LParen"); _78 = F; }
+else { if (c.track) { E(c, "LParen"); } _78 = F; }
 if (_78 === F) { c.idx = _77; _75 = F; break L_76; }
 
 let _80 = [];
@@ -1240,7 +1246,7 @@ const _82 = c.idx;
 let _87;
 const _88 = c.tokens[c.idx];
 if (_88 !== undefined && (_88.id === 84 || (_88.id === undefined && _88.type === "Comma"))) { c.idx++; _87 = _88; }
-else { E(c, "Comma"); _87 = F; }
+else { if (c.track) { E(c, "Comma"); } _87 = F; }
 if (_87 === F) { c.idx = _82; break; }
 const _83 = c.idx;
 
@@ -1256,7 +1262,7 @@ if (_80 === F) { c.idx = _77; _75 = F; break L_76; }
 let _91;
 const _92 = c.tokens[c.idx];
 if (_92 !== undefined && (_92.id === 81 || (_92.id === undefined && _92.type === "RParen"))) { c.idx++; _91 = _92; }
-else { E(c, "RParen"); _91 = F; }
+else { if (c.track) { E(c, "RParen"); } _91 = F; }
 if (_91 === F) { c.idx = _77; _75 = F; break L_76; }
 _75 = _80;
 }
@@ -1289,7 +1295,7 @@ const _99 = c.idx;
 let _100;
 const _101 = c.tokens[c.idx];
 if (_101 !== undefined && (_101.id === 46 || (_101.id === undefined && _101.type === "With"))) { c.idx++; _100 = _101; }
-else { E(c, "With"); _100 = F; }
+else { if (c.track) { E(c, "With"); } _100 = F; }
 if (_100 === F) { c.idx = _99; _97 = F; break L_98; }
 
 let _102 = [];
@@ -1307,7 +1313,7 @@ const _104 = c.idx;
 let _109;
 const _110 = c.tokens[c.idx];
 if (_110 !== undefined && (_110.id === 84 || (_110.id === undefined && _110.type === "Comma"))) { c.idx++; _109 = _110; }
-else { E(c, "Comma"); _109 = F; }
+else { if (c.track) { E(c, "Comma"); } _109 = F; }
 if (_109 === F) { c.idx = _104; break; }
 const _105 = c.idx;
 
@@ -1370,12 +1376,12 @@ const _126 = c.idx;
 let _127;
 const _128 = c.tokens[c.idx];
 if (_128 !== undefined && (_128.id === 29 || (_128.id === undefined && _128.type === "Order"))) { c.idx++; _127 = _128; }
-else { E(c, "Order"); _127 = F; }
+else { if (c.track) { E(c, "Order"); } _127 = F; }
 if (_127 === F) { c.idx = _126; _124 = F; break L_125; }
 let _129;
 const _130 = c.tokens[c.idx];
 if (_130 !== undefined && (_130.id === 28 || (_130.id === undefined && _130.type === "By"))) { c.idx++; _129 = _130; }
-else { E(c, "By"); _129 = F; }
+else { if (c.track) { E(c, "By"); } _129 = F; }
 if (_129 === F) { c.idx = _126; _124 = F; break L_125; }
 
 let _131 = [];
@@ -1393,7 +1399,7 @@ const _133 = c.idx;
 let _138;
 const _139 = c.tokens[c.idx];
 if (_139 !== undefined && (_139.id === 84 || (_139.id === undefined && _139.type === "Comma"))) { c.idx++; _138 = _139; }
-else { E(c, "Comma"); _138 = F; }
+else { if (c.track) { E(c, "Comma"); } _138 = F; }
 if (_138 === F) { c.idx = _133; break; }
 const _134 = c.idx;
 
@@ -1417,7 +1423,7 @@ R[7] = (c) => {
 let _142;
 L_143: {
 const _144 = c.tokens[c.idx];
-if (_144 === undefined) { E(c, "Limit"); E(c, "Offset"); _142 = F; break L_143; }
+if (_144 === undefined) { if (c.track) { E(c, "Limit"); E(c, "Offset"); } _142 = F; break L_143; }
 const _145 = _144.id !== undefined ? _144.id : I[_144.type];
 switch (_145) {
 case 34: {
@@ -1431,13 +1437,13 @@ c.bindings = _149;
 let _151;
 const _152 = c.tokens[c.idx];
 if (_152 !== undefined && (_152.id === 34 || (_152.id === undefined && _152.type === "Limit"))) { c.idx++; _151 = _152; }
-else { E(c, "Limit"); _151 = F; }
+else { if (c.track) { E(c, "Limit"); } _151 = F; }
 if (_151 === F) { c.idx = _147; c.bindings = _150; _146 = F; break L_148; }
 
 let _154;
 L_155: {
 const _156 = c.tokens[c.idx];
-if (_156 === undefined) { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _154 = F; break L_155; }
+if (_156 === undefined) { if (c.track) { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _154 = F; break L_155; }
 const _157 = _156.id !== undefined ? _156.id : I[_156.type];
 switch (_157) {
 case 8: {
@@ -1448,7 +1454,7 @@ const _160 = c.idx;
 let _161;
 const _162 = c.tokens[c.idx];
 if (_162 !== undefined && (_162.id === 8 || (_162.id === undefined && _162.type === "All"))) { c.idx++; _161 = _162; }
-else { E(c, "All"); _161 = F; }
+else { if (c.track) { E(c, "All"); } _161 = F; }
 if (_161 === F) { c.idx = _160; _158 = F; break L_159; }
 _158 = null;
 }
@@ -1462,7 +1468,7 @@ const _163 = R[14](c);
 if (c.track) c.ruleDepth = _164;
 _154 = _163; break L_155;
 }
-default: { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _154 = F; break L_155; }
+default: { if (c.track) { E(c, "All"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _154 = F; break L_155; }
 }
 }
 if (_154 !== F) _149["n"] = _154;
@@ -1478,7 +1484,7 @@ const _170 = c.idx;
 let _171;
 const _172 = c.tokens[c.idx];
 if (_172 !== undefined && (_172.id === 35 || (_172.id === undefined && _172.type === "Offset"))) { c.idx++; _171 = _172; }
-else { E(c, "Offset"); _171 = F; }
+else { if (c.track) { E(c, "Offset"); } _171 = F; }
 if (_171 === F) { c.idx = _170; _168 = F; break L_169; }
 
 const _174 = c.ruleDepth;
@@ -1510,7 +1516,7 @@ c.bindings = _179;
 let _181;
 const _182 = c.tokens[c.idx];
 if (_182 !== undefined && (_182.id === 35 || (_182.id === undefined && _182.type === "Offset"))) { c.idx++; _181 = _182; }
-else { E(c, "Offset"); _181 = F; }
+else { if (c.track) { E(c, "Offset"); } _181 = F; }
 if (_181 === F) { c.idx = _177; c.bindings = _180; _176 = F; break L_178; }
 
 const _185 = c.ruleDepth;
@@ -1526,7 +1532,7 @@ _176 = _186;
 }
 _142 = _176; break L_143;
 }
-default: { E(c, "Limit"); E(c, "Offset"); _142 = F; break L_143; }
+default: { if (c.track) { E(c, "Limit"); E(c, "Offset"); } _142 = F; break L_143; }
 }
 }
 return _142;
@@ -1580,7 +1586,7 @@ R[9] = (c) => {
 let _202;
 L_203: {
 const _204 = c.tokens[c.idx];
-if (_204 === undefined) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); _202 = F; break L_203; }
+if (_204 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); } _202 = F; break L_203; }
 const _205 = _204.id !== undefined ? _204.id : I[_204.type];
 switch (_205) {
 case 60: case 58: case 59: {
@@ -1597,11 +1603,11 @@ const _210 = c.tokens[c.idx];
 let _211 = false;
 if (_210 !== undefined) { switch (_210.id !== undefined ? _210.id : I[_210.type]) { case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: _211 = true; } }
 if (_211) { c.idx++; _209 = _210; }
-else { E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); _209 = F; }
+else { if (c.track) { E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); } _209 = F; }
 const _208 = _209 === F ? F : H[7](_209, c);
 _202 = _208; break L_203;
 }
-default: { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); _202 = F; break L_203; }
+default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Select"); E(c, "From"); E(c, "Where"); E(c, "As"); E(c, "Distinct"); E(c, "All"); E(c, "And"); E(c, "Or"); E(c, "Not"); E(c, "In"); E(c, "Is"); E(c, "Null"); E(c, "Like"); E(c, "Ilike"); E(c, "Between"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Outer"); E(c, "Cross"); E(c, "Join"); E(c, "On"); E(c, "Using"); E(c, "Group"); E(c, "By"); E(c, "Order"); E(c, "Asc"); E(c, "Desc"); E(c, "Nulls"); E(c, "Having"); E(c, "Limit"); E(c, "Offset"); E(c, "Insert"); E(c, "Into"); E(c, "Values"); E(c, "True"); E(c, "False"); E(c, "Case"); E(c, "When"); E(c, "Then"); E(c, "Else"); E(c, "End"); E(c, "With"); E(c, "Union"); E(c, "Except"); E(c, "Intersect"); E(c, "Exists"); E(c, "Cast"); E(c, "Extract"); E(c, "Over"); E(c, "Partition"); E(c, "Filter"); } _202 = F; break L_203; }
 }
 }
 return _202;
@@ -1627,7 +1633,7 @@ if (_217 === F) { c.idx = _213; c.bindings = _216; _212 = F; break L_214; }
 let _220;
 const _221 = c.tokens[c.idx];
 if (_221 !== undefined && (_221.id === 6 || (_221.id === undefined && _221.type === "As"))) { c.idx++; _220 = _221; }
-else { E(c, "As"); _220 = F; }
+else { if (c.track) { E(c, "As"); } _220 = F; }
 if (_220 === F) { c.idx = _213; c.bindings = _216; _212 = F; break L_214; }
 
 let _223;
@@ -1636,7 +1642,7 @@ const _225 = c.idx;
 let _226;
 const _227 = c.tokens[c.idx];
 if (_227 !== undefined && (_227.id === 80 || (_227.id === undefined && _227.type === "LParen"))) { c.idx++; _226 = _227; }
-else { E(c, "LParen"); _226 = F; }
+else { if (c.track) { E(c, "LParen"); } _226 = F; }
 if (_226 === F) { c.idx = _225; _223 = F; break L_224; }
 
 const _229 = c.ruleDepth;
@@ -1647,7 +1653,7 @@ if (_228 === F) { c.idx = _225; _223 = F; break L_224; }
 let _230;
 const _231 = c.tokens[c.idx];
 if (_231 !== undefined && (_231.id === 81 || (_231.id === undefined && _231.type === "RParen"))) { c.idx++; _230 = _231; }
-else { E(c, "RParen"); _230 = F; }
+else { if (c.track) { E(c, "RParen"); } _230 = F; }
 if (_230 === F) { c.idx = _225; _223 = F; break L_224; }
 _223 = _228;
 }
@@ -1667,7 +1673,7 @@ R[11] = (c) => {
 let _233;
 L_234: {
 const _235 = c.tokens[c.idx];
-if (_235 === undefined) { E(c, "Select"); E(c, "Values"); E(c, "LParen"); _233 = F; break L_234; }
+if (_235 === undefined) { if (c.track) { E(c, "Select"); E(c, "Values"); E(c, "LParen"); } _233 = F; break L_234; }
 const _236 = _235.id !== undefined ? _235.id : I[_235.type];
 switch (_236) {
 case 3: {
@@ -1694,7 +1700,7 @@ const _243 = c.idx;
 let _244;
 const _245 = c.tokens[c.idx];
 if (_245 !== undefined && (_245.id === 80 || (_245.id === undefined && _245.type === "LParen"))) { c.idx++; _244 = _245; }
-else { E(c, "LParen"); _244 = F; }
+else { if (c.track) { E(c, "LParen"); } _244 = F; }
 if (_244 === F) { c.idx = _243; _241 = F; break L_242; }
 
 const _247 = c.ruleDepth;
@@ -1705,13 +1711,13 @@ if (_246 === F) { c.idx = _243; _241 = F; break L_242; }
 let _248;
 const _249 = c.tokens[c.idx];
 if (_249 !== undefined && (_249.id === 81 || (_249.id === undefined && _249.type === "RParen"))) { c.idx++; _248 = _249; }
-else { E(c, "RParen"); _248 = F; }
+else { if (c.track) { E(c, "RParen"); } _248 = F; }
 if (_248 === F) { c.idx = _243; _241 = F; break L_242; }
 _241 = _246;
 }
 _233 = _241; break L_234;
 }
-default: { E(c, "Select"); E(c, "Values"); E(c, "LParen"); _233 = F; break L_234; }
+default: { if (c.track) { E(c, "Select"); E(c, "Values"); E(c, "LParen"); } _233 = F; break L_234; }
 }
 }
 return _233;
@@ -1730,7 +1736,7 @@ c.bindings = _253;
 let _256;
 L_257: {
 const _258 = c.tokens[c.idx];
-if (_258 === undefined) { E(c, "Union"); E(c, "Except"); E(c, "Intersect"); _256 = F; break L_257; }
+if (_258 === undefined) { if (c.track) { E(c, "Union"); E(c, "Except"); E(c, "Intersect"); } _256 = F; break L_257; }
 const _259 = _258.id !== undefined ? _258.id : I[_258.type];
 switch (_259) {
 case 47: {
@@ -1741,7 +1747,7 @@ const _262 = c.idx;
 let _263;
 const _264 = c.tokens[c.idx];
 if (_264 !== undefined && (_264.id === 47 || (_264.id === undefined && _264.type === "Union"))) { c.idx++; _263 = _264; }
-else { E(c, "Union"); _263 = F; }
+else { if (c.track) { E(c, "Union"); } _263 = F; }
 if (_263 === F) { c.idx = _262; _260 = F; break L_261; }
 _260 = "UNION";
 }
@@ -1755,7 +1761,7 @@ const _267 = c.idx;
 let _268;
 const _269 = c.tokens[c.idx];
 if (_269 !== undefined && (_269.id === 48 || (_269.id === undefined && _269.type === "Except"))) { c.idx++; _268 = _269; }
-else { E(c, "Except"); _268 = F; }
+else { if (c.track) { E(c, "Except"); } _268 = F; }
 if (_268 === F) { c.idx = _267; _265 = F; break L_266; }
 _265 = "EXCEPT";
 }
@@ -1769,13 +1775,13 @@ const _272 = c.idx;
 let _273;
 const _274 = c.tokens[c.idx];
 if (_274 !== undefined && (_274.id === 49 || (_274.id === undefined && _274.type === "Intersect"))) { c.idx++; _273 = _274; }
-else { E(c, "Intersect"); _273 = F; }
+else { if (c.track) { E(c, "Intersect"); } _273 = F; }
 if (_273 === F) { c.idx = _272; _270 = F; break L_271; }
 _270 = "INTERSECT";
 }
 _256 = _270; break L_257;
 }
-default: { E(c, "Union"); E(c, "Except"); E(c, "Intersect"); _256 = F; break L_257; }
+default: { if (c.track) { E(c, "Union"); E(c, "Except"); E(c, "Intersect"); } _256 = F; break L_257; }
 }
 }
 if (_256 !== F) _253["op"] = _256;
@@ -1787,7 +1793,7 @@ const _277 = c.idx;
 let _278;
 const _279 = c.tokens[c.idx];
 if (_279 !== undefined && (_279.id === 8 || (_279.id === undefined && _279.type === "All"))) { c.idx++; _278 = _279; }
-else { E(c, "All"); _278 = F; }
+else { if (c.track) { E(c, "All"); } _278 = F; }
 if (_278 === F) { c.idx = _277; _276 = false; } else _276 = true;
 }
 if (_276 !== F) _253["all"] = _276;
@@ -1799,7 +1805,7 @@ const _281 = c.idx;
 let _282;
 const _283 = c.tokens[c.idx];
 if (_283 !== undefined && (_283.id === 7 || (_283.id === undefined && _283.type === "Distinct"))) { c.idx++; _282 = _283; }
-else { E(c, "Distinct"); _282 = F; }
+else { if (c.track) { E(c, "Distinct"); } _282 = F; }
 if (_282 === F) { c.idx = _281; _280 = null; } else _280 = _282;
 }
 if (_280 === F) { c.idx = _251; c.bindings = _254; _250 = F; break L_252; }
@@ -1834,7 +1840,7 @@ const _295 = c.idx;
 let _296;
 L_297: {
 const _298 = c.tokens[c.idx];
-if (_298 === undefined) { E(c, "Asc"); E(c, "Desc"); _296 = F; break L_297; }
+if (_298 === undefined) { if (c.track) { E(c, "Asc"); E(c, "Desc"); } _296 = F; break L_297; }
 const _299 = _298.id !== undefined ? _298.id : I[_298.type];
 switch (_299) {
 case 30: {
@@ -1845,7 +1851,7 @@ const _302 = c.idx;
 let _303;
 const _304 = c.tokens[c.idx];
 if (_304 !== undefined && (_304.id === 30 || (_304.id === undefined && _304.type === "Asc"))) { c.idx++; _303 = _304; }
-else { E(c, "Asc"); _303 = F; }
+else { if (c.track) { E(c, "Asc"); } _303 = F; }
 if (_303 === F) { c.idx = _302; _300 = F; break L_301; }
 _300 = "ASC";
 }
@@ -1859,13 +1865,13 @@ const _307 = c.idx;
 let _308;
 const _309 = c.tokens[c.idx];
 if (_309 !== undefined && (_309.id === 31 || (_309.id === undefined && _309.type === "Desc"))) { c.idx++; _308 = _309; }
-else { E(c, "Desc"); _308 = F; }
+else { if (c.track) { E(c, "Desc"); } _308 = F; }
 if (_308 === F) { c.idx = _307; _305 = F; break L_306; }
 _305 = "DESC";
 }
 _296 = _305; break L_297;
 }
-default: { E(c, "Asc"); E(c, "Desc"); _296 = F; break L_297; }
+default: { if (c.track) { E(c, "Asc"); E(c, "Desc"); } _296 = F; break L_297; }
 }
 }
 if (_296 === F) { c.idx = _295; _294 = null; } else _294 = _296;
@@ -1883,7 +1889,7 @@ const _315 = c.idx;
 let _316;
 const _317 = c.tokens[c.idx];
 if (_317 !== undefined && (_317.id === 32 || (_317.id === undefined && _317.type === "Nulls"))) { c.idx++; _316 = _317; }
-else { E(c, "Nulls"); _316 = F; }
+else { if (c.track) { E(c, "Nulls"); } _316 = F; }
 if (_316 === F) { c.idx = _315; _313 = F; break L_314; }
 
 const _319 = c.ruleDepth;
@@ -1906,704 +1912,724 @@ return _285;
 }
 
 // Additive
-R[14] = (c) => {
-
-let _321;
-L_322: {
-
-const _327 = c.ruleDepth;
-if (c.track) { c.ruleNames[_327] = "Multiplicative"; c.ruleDepth = _327 + 1; }
-const _326 = R[20](c);
-if (c.track) c.ruleDepth = _327;
-if (_326 === F) { _321 = F; break L_322; }
-let _323 = _326;
-let _324 = null;
-for (;;) {
-const _325 = c.idx;
-
-let _328;
-L_329: {
-const _330 = c.tokens[c.idx];
-if (_330 === undefined) { E(c, "Plus"); E(c, "Minus"); _328 = F; break L_329; }
-const _331 = _330.id !== undefined ? _330.id : I[_330.type];
-switch (_331) {
-case 75: {
-
-let _332;
-L_333: {
-const _334 = c.idx;
-let _335;
-const _336 = c.tokens[c.idx];
-if (_336 !== undefined && (_336.id === 75 || (_336.id === undefined && _336.type === "Plus"))) { c.idx++; _335 = _336; }
-else { E(c, "Plus"); _335 = F; }
-if (_335 === F) { c.idx = _334; _332 = F; break L_333; }
-_332 = "ADD";
-}
-_328 = _332; break L_329;
-}
-case 76: {
-
-let _337;
-L_338: {
-const _339 = c.idx;
-let _340;
-const _341 = c.tokens[c.idx];
-if (_341 !== undefined && (_341.id === 76 || (_341.id === undefined && _341.type === "Minus"))) { c.idx++; _340 = _341; }
-else { E(c, "Minus"); _340 = F; }
-if (_340 === F) { c.idx = _339; _337 = F; break L_338; }
-_337 = "SUB";
-}
-_328 = _337; break L_329;
-}
-default: { E(c, "Plus"); E(c, "Minus"); _328 = F; break L_329; }
-}
-}
-if (_328 === F) { c.idx = _325; break; }
-
-const _343 = c.ruleDepth;
-if (c.track) { c.ruleNames[_343] = "Multiplicative"; c.ruleDepth = _343 + 1; }
-const _342 = R[20](c);
-if (c.track) c.ruleDepth = _343;
-if (_342 === F) { c.idx = _325; break; }
-if (_324 === null) _324 = { left: null, op: null, right: null };
-_324.left = _323; _324.op = _328; _324.right = _342;
-_323 = H[11](_324, c);
-}
-_321 = _323;
-}
-return _321;
-}
+R[14] = (c) => c.track ? R[20](c) : R[21](c, 1)
 
 // Ident
 R[15] = (c) => {
 
-let _344;
-L_345: {
-const _346 = c.tokens[c.idx];
-if (_346 === undefined) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); _344 = F; break L_345; }
-const _347 = _346.id !== undefined ? _346.id : I[_346.type];
-switch (_347) {
+let _321;
+L_322: {
+const _323 = c.tokens[c.idx];
+if (_323 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); } _321 = F; break L_322; }
+const _324 = _323.id !== undefined ? _323.id : I[_323.type];
+switch (_324) {
 case 60: {
-let _349;
-const _350 = c.tokens[c.idx];
-if (_350 !== undefined && (_350.id === 60 || (_350.id === undefined && _350.type === "Identifier"))) { c.idx++; _349 = _350; }
-else { E(c, "Identifier"); _349 = F; }
-const _348 = _349 === F ? F : H[12](_349, c);
-_344 = _348; break L_345;
+let _326;
+const _327 = c.tokens[c.idx];
+if (_327 !== undefined && (_327.id === 60 || (_327.id === undefined && _327.type === "Identifier"))) { c.idx++; _326 = _327; }
+else { if (c.track) { E(c, "Identifier"); } _326 = F; }
+const _325 = _326 === F ? F : H[11](_326, c);
+_321 = _325; break L_322;
 }
 case 58: {
-let _352;
-const _353 = c.tokens[c.idx];
-if (_353 !== undefined && (_353.id === 58 || (_353.id === undefined && _353.type === "QuotedIdent"))) { c.idx++; _352 = _353; }
-else { E(c, "QuotedIdent"); _352 = F; }
-const _351 = _352 === F ? F : H[13](_352, c);
-_344 = _351; break L_345;
+let _329;
+const _330 = c.tokens[c.idx];
+if (_330 !== undefined && (_330.id === 58 || (_330.id === undefined && _330.type === "QuotedIdent"))) { c.idx++; _329 = _330; }
+else { if (c.track) { E(c, "QuotedIdent"); } _329 = F; }
+const _328 = _329 === F ? F : H[12](_329, c);
+_321 = _328; break L_322;
 }
 case 59: {
-let _355;
-const _356 = c.tokens[c.idx];
-if (_356 !== undefined && (_356.id === 59 || (_356.id === undefined && _356.type === "BacktickIdent"))) { c.idx++; _355 = _356; }
-else { E(c, "BacktickIdent"); _355 = F; }
-const _354 = _355 === F ? F : H[14](_355, c);
-_344 = _354; break L_345;
+let _332;
+const _333 = c.tokens[c.idx];
+if (_333 !== undefined && (_333.id === 59 || (_333.id === undefined && _333.type === "BacktickIdent"))) { c.idx++; _332 = _333; }
+else { if (c.track) { E(c, "BacktickIdent"); } _332 = F; }
+const _331 = _332 === F ? F : H[13](_332, c);
+_321 = _331; break L_322;
 }
-default: { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); _344 = F; break L_345; }
+default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); } _321 = F; break L_322; }
 }
 }
-return _344;
+return _321;
 }
 
 // PathStep
 R[16] = (c) => {
 
-let _357;
-L_358: {
-const _359 = c.tokens[c.idx];
-if (_359 === undefined) { E(c, "Dot"); E(c, "LBracket"); _357 = F; break L_358; }
-const _360 = _359.id !== undefined ? _359.id : I[_359.type];
-switch (_360) {
+let _334;
+L_335: {
+const _336 = c.tokens[c.idx];
+if (_336 === undefined) { if (c.track) { E(c, "Dot"); E(c, "LBracket"); } _334 = F; break L_335; }
+const _337 = _336.id !== undefined ? _336.id : I[_336.type];
+switch (_337) {
 case 85: {
 
-let _361;
-L_362: {
-const _363 = c.idx;
-let _364;
-const _365 = c.tokens[c.idx];
-if (_365 !== undefined && (_365.id === 85 || (_365.id === undefined && _365.type === "Dot"))) { c.idx++; _364 = _365; }
-else { E(c, "Dot"); _364 = F; }
-if (_364 === F) { c.idx = _363; _361 = F; break L_362; }
+let _338;
+L_339: {
+const _340 = c.idx;
+let _341;
+const _342 = c.tokens[c.idx];
+if (_342 !== undefined && (_342.id === 85 || (_342.id === undefined && _342.type === "Dot"))) { c.idx++; _341 = _342; }
+else { if (c.track) { E(c, "Dot"); } _341 = F; }
+if (_341 === F) { c.idx = _340; _338 = F; break L_339; }
 
-const _367 = c.ruleDepth;
-if (c.track) { c.ruleNames[_367] = "AnyName"; c.ruleDepth = _367 + 1; }
-const _366 = R[9](c);
-if (c.track) c.ruleDepth = _367;
-if (_366 === F) { c.idx = _363; _361 = F; break L_362; }
-_361 = _366;
+const _344 = c.ruleDepth;
+if (c.track) { c.ruleNames[_344] = "AnyName"; c.ruleDepth = _344 + 1; }
+const _343 = R[9](c);
+if (c.track) c.ruleDepth = _344;
+if (_343 === F) { c.idx = _340; _338 = F; break L_339; }
+_338 = _343;
 }
-_357 = _361; break L_358;
+_334 = _338; break L_335;
 }
 case 82: {
 
-let _368;
-L_369: {
-const _370 = c.idx;
-let _371;
-const _372 = c.tokens[c.idx];
-if (_372 !== undefined && (_372.id === 82 || (_372.id === undefined && _372.type === "LBracket"))) { c.idx++; _371 = _372; }
-else { E(c, "LBracket"); _371 = F; }
-if (_371 === F) { c.idx = _370; _368 = F; break L_369; }
+let _345;
+L_346: {
+const _347 = c.idx;
+let _348;
+const _349 = c.tokens[c.idx];
+if (_349 !== undefined && (_349.id === 82 || (_349.id === undefined && _349.type === "LBracket"))) { c.idx++; _348 = _349; }
+else { if (c.track) { E(c, "LBracket"); } _348 = F; }
+if (_348 === F) { c.idx = _347; _345 = F; break L_346; }
 
-let _373;
-L_374: {
-const _375 = c.tokens[c.idx];
-if (_375 === undefined) { E(c, "Number"); E(c, "String"); E(c, "Star"); _373 = F; break L_374; }
-const _376 = _375.id !== undefined ? _375.id : I[_375.type];
-switch (_376) {
+let _350;
+L_351: {
+const _352 = c.tokens[c.idx];
+if (_352 === undefined) { if (c.track) { E(c, "Number"); E(c, "String"); E(c, "Star"); } _350 = F; break L_351; }
+const _353 = _352.id !== undefined ? _352.id : I[_352.type];
+switch (_353) {
 case 56: {
 
-const _378 = c.ruleDepth;
-if (c.track) { c.ruleNames[_378] = "NumberLiteral"; c.ruleDepth = _378 + 1; }
-const _377 = R[21](c);
-if (c.track) c.ruleDepth = _378;
-_373 = _377; break L_374;
+const _355 = c.ruleDepth;
+if (c.track) { c.ruleNames[_355] = "NumberLiteral"; c.ruleDepth = _355 + 1; }
+const _354 = R[22](c);
+if (c.track) c.ruleDepth = _355;
+_350 = _354; break L_351;
 }
 case 57: {
 
-const _380 = c.ruleDepth;
-if (c.track) { c.ruleNames[_380] = "StringLiteral"; c.ruleDepth = _380 + 1; }
-const _379 = R[22](c);
-if (c.track) c.ruleDepth = _380;
-_373 = _379; break L_374;
+const _357 = c.ruleDepth;
+if (c.track) { c.ruleNames[_357] = "StringLiteral"; c.ruleDepth = _357 + 1; }
+const _356 = R[23](c);
+if (c.track) c.ruleDepth = _357;
+_350 = _356; break L_351;
 }
 case 77: {
 
-let _381;
-L_382: {
-const _383 = c.idx;
-let _384;
-const _385 = c.tokens[c.idx];
-if (_385 !== undefined && (_385.id === 77 || (_385.id === undefined && _385.type === "Star"))) { c.idx++; _384 = _385; }
-else { E(c, "Star"); _384 = F; }
-if (_384 === F) { c.idx = _383; _381 = F; break L_382; }
-_381 = "[*]";
+let _358;
+L_359: {
+const _360 = c.idx;
+let _361;
+const _362 = c.tokens[c.idx];
+if (_362 !== undefined && (_362.id === 77 || (_362.id === undefined && _362.type === "Star"))) { c.idx++; _361 = _362; }
+else { if (c.track) { E(c, "Star"); } _361 = F; }
+if (_361 === F) { c.idx = _360; _358 = F; break L_359; }
+_358 = "[*]";
 }
-_373 = _381; break L_374;
+_350 = _358; break L_351;
 }
-default: { E(c, "Number"); E(c, "String"); E(c, "Star"); _373 = F; break L_374; }
-}
-}
-if (_373 === F) { c.idx = _370; _368 = F; break L_369; }
-let _386;
-const _387 = c.tokens[c.idx];
-if (_387 !== undefined && (_387.id === 83 || (_387.id === undefined && _387.type === "RBracket"))) { c.idx++; _386 = _387; }
-else { E(c, "RBracket"); _386 = F; }
-if (_386 === F) { c.idx = _370; _368 = F; break L_369; }
-_368 = _373;
-}
-_357 = _368; break L_358;
-}
-default: { E(c, "Dot"); E(c, "LBracket"); _357 = F; break L_358; }
+default: { if (c.track) { E(c, "Number"); E(c, "String"); E(c, "Star"); } _350 = F; break L_351; }
 }
 }
-return _357;
+if (_350 === F) { c.idx = _347; _345 = F; break L_346; }
+let _363;
+const _364 = c.tokens[c.idx];
+if (_364 !== undefined && (_364.id === 83 || (_364.id === undefined && _364.type === "RBracket"))) { c.idx++; _363 = _364; }
+else { if (c.track) { E(c, "RBracket"); } _363 = F; }
+if (_363 === F) { c.idx = _347; _345 = F; break L_346; }
+_345 = _350;
+}
+_334 = _345; break L_335;
+}
+default: { if (c.track) { E(c, "Dot"); E(c, "LBracket"); } _334 = F; break L_335; }
+}
+}
+return _334;
 }
 
 // SelectCore
 R[17] = (c) => {
 
-let _388;
-L_390: {
-const _389 = c.idx;
-const _392 = c.bindings;
-const _391 = {};
-c.bindings = _391;
-let _393;
-const _394 = c.tokens[c.idx];
-if (_394 !== undefined && (_394.id === 3 || (_394.id === undefined && _394.type === "Select"))) { c.idx++; _393 = _394; }
-else { E(c, "Select"); _393 = F; }
-if (_393 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
-let _396;
-const _397 = c.idx;
+let _365;
+L_367: {
+const _366 = c.idx;
+const _369 = c.bindings;
+const _368 = {};
+c.bindings = _368;
+let _370;
+const _371 = c.tokens[c.idx];
+if (_371 !== undefined && (_371.id === 3 || (_371.id === undefined && _371.type === "Select"))) { c.idx++; _370 = _371; }
+else { if (c.track) { E(c, "Select"); } _370 = F; }
+if (_370 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
+let _373;
+const _374 = c.idx;
 {
-let _398;
-const _399 = c.tokens[c.idx];
-if (_399 !== undefined && (_399.id === 7 || (_399.id === undefined && _399.type === "Distinct"))) { c.idx++; _398 = _399; }
-else { E(c, "Distinct"); _398 = F; }
-if (_398 === F) { c.idx = _397; _396 = false; } else _396 = true;
+let _375;
+const _376 = c.tokens[c.idx];
+if (_376 !== undefined && (_376.id === 7 || (_376.id === undefined && _376.type === "Distinct"))) { c.idx++; _375 = _376; }
+else { if (c.track) { E(c, "Distinct"); } _375 = F; }
+if (_375 === F) { c.idx = _374; _373 = false; } else _373 = true;
 }
-if (_396 !== F) _391["distinct"] = _396;
-const _395 = _396;
-if (_395 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
-let _400;
-const _401 = c.idx;
+if (_373 !== F) _368["distinct"] = _373;
+const _372 = _373;
+if (_372 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
+let _377;
+const _378 = c.idx;
 {
-let _402;
-const _403 = c.tokens[c.idx];
-if (_403 !== undefined && (_403.id === 8 || (_403.id === undefined && _403.type === "All"))) { c.idx++; _402 = _403; }
-else { E(c, "All"); _402 = F; }
-if (_402 === F) { c.idx = _401; _400 = null; } else _400 = _402;
+let _379;
+const _380 = c.tokens[c.idx];
+if (_380 !== undefined && (_380.id === 8 || (_380.id === undefined && _380.type === "All"))) { c.idx++; _379 = _380; }
+else { if (c.track) { E(c, "All"); } _379 = F; }
+if (_379 === F) { c.idx = _378; _377 = null; } else _377 = _379;
 }
-if (_400 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
+if (_377 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
 
-let _405 = [];
-L_409: {
-const _406 = c.idx;
+let _382 = [];
+L_386: {
+const _383 = c.idx;
+
+const _388 = c.ruleDepth;
+if (c.track) { c.ruleNames[_388] = "ResultColumn"; c.ruleDepth = _388 + 1; }
+const _387 = R[24](c);
+if (c.track) c.ruleDepth = _388;
+if (_387 === F) { c.idx = _383; _382 = F; break L_386; }
+_382.push(_387);
+for (;;) {
+const _384 = c.idx;
+let _389;
+const _390 = c.tokens[c.idx];
+if (_390 !== undefined && (_390.id === 84 || (_390.id === undefined && _390.type === "Comma"))) { c.idx++; _389 = _390; }
+else { if (c.track) { E(c, "Comma"); } _389 = F; }
+if (_389 === F) { c.idx = _384; break; }
+const _385 = c.idx;
+
+const _392 = c.ruleDepth;
+if (c.track) { c.ruleNames[_392] = "ResultColumn"; c.ruleDepth = _392 + 1; }
+const _391 = R[24](c);
+if (c.track) c.ruleDepth = _392;
+if (_391 === F) { c.idx = _384; break; }
+_382.push(_391);
+}
+}
+if (_382 !== F) _368["columns"] = _382;
+const _381 = _382;
+if (_381 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
+let _394;
+const _395 = c.idx;
+{
+
+let _396;
+L_397: {
+const _398 = c.idx;
+let _399;
+const _400 = c.tokens[c.idx];
+if (_400 !== undefined && (_400.id === 4 || (_400.id === undefined && _400.type === "From"))) { c.idx++; _399 = _400; }
+else { if (c.track) { E(c, "From"); } _399 = F; }
+if (_399 === F) { c.idx = _398; _396 = F; break L_397; }
+
+let _401 = [];
+L_405: {
+const _402 = c.idx;
+
+const _407 = c.ruleDepth;
+if (c.track) { c.ruleNames[_407] = "FromTerm"; c.ruleDepth = _407 + 1; }
+const _406 = R[25](c);
+if (c.track) c.ruleDepth = _407;
+if (_406 === F) { c.idx = _402; _401 = F; break L_405; }
+_401.push(_406);
+for (;;) {
+const _403 = c.idx;
+let _408;
+const _409 = c.tokens[c.idx];
+if (_409 !== undefined && (_409.id === 84 || (_409.id === undefined && _409.type === "Comma"))) { c.idx++; _408 = _409; }
+else { if (c.track) { E(c, "Comma"); } _408 = F; }
+if (_408 === F) { c.idx = _403; break; }
+const _404 = c.idx;
 
 const _411 = c.ruleDepth;
-if (c.track) { c.ruleNames[_411] = "ResultColumn"; c.ruleDepth = _411 + 1; }
-const _410 = R[23](c);
+if (c.track) { c.ruleNames[_411] = "FromTerm"; c.ruleDepth = _411 + 1; }
+const _410 = R[25](c);
 if (c.track) c.ruleDepth = _411;
-if (_410 === F) { c.idx = _406; _405 = F; break L_409; }
-_405.push(_410);
-for (;;) {
-const _407 = c.idx;
-let _412;
-const _413 = c.tokens[c.idx];
-if (_413 !== undefined && (_413.id === 84 || (_413.id === undefined && _413.type === "Comma"))) { c.idx++; _412 = _413; }
-else { E(c, "Comma"); _412 = F; }
-if (_412 === F) { c.idx = _407; break; }
-const _408 = c.idx;
-
-const _415 = c.ruleDepth;
-if (c.track) { c.ruleNames[_415] = "ResultColumn"; c.ruleDepth = _415 + 1; }
-const _414 = R[23](c);
-if (c.track) c.ruleDepth = _415;
-if (_414 === F) { c.idx = _407; break; }
-_405.push(_414);
+if (_410 === F) { c.idx = _403; break; }
+_401.push(_410);
 }
 }
-if (_405 !== F) _391["columns"] = _405;
-const _404 = _405;
-if (_404 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
-let _417;
-const _418 = c.idx;
+if (_401 === F) { c.idx = _398; _396 = F; break L_397; }
+_396 = _401;
+}
+if (_396 === F) { c.idx = _395; _394 = null; } else _394 = _396;
+}
+if (_394 !== F) _368["from"] = _394;
+const _393 = _394;
+if (_393 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
+let _413;
+const _414 = c.idx;
 {
 
-let _419;
-L_420: {
-const _421 = c.idx;
-let _422;
-const _423 = c.tokens[c.idx];
-if (_423 !== undefined && (_423.id === 4 || (_423.id === undefined && _423.type === "From"))) { c.idx++; _422 = _423; }
-else { E(c, "From"); _422 = F; }
-if (_422 === F) { c.idx = _421; _419 = F; break L_420; }
+let _415;
+L_416: {
+const _417 = c.idx;
+let _418;
+const _419 = c.tokens[c.idx];
+if (_419 !== undefined && (_419.id === 5 || (_419.id === undefined && _419.type === "Where"))) { c.idx++; _418 = _419; }
+else { if (c.track) { E(c, "Where"); } _418 = F; }
+if (_418 === F) { c.idx = _417; _415 = F; break L_416; }
 
-let _424 = [];
-L_428: {
-const _425 = c.idx;
+const _421 = c.ruleDepth;
+if (c.track) { c.ruleNames[_421] = "Expression"; c.ruleDepth = _421 + 1; }
+const _420 = R[19](c);
+if (c.track) c.ruleDepth = _421;
+if (_420 === F) { c.idx = _417; _415 = F; break L_416; }
+_415 = _420;
+}
+if (_415 === F) { c.idx = _414; _413 = null; } else _413 = _415;
+}
+if (_413 !== F) _368["where"] = _413;
+const _412 = _413;
+if (_412 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
+let _423;
+const _424 = c.idx;
+{
 
-const _430 = c.ruleDepth;
-if (c.track) { c.ruleNames[_430] = "FromTerm"; c.ruleDepth = _430 + 1; }
-const _429 = R[24](c);
-if (c.track) c.ruleDepth = _430;
-if (_429 === F) { c.idx = _425; _424 = F; break L_428; }
-_424.push(_429);
-for (;;) {
-const _426 = c.idx;
-let _431;
-const _432 = c.tokens[c.idx];
-if (_432 !== undefined && (_432.id === 84 || (_432.id === undefined && _432.type === "Comma"))) { c.idx++; _431 = _432; }
-else { E(c, "Comma"); _431 = F; }
-if (_431 === F) { c.idx = _426; break; }
+let _425;
+L_426: {
 const _427 = c.idx;
+let _428;
+const _429 = c.tokens[c.idx];
+if (_429 !== undefined && (_429.id === 27 || (_429.id === undefined && _429.type === "Group"))) { c.idx++; _428 = _429; }
+else { if (c.track) { E(c, "Group"); } _428 = F; }
+if (_428 === F) { c.idx = _427; _425 = F; break L_426; }
+let _430;
+const _431 = c.tokens[c.idx];
+if (_431 !== undefined && (_431.id === 28 || (_431.id === undefined && _431.type === "By"))) { c.idx++; _430 = _431; }
+else { if (c.track) { E(c, "By"); } _430 = F; }
+if (_430 === F) { c.idx = _427; _425 = F; break L_426; }
 
-const _434 = c.ruleDepth;
-if (c.track) { c.ruleNames[_434] = "FromTerm"; c.ruleDepth = _434 + 1; }
-const _433 = R[24](c);
-if (c.track) c.ruleDepth = _434;
-if (_433 === F) { c.idx = _426; break; }
-_424.push(_433);
-}
-}
-if (_424 === F) { c.idx = _421; _419 = F; break L_420; }
-_419 = _424;
-}
-if (_419 === F) { c.idx = _418; _417 = null; } else _417 = _419;
-}
-if (_417 !== F) _391["from"] = _417;
-const _416 = _417;
-if (_416 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
-let _436;
-const _437 = c.idx;
-{
+let _432 = [];
+L_436: {
+const _433 = c.idx;
 
-let _438;
-L_439: {
-const _440 = c.idx;
-let _441;
-const _442 = c.tokens[c.idx];
-if (_442 !== undefined && (_442.id === 5 || (_442.id === undefined && _442.type === "Where"))) { c.idx++; _441 = _442; }
-else { E(c, "Where"); _441 = F; }
-if (_441 === F) { c.idx = _440; _438 = F; break L_439; }
-
-const _444 = c.ruleDepth;
-if (c.track) { c.ruleNames[_444] = "Expression"; c.ruleDepth = _444 + 1; }
-const _443 = R[19](c);
-if (c.track) c.ruleDepth = _444;
-if (_443 === F) { c.idx = _440; _438 = F; break L_439; }
-_438 = _443;
-}
-if (_438 === F) { c.idx = _437; _436 = null; } else _436 = _438;
-}
-if (_436 !== F) _391["where"] = _436;
-const _435 = _436;
-if (_435 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
-let _446;
-const _447 = c.idx;
-{
-
-let _448;
-L_449: {
-const _450 = c.idx;
-let _451;
-const _452 = c.tokens[c.idx];
-if (_452 !== undefined && (_452.id === 27 || (_452.id === undefined && _452.type === "Group"))) { c.idx++; _451 = _452; }
-else { E(c, "Group"); _451 = F; }
-if (_451 === F) { c.idx = _450; _448 = F; break L_449; }
-let _453;
-const _454 = c.tokens[c.idx];
-if (_454 !== undefined && (_454.id === 28 || (_454.id === undefined && _454.type === "By"))) { c.idx++; _453 = _454; }
-else { E(c, "By"); _453 = F; }
-if (_453 === F) { c.idx = _450; _448 = F; break L_449; }
-
-let _455 = [];
-L_459: {
-const _456 = c.idx;
-
-const _461 = c.ruleDepth;
-if (c.track) { c.ruleNames[_461] = "Expression"; c.ruleDepth = _461 + 1; }
-const _460 = R[19](c);
-if (c.track) c.ruleDepth = _461;
-if (_460 === F) { c.idx = _456; _455 = F; break L_459; }
-_455.push(_460);
+const _438 = c.ruleDepth;
+if (c.track) { c.ruleNames[_438] = "Expression"; c.ruleDepth = _438 + 1; }
+const _437 = R[19](c);
+if (c.track) c.ruleDepth = _438;
+if (_437 === F) { c.idx = _433; _432 = F; break L_436; }
+_432.push(_437);
 for (;;) {
-const _457 = c.idx;
-let _462;
-const _463 = c.tokens[c.idx];
-if (_463 !== undefined && (_463.id === 84 || (_463.id === undefined && _463.type === "Comma"))) { c.idx++; _462 = _463; }
-else { E(c, "Comma"); _462 = F; }
-if (_462 === F) { c.idx = _457; break; }
-const _458 = c.idx;
+const _434 = c.idx;
+let _439;
+const _440 = c.tokens[c.idx];
+if (_440 !== undefined && (_440.id === 84 || (_440.id === undefined && _440.type === "Comma"))) { c.idx++; _439 = _440; }
+else { if (c.track) { E(c, "Comma"); } _439 = F; }
+if (_439 === F) { c.idx = _434; break; }
+const _435 = c.idx;
 
-const _465 = c.ruleDepth;
-if (c.track) { c.ruleNames[_465] = "Expression"; c.ruleDepth = _465 + 1; }
-const _464 = R[19](c);
-if (c.track) c.ruleDepth = _465;
-if (_464 === F) { c.idx = _457; break; }
-_455.push(_464);
+const _442 = c.ruleDepth;
+if (c.track) { c.ruleNames[_442] = "Expression"; c.ruleDepth = _442 + 1; }
+const _441 = R[19](c);
+if (c.track) c.ruleDepth = _442;
+if (_441 === F) { c.idx = _434; break; }
+_432.push(_441);
 }
 }
-if (_455 === F) { c.idx = _450; _448 = F; break L_449; }
-_448 = _455;
+if (_432 === F) { c.idx = _427; _425 = F; break L_426; }
+_425 = _432;
 }
-if (_448 === F) { c.idx = _447; _446 = null; } else _446 = _448;
+if (_425 === F) { c.idx = _424; _423 = null; } else _423 = _425;
 }
-if (_446 !== F) _391["groupBy"] = _446;
-const _445 = _446;
-if (_445 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
-let _467;
-const _468 = c.idx;
+if (_423 !== F) _368["groupBy"] = _423;
+const _422 = _423;
+if (_422 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
+let _444;
+const _445 = c.idx;
 {
 
-let _469;
-L_470: {
-const _471 = c.idx;
-let _472;
-const _473 = c.tokens[c.idx];
-if (_473 !== undefined && (_473.id === 33 || (_473.id === undefined && _473.type === "Having"))) { c.idx++; _472 = _473; }
-else { E(c, "Having"); _472 = F; }
-if (_472 === F) { c.idx = _471; _469 = F; break L_470; }
+let _446;
+L_447: {
+const _448 = c.idx;
+let _449;
+const _450 = c.tokens[c.idx];
+if (_450 !== undefined && (_450.id === 33 || (_450.id === undefined && _450.type === "Having"))) { c.idx++; _449 = _450; }
+else { if (c.track) { E(c, "Having"); } _449 = F; }
+if (_449 === F) { c.idx = _448; _446 = F; break L_447; }
 
-const _475 = c.ruleDepth;
-if (c.track) { c.ruleNames[_475] = "Expression"; c.ruleDepth = _475 + 1; }
-const _474 = R[19](c);
-if (c.track) c.ruleDepth = _475;
-if (_474 === F) { c.idx = _471; _469 = F; break L_470; }
-_469 = _474;
+const _452 = c.ruleDepth;
+if (c.track) { c.ruleNames[_452] = "Expression"; c.ruleDepth = _452 + 1; }
+const _451 = R[19](c);
+if (c.track) c.ruleDepth = _452;
+if (_451 === F) { c.idx = _448; _446 = F; break L_447; }
+_446 = _451;
 }
-if (_469 === F) { c.idx = _468; _467 = null; } else _467 = _469;
+if (_446 === F) { c.idx = _445; _444 = null; } else _444 = _446;
 }
-if (_467 !== F) _391["having"] = _467;
-const _466 = _467;
-if (_466 === F) { c.idx = _389; c.bindings = _392; _388 = F; break L_390; }
-const _476 = H[15](_391, c);
-c.bindings = _392;
-_388 = _476;
+if (_444 !== F) _368["having"] = _444;
+const _443 = _444;
+if (_443 === F) { c.idx = _366; c.bindings = _369; _365 = F; break L_367; }
+const _453 = H[14](_368, c);
+c.bindings = _369;
+_365 = _453;
 }
-return _388;
+return _365;
 }
 
 // ValuesCore
 R[18] = (c) => {
 
-let _477;
-L_479: {
-const _478 = c.idx;
-const _481 = c.bindings;
-const _480 = {};
-c.bindings = _480;
-let _482;
-const _483 = c.tokens[c.idx];
-if (_483 !== undefined && (_483.id === 38 || (_483.id === undefined && _483.type === "Values"))) { c.idx++; _482 = _483; }
-else { E(c, "Values"); _482 = F; }
-if (_482 === F) { c.idx = _478; c.bindings = _481; _477 = F; break L_479; }
+let _454;
+L_456: {
+const _455 = c.idx;
+const _458 = c.bindings;
+const _457 = {};
+c.bindings = _457;
+let _459;
+const _460 = c.tokens[c.idx];
+if (_460 !== undefined && (_460.id === 38 || (_460.id === undefined && _460.type === "Values"))) { c.idx++; _459 = _460; }
+else { if (c.track) { E(c, "Values"); } _459 = F; }
+if (_459 === F) { c.idx = _455; c.bindings = _458; _454 = F; break L_456; }
 
-let _485 = [];
-L_489: {
-const _486 = c.idx;
+let _462 = [];
+L_466: {
+const _463 = c.idx;
 
-const _491 = c.ruleDepth;
-if (c.track) { c.ruleNames[_491] = "ValueRow"; c.ruleDepth = _491 + 1; }
-const _490 = R[25](c);
-if (c.track) c.ruleDepth = _491;
-if (_490 === F) { c.idx = _486; _485 = F; break L_489; }
-_485.push(_490);
+const _468 = c.ruleDepth;
+if (c.track) { c.ruleNames[_468] = "ValueRow"; c.ruleDepth = _468 + 1; }
+const _467 = R[26](c);
+if (c.track) c.ruleDepth = _468;
+if (_467 === F) { c.idx = _463; _462 = F; break L_466; }
+_462.push(_467);
 for (;;) {
-const _487 = c.idx;
-let _492;
-const _493 = c.tokens[c.idx];
-if (_493 !== undefined && (_493.id === 84 || (_493.id === undefined && _493.type === "Comma"))) { c.idx++; _492 = _493; }
-else { E(c, "Comma"); _492 = F; }
-if (_492 === F) { c.idx = _487; break; }
-const _488 = c.idx;
+const _464 = c.idx;
+let _469;
+const _470 = c.tokens[c.idx];
+if (_470 !== undefined && (_470.id === 84 || (_470.id === undefined && _470.type === "Comma"))) { c.idx++; _469 = _470; }
+else { if (c.track) { E(c, "Comma"); } _469 = F; }
+if (_469 === F) { c.idx = _464; break; }
+const _465 = c.idx;
 
-const _495 = c.ruleDepth;
-if (c.track) { c.ruleNames[_495] = "ValueRow"; c.ruleDepth = _495 + 1; }
-const _494 = R[25](c);
-if (c.track) c.ruleDepth = _495;
-if (_494 === F) { c.idx = _487; break; }
-_485.push(_494);
+const _472 = c.ruleDepth;
+if (c.track) { c.ruleNames[_472] = "ValueRow"; c.ruleDepth = _472 + 1; }
+const _471 = R[26](c);
+if (c.track) c.ruleDepth = _472;
+if (_471 === F) { c.idx = _464; break; }
+_462.push(_471);
 }
 }
-if (_485 !== F) _480["rows"] = _485;
-const _484 = _485;
-if (_484 === F) { c.idx = _478; c.bindings = _481; _477 = F; break L_479; }
-const _496 = H[16](_480, c);
-c.bindings = _481;
-_477 = _496;
+if (_462 !== F) _457["rows"] = _462;
+const _461 = _462;
+if (_461 === F) { c.idx = _455; c.bindings = _458; _454 = F; break L_456; }
+const _473 = H[15](_457, c);
+c.bindings = _458;
+_454 = _473;
 }
-return _477;
+return _454;
 }
 
 // Expression
 R[19] = (c) => {
 
-const _498 = c.ruleDepth;
-if (c.track) { c.ruleNames[_498] = "OrExpr"; c.ruleDepth = _498 + 1; }
-const _497 = R[26](c);
-if (c.track) c.ruleDepth = _498;
-return _497;
+const _475 = c.ruleDepth;
+if (c.track) { c.ruleNames[_475] = "OrExpr"; c.ruleDepth = _475 + 1; }
+const _474 = R[27](c);
+if (c.track) c.ruleDepth = _475;
+return _474;
 }
 
-// Multiplicative
+// Additive$tower
 R[20] = (c) => {
 
-let _499;
-L_500: {
+let _476;
+L_477: {
 
-const _505 = c.ruleDepth;
-if (c.track) { c.ruleNames[_505] = "Unary"; c.ruleDepth = _505 + 1; }
-const _504 = R[27](c);
-if (c.track) c.ruleDepth = _505;
-if (_504 === F) { _499 = F; break L_500; }
-let _501 = _504;
-let _502 = null;
+const _482 = c.ruleDepth;
+if (c.track) { c.ruleNames[_482] = "Multiplicative"; c.ruleDepth = _482 + 1; }
+const _481 = R[28](c);
+if (c.track) c.ruleDepth = _482;
+if (_481 === F) { _476 = F; break L_477; }
+let _478 = _481;
+let _479 = null;
 for (;;) {
-const _503 = c.idx;
+const _480 = c.idx;
 
-let _506;
-L_507: {
-const _508 = c.tokens[c.idx];
-if (_508 === undefined) { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); _506 = F; break L_507; }
-const _509 = _508.id !== undefined ? _508.id : I[_508.type];
-switch (_509) {
+let _483;
+L_484: {
+const _485 = c.tokens[c.idx];
+if (_485 === undefined) { if (c.track) { E(c, "Plus"); E(c, "Minus"); } _483 = F; break L_484; }
+const _486 = _485.id !== undefined ? _485.id : I[_485.type];
+switch (_486) {
+case 75: {
+
+let _487;
+L_488: {
+const _489 = c.idx;
+let _490;
+const _491 = c.tokens[c.idx];
+if (_491 !== undefined && (_491.id === 75 || (_491.id === undefined && _491.type === "Plus"))) { c.idx++; _490 = _491; }
+else { if (c.track) { E(c, "Plus"); } _490 = F; }
+if (_490 === F) { c.idx = _489; _487 = F; break L_488; }
+_487 = "ADD";
+}
+_483 = _487; break L_484;
+}
+case 76: {
+
+let _492;
+L_493: {
+const _494 = c.idx;
+let _495;
+const _496 = c.tokens[c.idx];
+if (_496 !== undefined && (_496.id === 76 || (_496.id === undefined && _496.type === "Minus"))) { c.idx++; _495 = _496; }
+else { if (c.track) { E(c, "Minus"); } _495 = F; }
+if (_495 === F) { c.idx = _494; _492 = F; break L_493; }
+_492 = "SUB";
+}
+_483 = _492; break L_484;
+}
+default: { if (c.track) { E(c, "Plus"); E(c, "Minus"); } _483 = F; break L_484; }
+}
+}
+if (_483 === F) { c.idx = _480; break; }
+
+const _498 = c.ruleDepth;
+if (c.track) { c.ruleNames[_498] = "Multiplicative"; c.ruleDepth = _498 + 1; }
+const _497 = R[28](c);
+if (c.track) c.ruleDepth = _498;
+if (_497 === F) { c.idx = _480; break; }
+if (_479 === null) _479 = { left: null, op: null, right: null };
+_479.left = _478; _479.op = _483; _479.right = _497;
+_478 = H[16](_479, c);
+}
+_476 = _478;
+}
+return _476;
+}
+
+// ConcatExpr$climb
+R[21] = (c, from) => {
+
+
+const _508 = c.ruleDepth;
+if (c.track) { c.ruleNames[_508] = "Unary"; c.ruleDepth = _508 + 1; }
+const _507 = R[29](c);
+if (c.track) c.ruleDepth = _508;
+if (_507 === F) return F;
+let _503 = _507;
+let _504 = null, _505 = null, _506 = null;
+L_499: for (;;) {
+const _500 = c.idx;
+const _501 = c.tokens[_500];
+if (_501 === undefined) break;
+let _502;
+switch (_501.id !== undefined ? _501.id : I[_501.type]) {
+case 66: _502 = 0; break;
+case 75: case 76: _502 = 1; break;
+case 77: case 78: case 79: _502 = 2; break;
+default: break L_499;
+}
+if (_502 < from) break;
+switch (_502) {
+case 0: {
+let _509;
+const _510 = c.tokens[c.idx];
+if (_510 !== undefined && (_510.id === 66 || (_510.id === undefined && _510.type === "Concat"))) { c.idx++; _509 = _510; }
+else { if (c.track) { E(c, "Concat"); } _509 = F; }
+if (_509 === F) { c.idx = _500; break L_499; }
+const _511 = R[21](c, 1);
+if (_511 === F) { c.idx = _500; break L_499; }
+if (_504 === null) _504 = { left: null, op: null, right: null };
+_504.left = _503; _504.op = _509; _504.right = _511;
+_503 = H[17](_504, c);
+break;
+}
+case 1: {
+
+let _512;
+L_513: {
+const _514 = c.tokens[c.idx];
+if (_514 === undefined) { if (c.track) { E(c, "Plus"); E(c, "Minus"); } _512 = F; break L_513; }
+const _515 = _514.id !== undefined ? _514.id : I[_514.type];
+switch (_515) {
+case 75: {
+
+let _516;
+L_517: {
+const _518 = c.idx;
+let _519;
+const _520 = c.tokens[c.idx];
+if (_520 !== undefined && (_520.id === 75 || (_520.id === undefined && _520.type === "Plus"))) { c.idx++; _519 = _520; }
+else { if (c.track) { E(c, "Plus"); } _519 = F; }
+if (_519 === F) { c.idx = _518; _516 = F; break L_517; }
+_516 = "ADD";
+}
+_512 = _516; break L_513;
+}
+case 76: {
+
+let _521;
+L_522: {
+const _523 = c.idx;
+let _524;
+const _525 = c.tokens[c.idx];
+if (_525 !== undefined && (_525.id === 76 || (_525.id === undefined && _525.type === "Minus"))) { c.idx++; _524 = _525; }
+else { if (c.track) { E(c, "Minus"); } _524 = F; }
+if (_524 === F) { c.idx = _523; _521 = F; break L_522; }
+_521 = "SUB";
+}
+_512 = _521; break L_513;
+}
+default: { if (c.track) { E(c, "Plus"); E(c, "Minus"); } _512 = F; break L_513; }
+}
+}
+if (_512 === F) { c.idx = _500; break L_499; }
+const _526 = R[21](c, 2);
+if (_526 === F) { c.idx = _500; break L_499; }
+if (_505 === null) _505 = { left: null, op: null, right: null };
+_505.left = _503; _505.op = _512; _505.right = _526;
+_503 = H[18](_505, c);
+break;
+}
+case 2: {
+
+let _527;
+L_528: {
+const _529 = c.tokens[c.idx];
+if (_529 === undefined) { if (c.track) { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); } _527 = F; break L_528; }
+const _530 = _529.id !== undefined ? _529.id : I[_529.type];
+switch (_530) {
 case 77: {
 
-let _510;
-L_511: {
-const _512 = c.idx;
-let _513;
-const _514 = c.tokens[c.idx];
-if (_514 !== undefined && (_514.id === 77 || (_514.id === undefined && _514.type === "Star"))) { c.idx++; _513 = _514; }
-else { E(c, "Star"); _513 = F; }
-if (_513 === F) { c.idx = _512; _510 = F; break L_511; }
-_510 = "MUL";
+let _531;
+L_532: {
+const _533 = c.idx;
+let _534;
+const _535 = c.tokens[c.idx];
+if (_535 !== undefined && (_535.id === 77 || (_535.id === undefined && _535.type === "Star"))) { c.idx++; _534 = _535; }
+else { if (c.track) { E(c, "Star"); } _534 = F; }
+if (_534 === F) { c.idx = _533; _531 = F; break L_532; }
+_531 = "MUL";
 }
-_506 = _510; break L_507;
+_527 = _531; break L_528;
 }
 case 78: {
 
-let _515;
-L_516: {
-const _517 = c.idx;
-let _518;
-const _519 = c.tokens[c.idx];
-if (_519 !== undefined && (_519.id === 78 || (_519.id === undefined && _519.type === "Slash"))) { c.idx++; _518 = _519; }
-else { E(c, "Slash"); _518 = F; }
-if (_518 === F) { c.idx = _517; _515 = F; break L_516; }
-_515 = "DIV";
+let _536;
+L_537: {
+const _538 = c.idx;
+let _539;
+const _540 = c.tokens[c.idx];
+if (_540 !== undefined && (_540.id === 78 || (_540.id === undefined && _540.type === "Slash"))) { c.idx++; _539 = _540; }
+else { if (c.track) { E(c, "Slash"); } _539 = F; }
+if (_539 === F) { c.idx = _538; _536 = F; break L_537; }
+_536 = "DIV";
 }
-_506 = _515; break L_507;
+_527 = _536; break L_528;
 }
 case 79: {
 
-let _520;
-L_521: {
-const _522 = c.idx;
-let _523;
-const _524 = c.tokens[c.idx];
-if (_524 !== undefined && (_524.id === 79 || (_524.id === undefined && _524.type === "Percent"))) { c.idx++; _523 = _524; }
-else { E(c, "Percent"); _523 = F; }
-if (_523 === F) { c.idx = _522; _520 = F; break L_521; }
-_520 = "MOD";
+let _541;
+L_542: {
+const _543 = c.idx;
+let _544;
+const _545 = c.tokens[c.idx];
+if (_545 !== undefined && (_545.id === 79 || (_545.id === undefined && _545.type === "Percent"))) { c.idx++; _544 = _545; }
+else { if (c.track) { E(c, "Percent"); } _544 = F; }
+if (_544 === F) { c.idx = _543; _541 = F; break L_542; }
+_541 = "MOD";
 }
-_506 = _520; break L_507;
+_527 = _541; break L_528;
 }
-default: { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); _506 = F; break L_507; }
+default: { if (c.track) { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); } _527 = F; break L_528; }
 }
 }
-if (_506 === F) { c.idx = _503; break; }
-
-const _526 = c.ruleDepth;
-if (c.track) { c.ruleNames[_526] = "Unary"; c.ruleDepth = _526 + 1; }
-const _525 = R[27](c);
-if (c.track) c.ruleDepth = _526;
-if (_525 === F) { c.idx = _503; break; }
-if (_502 === null) _502 = { left: null, op: null, right: null };
-_502.left = _501; _502.op = _506; _502.right = _525;
-_501 = H[17](_502, c);
+if (_527 === F) { c.idx = _500; break L_499; }
+const _546 = R[21](c, 3);
+if (_546 === F) { c.idx = _500; break L_499; }
+if (_506 === null) _506 = { left: null, op: null, right: null };
+_506.left = _503; _506.op = _527; _506.right = _546;
+_503 = H[19](_506, c);
+break;
 }
-_499 = _501;
 }
-return _499;
+}
+return _503;
 }
 
 // NumberLiteral
-R[21] = (c) => {
-let _528;
-const _529 = c.tokens[c.idx];
-if (_529 !== undefined && (_529.id === 56 || (_529.id === undefined && _529.type === "Number"))) { c.idx++; _528 = _529; }
-else { E(c, "Number"); _528 = F; }
-const _527 = _528 === F ? F : H[18](_528, c);
-return _527;
+R[22] = (c) => {
+let _548;
+const _549 = c.tokens[c.idx];
+if (_549 !== undefined && (_549.id === 56 || (_549.id === undefined && _549.type === "Number"))) { c.idx++; _548 = _549; }
+else { if (c.track) { E(c, "Number"); } _548 = F; }
+const _547 = _548 === F ? F : H[20](_548, c);
+return _547;
 }
 
 // StringLiteral
-R[22] = (c) => {
-let _531;
-const _532 = c.tokens[c.idx];
-if (_532 !== undefined && (_532.id === 57 || (_532.id === undefined && _532.type === "String"))) { c.idx++; _531 = _532; }
-else { E(c, "String"); _531 = F; }
-const _530 = _531 === F ? F : H[19](_531, c);
-return _530;
+R[23] = (c) => {
+let _551;
+const _552 = c.tokens[c.idx];
+if (_552 !== undefined && (_552.id === 57 || (_552.id === undefined && _552.type === "String"))) { c.idx++; _551 = _552; }
+else { if (c.track) { E(c, "String"); } _551 = F; }
+const _550 = _551 === F ? F : H[21](_551, c);
+return _550;
 }
 
 // ResultColumn
-R[23] = (c) => {
-
-let _533;
-L_534: {
-const _535 = c.tokens[c.idx];
-if (_535 === undefined) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _533 = F; break L_534; }
-const _536 = _535.id !== undefined ? _535.id : I[_535.type];
-switch (_536) {
-case 60: case 58: case 59: {
-let _537;
-L_538: {
-const _539 = c.idx;
-{
-
-let _540;
-L_542: {
-const _541 = c.idx;
-const _544 = c.bindings;
-const _543 = {};
-c.bindings = _543;
-
-const _547 = c.ruleDepth;
-if (c.track) { c.ruleNames[_547] = "Ident"; c.ruleDepth = _547 + 1; }
-const _546 = R[15](c);
-if (c.track) c.ruleDepth = _547;
-if (_546 !== F) _543["table"] = _546;
-const _545 = _546;
-if (_545 === F) { c.idx = _541; c.bindings = _544; _540 = F; break L_542; }
-let _548;
-const _549 = c.tokens[c.idx];
-if (_549 !== undefined && (_549.id === 85 || (_549.id === undefined && _549.type === "Dot"))) { c.idx++; _548 = _549; }
-else { E(c, "Dot"); _548 = F; }
-if (_548 === F) { c.idx = _541; c.bindings = _544; _540 = F; break L_542; }
-let _550;
-const _551 = c.tokens[c.idx];
-if (_551 !== undefined && (_551.id === 77 || (_551.id === undefined && _551.type === "Star"))) { c.idx++; _550 = _551; }
-else { E(c, "Star"); _550 = F; }
-if (_550 === F) { c.idx = _541; c.bindings = _544; _540 = F; break L_542; }
-const _552 = H[20](_543, c);
-c.bindings = _544;
-_540 = _552;
-}
-if (_540 !== F) { _537 = _540; break L_538; }
-c.idx = _539;
-}
-{
+R[24] = (c) => {
 
 let _553;
-L_555: {
-const _554 = c.idx;
-const _557 = c.bindings;
-const _556 = {};
-c.bindings = _556;
+L_554: {
+const _555 = c.tokens[c.idx];
+if (_555 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _553 = F; break L_554; }
+const _556 = _555.id !== undefined ? _555.id : I[_555.type];
+switch (_556) {
+case 60: case 58: case 59: {
+let _557;
+L_558: {
+const _559 = c.idx;
+let _560 = 3;
+if (!c.track) {
+const _561 = c.tokens[_559 + 1];
+switch (_561 === undefined ? -1 : (_561.id !== undefined ? _561.id : I[_561.type])) {
+case 85: _560 = 3; break;
+case 80: case 82: _560 = 2; break;
+default: _560 = 2; break;
+}
+}
+if (_560 & 1) {
 
-const _560 = c.ruleDepth;
-if (c.track) { c.ruleNames[_560] = "Expression"; c.ruleDepth = _560 + 1; }
-const _559 = R[19](c);
-if (c.track) c.ruleDepth = _560;
-if (_559 !== F) _556["expr"] = _559;
-const _558 = _559;
-if (_558 === F) { c.idx = _554; c.bindings = _557; _553 = F; break L_555; }
 let _562;
+L_564: {
 const _563 = c.idx;
-{
+const _566 = c.bindings;
+const _565 = {};
+c.bindings = _565;
 
-const _565 = c.ruleDepth;
-if (c.track) { c.ruleNames[_565] = "AliasClause"; c.ruleDepth = _565 + 1; }
-const _564 = R[28](c);
-if (c.track) c.ruleDepth = _565;
-if (_564 === F) { c.idx = _563; _562 = null; } else _562 = _564;
-}
-if (_562 !== F) _556["alias"] = _562;
-const _561 = _562;
-if (_561 === F) { c.idx = _554; c.bindings = _557; _553 = F; break L_555; }
-const _566 = H[21](_556, c);
-c.bindings = _557;
-_553 = _566;
-}
-if (_553 !== F) { _537 = _553; break L_538; }
-c.idx = _539;
-}
-_537 = F;
-}
-_533 = _537; break L_534;
-}
-case 77: {
-
-let _567;
-L_569: {
-const _568 = c.idx;
-const _571 = c.bindings;
-const _570 = {};
-c.bindings = _570;
+const _569 = c.ruleDepth;
+if (c.track) { c.ruleNames[_569] = "Ident"; c.ruleDepth = _569 + 1; }
+const _568 = R[15](c);
+if (c.track) c.ruleDepth = _569;
+if (_568 !== F) _565["table"] = _568;
+const _567 = _568;
+if (_567 === F) { c.idx = _563; c.bindings = _566; _562 = F; break L_564; }
+let _570;
+const _571 = c.tokens[c.idx];
+if (_571 !== undefined && (_571.id === 85 || (_571.id === undefined && _571.type === "Dot"))) { c.idx++; _570 = _571; }
+else { if (c.track) { E(c, "Dot"); } _570 = F; }
+if (_570 === F) { c.idx = _563; c.bindings = _566; _562 = F; break L_564; }
 let _572;
 const _573 = c.tokens[c.idx];
 if (_573 !== undefined && (_573.id === 77 || (_573.id === undefined && _573.type === "Star"))) { c.idx++; _572 = _573; }
-else { E(c, "Star"); _572 = F; }
-if (_572 === F) { c.idx = _568; c.bindings = _571; _567 = F; break L_569; }
-const _574 = H[22](_570, c);
-c.bindings = _571;
-_567 = _574;
+else { if (c.track) { E(c, "Star"); } _572 = F; }
+if (_572 === F) { c.idx = _563; c.bindings = _566; _562 = F; break L_564; }
+const _574 = H[22](_565, c);
+c.bindings = _566;
+_562 = _574;
 }
-_533 = _567; break L_534;
+if (_562 !== F) { _557 = _562; break L_558; }
+c.idx = _559;
 }
-case 11: case 76: case 75: case 39: case 40: case 14: case 80: case 50: case 41: case 51: case 52: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
+if (_560 & 2) {
 
 let _575;
 L_577: {
@@ -2625,7 +2651,7 @@ const _585 = c.idx;
 
 const _587 = c.ruleDepth;
 if (c.track) { c.ruleNames[_587] = "AliasClause"; c.ruleDepth = _587 + 1; }
-const _586 = R[28](c);
+const _586 = R[30](c);
 if (c.track) c.ruleDepth = _587;
 if (_586 === F) { c.idx = _585; _584 = null; } else _584 = _586;
 }
@@ -2636,16 +2662,14 @@ const _588 = H[23](_578, c);
 c.bindings = _579;
 _575 = _588;
 }
-_533 = _575; break L_534;
+if (_575 !== F) { _557 = _575; break L_558; }
+c.idx = _559;
 }
-default: { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _533 = F; break L_534; }
+_557 = F;
 }
+_553 = _557; break L_554;
 }
-return _533;
-}
-
-// FromTerm
-R[24] = (c) => {
+case 77: {
 
 let _589;
 L_591: {
@@ -2653,336 +2677,345 @@ const _590 = c.idx;
 const _593 = c.bindings;
 const _592 = {};
 c.bindings = _592;
-
-const _596 = c.ruleDepth;
-if (c.track) { c.ruleNames[_596] = "FromItem"; c.ruleDepth = _596 + 1; }
-const _595 = R[29](c);
-if (c.track) c.ruleDepth = _596;
-if (_595 !== F) _592["base"] = _595;
-const _594 = _595;
+let _594;
+const _595 = c.tokens[c.idx];
+if (_595 !== undefined && (_595.id === 77 || (_595.id === undefined && _595.type === "Star"))) { c.idx++; _594 = _595; }
+else { if (c.track) { E(c, "Star"); } _594 = F; }
 if (_594 === F) { c.idx = _590; c.bindings = _593; _589 = F; break L_591; }
-
-let _598 = [];
-L_600: {
-for (;;) {
-const _599 = c.idx;
-
-const _602 = c.ruleDepth;
-if (c.track) { c.ruleNames[_602] = "JoinClause"; c.ruleDepth = _602 + 1; }
-const _601 = R[30](c);
-if (c.track) c.ruleDepth = _602;
-if (_601 === F) { c.idx = _599; break; }
-if (c.idx === _599) P("many", _599);
-_598.push(_601);
-}
-}
-if (_598 !== F) _592["joins"] = _598;
-const _597 = _598;
-if (_597 === F) { c.idx = _590; c.bindings = _593; _589 = F; break L_591; }
-const _603 = H[24](_592, c);
+const _596 = H[24](_592, c);
 c.bindings = _593;
-_589 = _603;
+_589 = _596;
 }
-return _589;
+_553 = _589; break L_554;
+}
+case 11: case 76: case 75: case 39: case 40: case 14: case 80: case 50: case 41: case 51: case 52: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
+
+let _597;
+L_599: {
+const _598 = c.idx;
+const _601 = c.bindings;
+const _600 = {};
+c.bindings = _600;
+
+const _604 = c.ruleDepth;
+if (c.track) { c.ruleNames[_604] = "Expression"; c.ruleDepth = _604 + 1; }
+const _603 = R[19](c);
+if (c.track) c.ruleDepth = _604;
+if (_603 !== F) _600["expr"] = _603;
+const _602 = _603;
+if (_602 === F) { c.idx = _598; c.bindings = _601; _597 = F; break L_599; }
+let _606;
+const _607 = c.idx;
+{
+
+const _609 = c.ruleDepth;
+if (c.track) { c.ruleNames[_609] = "AliasClause"; c.ruleDepth = _609 + 1; }
+const _608 = R[30](c);
+if (c.track) c.ruleDepth = _609;
+if (_608 === F) { c.idx = _607; _606 = null; } else _606 = _608;
+}
+if (_606 !== F) _600["alias"] = _606;
+const _605 = _606;
+if (_605 === F) { c.idx = _598; c.bindings = _601; _597 = F; break L_599; }
+const _610 = H[25](_600, c);
+c.bindings = _601;
+_597 = _610;
+}
+_553 = _597; break L_554;
+}
+default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Star"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _553 = F; break L_554; }
+}
+}
+return _553;
+}
+
+// FromTerm
+R[25] = (c) => {
+
+let _611;
+L_613: {
+const _612 = c.idx;
+const _615 = c.bindings;
+const _614 = {};
+c.bindings = _614;
+
+const _618 = c.ruleDepth;
+if (c.track) { c.ruleNames[_618] = "FromItem"; c.ruleDepth = _618 + 1; }
+const _617 = R[31](c);
+if (c.track) c.ruleDepth = _618;
+if (_617 !== F) _614["base"] = _617;
+const _616 = _617;
+if (_616 === F) { c.idx = _612; c.bindings = _615; _611 = F; break L_613; }
+
+let _620 = [];
+L_622: {
+for (;;) {
+const _621 = c.idx;
+
+const _624 = c.ruleDepth;
+if (c.track) { c.ruleNames[_624] = "JoinClause"; c.ruleDepth = _624 + 1; }
+const _623 = R[32](c);
+if (c.track) c.ruleDepth = _624;
+if (_623 === F) { c.idx = _621; break; }
+if (c.idx === _621) P("many", _621);
+_620.push(_623);
+}
+}
+if (_620 !== F) _614["joins"] = _620;
+const _619 = _620;
+if (_619 === F) { c.idx = _612; c.bindings = _615; _611 = F; break L_613; }
+const _625 = H[26](_614, c);
+c.bindings = _615;
+_611 = _625;
+}
+return _611;
 }
 
 // ValueRow
-R[25] = (c) => {
+R[26] = (c) => {
 
-let _604;
-L_605: {
-const _606 = c.idx;
-let _607;
-const _608 = c.tokens[c.idx];
-if (_608 !== undefined && (_608.id === 80 || (_608.id === undefined && _608.type === "LParen"))) { c.idx++; _607 = _608; }
-else { E(c, "LParen"); _607 = F; }
-if (_607 === F) { c.idx = _606; _604 = F; break L_605; }
+let _626;
+L_627: {
+const _628 = c.idx;
+let _629;
+const _630 = c.tokens[c.idx];
+if (_630 !== undefined && (_630.id === 80 || (_630.id === undefined && _630.type === "LParen"))) { c.idx++; _629 = _630; }
+else { if (c.track) { E(c, "LParen"); } _629 = F; }
+if (_629 === F) { c.idx = _628; _626 = F; break L_627; }
 
-let _609 = [];
-L_613: {
-const _610 = c.idx;
+let _631 = [];
+L_635: {
+const _632 = c.idx;
 
-const _615 = c.ruleDepth;
-if (c.track) { c.ruleNames[_615] = "Expression"; c.ruleDepth = _615 + 1; }
-const _614 = R[19](c);
-if (c.track) c.ruleDepth = _615;
-if (_614 === F) { c.idx = _610; _609 = F; break L_613; }
-_609.push(_614);
+const _637 = c.ruleDepth;
+if (c.track) { c.ruleNames[_637] = "Expression"; c.ruleDepth = _637 + 1; }
+const _636 = R[19](c);
+if (c.track) c.ruleDepth = _637;
+if (_636 === F) { c.idx = _632; _631 = F; break L_635; }
+_631.push(_636);
 for (;;) {
-const _611 = c.idx;
-let _616;
-const _617 = c.tokens[c.idx];
-if (_617 !== undefined && (_617.id === 84 || (_617.id === undefined && _617.type === "Comma"))) { c.idx++; _616 = _617; }
-else { E(c, "Comma"); _616 = F; }
-if (_616 === F) { c.idx = _611; break; }
-const _612 = c.idx;
+const _633 = c.idx;
+let _638;
+const _639 = c.tokens[c.idx];
+if (_639 !== undefined && (_639.id === 84 || (_639.id === undefined && _639.type === "Comma"))) { c.idx++; _638 = _639; }
+else { if (c.track) { E(c, "Comma"); } _638 = F; }
+if (_638 === F) { c.idx = _633; break; }
+const _634 = c.idx;
 
-const _619 = c.ruleDepth;
-if (c.track) { c.ruleNames[_619] = "Expression"; c.ruleDepth = _619 + 1; }
-const _618 = R[19](c);
-if (c.track) c.ruleDepth = _619;
-if (_618 === F) { c.idx = _611; break; }
-_609.push(_618);
+const _641 = c.ruleDepth;
+if (c.track) { c.ruleNames[_641] = "Expression"; c.ruleDepth = _641 + 1; }
+const _640 = R[19](c);
+if (c.track) c.ruleDepth = _641;
+if (_640 === F) { c.idx = _633; break; }
+_631.push(_640);
 }
 }
-if (_609 === F) { c.idx = _606; _604 = F; break L_605; }
-let _620;
-const _621 = c.tokens[c.idx];
-if (_621 !== undefined && (_621.id === 81 || (_621.id === undefined && _621.type === "RParen"))) { c.idx++; _620 = _621; }
-else { E(c, "RParen"); _620 = F; }
-if (_620 === F) { c.idx = _606; _604 = F; break L_605; }
-_604 = _609;
+if (_631 === F) { c.idx = _628; _626 = F; break L_627; }
+let _642;
+const _643 = c.tokens[c.idx];
+if (_643 !== undefined && (_643.id === 81 || (_643.id === undefined && _643.type === "RParen"))) { c.idx++; _642 = _643; }
+else { if (c.track) { E(c, "RParen"); } _642 = F; }
+if (_642 === F) { c.idx = _628; _626 = F; break L_627; }
+_626 = _631;
 }
-return _604;
+return _626;
 }
 
 // OrExpr
-R[26] = (c) => {
+R[27] = (c) => c.track ? R[33](c) : R[34](c, 0)
 
-let _622;
-L_623: {
-
-const _628 = c.ruleDepth;
-if (c.track) { c.ruleNames[_628] = "AndExpr"; c.ruleDepth = _628 + 1; }
-const _627 = R[31](c);
-if (c.track) c.ruleDepth = _628;
-if (_627 === F) { _622 = F; break L_623; }
-let _624 = _627;
-let _625 = null;
-for (;;) {
-const _626 = c.idx;
-let _629;
-const _630 = c.tokens[c.idx];
-if (_630 !== undefined && (_630.id === 10 || (_630.id === undefined && _630.type === "Or"))) { c.idx++; _629 = _630; }
-else { E(c, "Or"); _629 = F; }
-if (_629 === F) { c.idx = _626; break; }
-
-const _632 = c.ruleDepth;
-if (c.track) { c.ruleNames[_632] = "AndExpr"; c.ruleDepth = _632 + 1; }
-const _631 = R[31](c);
-if (c.track) c.ruleDepth = _632;
-if (_631 === F) { c.idx = _626; break; }
-if (_625 === null) _625 = { left: null, op: null, right: null };
-_625.left = _624; _625.op = _629; _625.right = _631;
-_624 = H[25](_625, c);
-}
-_622 = _624;
-}
-return _622;
-}
+// Multiplicative
+R[28] = (c) => c.track ? R[35](c) : R[21](c, 2)
 
 // Unary
-R[27] = (c) => {
-
-let _633;
-L_634: {
-const _635 = c.idx;
-let _636 = null;
-for (;;) {
-const _637 = c.idx;
-
-let _640;
-L_641: {
-const _642 = c.tokens[c.idx];
-if (_642 === undefined) { E(c, "Minus"); E(c, "Plus"); _640 = F; break L_641; }
-const _643 = _642.id !== undefined ? _642.id : I[_642.type];
-switch (_643) {
-case 76: {
+R[29] = (c) => {
 
 let _644;
 L_645: {
 const _646 = c.idx;
-let _647;
-const _648 = c.tokens[c.idx];
-if (_648 !== undefined && (_648.id === 76 || (_648.id === undefined && _648.type === "Minus"))) { c.idx++; _647 = _648; }
-else { E(c, "Minus"); _647 = F; }
-if (_647 === F) { c.idx = _646; _644 = F; break L_645; }
-_644 = "NEG";
+let _647 = null;
+for (;;) {
+const _648 = c.idx;
+
+let _651;
+L_652: {
+const _653 = c.tokens[c.idx];
+if (_653 === undefined) { if (c.track) { E(c, "Minus"); E(c, "Plus"); } _651 = F; break L_652; }
+const _654 = _653.id !== undefined ? _653.id : I[_653.type];
+switch (_654) {
+case 76: {
+
+let _655;
+L_656: {
+const _657 = c.idx;
+let _658;
+const _659 = c.tokens[c.idx];
+if (_659 !== undefined && (_659.id === 76 || (_659.id === undefined && _659.type === "Minus"))) { c.idx++; _658 = _659; }
+else { if (c.track) { E(c, "Minus"); } _658 = F; }
+if (_658 === F) { c.idx = _657; _655 = F; break L_656; }
+_655 = "NEG";
 }
-_640 = _644; break L_641;
+_651 = _655; break L_652;
 }
 case 75: {
 
-let _649;
-L_650: {
-const _651 = c.idx;
-let _652;
-const _653 = c.tokens[c.idx];
-if (_653 !== undefined && (_653.id === 75 || (_653.id === undefined && _653.type === "Plus"))) { c.idx++; _652 = _653; }
-else { E(c, "Plus"); _652 = F; }
-if (_652 === F) { c.idx = _651; _649 = F; break L_650; }
-_649 = "POS";
+let _660;
+L_661: {
+const _662 = c.idx;
+let _663;
+const _664 = c.tokens[c.idx];
+if (_664 !== undefined && (_664.id === 75 || (_664.id === undefined && _664.type === "Plus"))) { c.idx++; _663 = _664; }
+else { if (c.track) { E(c, "Plus"); } _663 = F; }
+if (_663 === F) { c.idx = _662; _660 = F; break L_661; }
+_660 = "POS";
 }
-_640 = _649; break L_641;
+_651 = _660; break L_652;
 }
-default: { E(c, "Minus"); E(c, "Plus"); _640 = F; break L_641; }
+default: { if (c.track) { E(c, "Minus"); E(c, "Plus"); } _651 = F; break L_652; }
 }
 }
-if (_640 === F) { c.idx = _637; break; }
-if (_636 === null) _636 = [];
-_636.push(_640);
+if (_651 === F) { c.idx = _648; break; }
+if (_647 === null) _647 = [];
+_647.push(_651);
 }
 
-const _655 = c.ruleDepth;
-if (c.track) { c.ruleNames[_655] = "PostfixExpr"; c.ruleDepth = _655 + 1; }
-const _654 = R[32](c);
-if (c.track) c.ruleDepth = _655;
-if (_654 === F) { c.idx = _635; _633 = F; break L_634; }
-let _639 = _654;
-if (_636 !== null) {
-const _638 = { op: null, operand: null };
-for (let i = _636.length - 1; i >= 0; i--) { _638.op = _636[i]; _638.operand = _639; _639 = H[26](_638, c); }
+const _666 = c.ruleDepth;
+if (c.track) { c.ruleNames[_666] = "PostfixExpr"; c.ruleDepth = _666 + 1; }
+const _665 = R[36](c);
+if (c.track) c.ruleDepth = _666;
+if (_665 === F) { c.idx = _646; _644 = F; break L_645; }
+let _650 = _665;
+if (_647 !== null) {
+const _649 = { op: null, operand: null };
+for (let i = _647.length - 1; i >= 0; i--) { _649.op = _647[i]; _649.operand = _650; _650 = H[27](_649, c); }
 }
-_633 = _639;
+_644 = _650;
 }
-return _633;
+return _644;
 }
 
 // AliasClause
-R[28] = (c) => {
+R[30] = (c) => {
 
-let _657;
-L_658: {
-const _659 = c.idx;
-let _660;
-const _661 = c.idx;
+let _668;
+L_669: {
+const _670 = c.idx;
+let _671;
+const _672 = c.idx;
 {
-let _662;
-const _663 = c.tokens[c.idx];
-if (_663 !== undefined && (_663.id === 6 || (_663.id === undefined && _663.type === "As"))) { c.idx++; _662 = _663; }
-else { E(c, "As"); _662 = F; }
-if (_662 === F) { c.idx = _661; _660 = null; } else _660 = _662;
+let _673;
+const _674 = c.tokens[c.idx];
+if (_674 !== undefined && (_674.id === 6 || (_674.id === undefined && _674.type === "As"))) { c.idx++; _673 = _674; }
+else { if (c.track) { E(c, "As"); } _673 = F; }
+if (_673 === F) { c.idx = _672; _671 = null; } else _671 = _673;
 }
-if (_660 === F) { c.idx = _659; _657 = F; break L_658; }
+if (_671 === F) { c.idx = _670; _668 = F; break L_669; }
 
-const _665 = c.ruleDepth;
-if (c.track) { c.ruleNames[_665] = "Ident"; c.ruleDepth = _665 + 1; }
-const _664 = R[15](c);
-if (c.track) c.ruleDepth = _665;
-if (_664 === F) { c.idx = _659; _657 = F; break L_658; }
-_657 = _664;
+const _676 = c.ruleDepth;
+if (c.track) { c.ruleNames[_676] = "Ident"; c.ruleDepth = _676 + 1; }
+const _675 = R[15](c);
+if (c.track) c.ruleDepth = _676;
+if (_675 === F) { c.idx = _670; _668 = F; break L_669; }
+_668 = _675;
 }
-return _657;
+return _668;
 }
 
 // FromItem
-R[29] = (c) => {
+R[31] = (c) => {
 
-let _666;
-L_668: {
-const _667 = c.idx;
-const _670 = c.bindings;
-const _669 = {};
-c.bindings = _669;
+let _677;
+L_679: {
+const _678 = c.idx;
+const _681 = c.bindings;
+const _680 = {};
+c.bindings = _680;
 
-let _672;
-L_673: {
-const _674 = c.tokens[c.idx];
-if (_674 === undefined) { E(c, "LParen"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); _672 = F; break L_673; }
-const _675 = _674.id !== undefined ? _674.id : I[_674.type];
-switch (_675) {
+let _683;
+L_684: {
+const _685 = c.tokens[c.idx];
+if (_685 === undefined) { if (c.track) { E(c, "LParen"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); } _683 = F; break L_684; }
+const _686 = _685.id !== undefined ? _685.id : I[_685.type];
+switch (_686) {
 case 80: {
 
-const _677 = c.ruleDepth;
-if (c.track) { c.ruleNames[_677] = "SubquerySource"; c.ruleDepth = _677 + 1; }
-const _676 = R[33](c);
-if (c.track) c.ruleDepth = _677;
-_672 = _676; break L_673;
+const _688 = c.ruleDepth;
+if (c.track) { c.ruleNames[_688] = "SubquerySource"; c.ruleDepth = _688 + 1; }
+const _687 = R[37](c);
+if (c.track) c.ruleDepth = _688;
+_683 = _687; break L_684;
 }
 case 60: case 58: case 59: {
-let _678;
-L_679: {
-const _680 = c.idx;
+let _689;
+L_690: {
+const _691 = c.idx;
+let _692 = 3;
+if (!c.track) {
+const _693 = c.tokens[_691 + 1];
+switch (_693 === undefined ? -1 : (_693.id !== undefined ? _693.id : I[_693.type])) {
+case 80: _692 = 3; break;
+case 85: case 82: _692 = 2; break;
+default: _692 = 2; break;
+}
+}
+if (_692 & 1) {
+
+const _695 = c.ruleDepth;
+if (c.track) { c.ruleNames[_695] = "FunctionSource"; c.ruleDepth = _695 + 1; }
+const _694 = R[38](c);
+if (c.track) c.ruleDepth = _695;
+if (_694 !== F) { _689 = _694; break L_690; }
+c.idx = _691;
+}
+if (_692 & 2) {
+
+const _697 = c.ruleDepth;
+if (c.track) { c.ruleNames[_697] = "PathSource"; c.ruleDepth = _697 + 1; }
+const _696 = R[39](c);
+if (c.track) c.ruleDepth = _697;
+if (_696 !== F) { _689 = _696; break L_690; }
+c.idx = _691;
+}
+_689 = F;
+}
+_683 = _689; break L_684;
+}
+default: { if (c.track) { E(c, "LParen"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); } _683 = F; break L_684; }
+}
+}
+if (_683 !== F) _680["source"] = _683;
+const _682 = _683;
+if (_682 === F) { c.idx = _678; c.bindings = _681; _677 = F; break L_679; }
+let _699;
+const _700 = c.idx;
 {
 
-const _682 = c.ruleDepth;
-if (c.track) { c.ruleNames[_682] = "FunctionSource"; c.ruleDepth = _682 + 1; }
-const _681 = R[34](c);
-if (c.track) c.ruleDepth = _682;
-if (_681 !== F) { _678 = _681; break L_679; }
-c.idx = _680;
+const _702 = c.ruleDepth;
+if (c.track) { c.ruleNames[_702] = "AliasClause"; c.ruleDepth = _702 + 1; }
+const _701 = R[30](c);
+if (c.track) c.ruleDepth = _702;
+if (_701 === F) { c.idx = _700; _699 = null; } else _699 = _701;
 }
-{
-
-const _684 = c.ruleDepth;
-if (c.track) { c.ruleNames[_684] = "PathSource"; c.ruleDepth = _684 + 1; }
-const _683 = R[35](c);
-if (c.track) c.ruleDepth = _684;
-if (_683 !== F) { _678 = _683; break L_679; }
-c.idx = _680;
+if (_699 !== F) _680["alias"] = _699;
+const _698 = _699;
+if (_698 === F) { c.idx = _678; c.bindings = _681; _677 = F; break L_679; }
+const _703 = H[28](_680, c);
+c.bindings = _681;
+_677 = _703;
 }
-_678 = F;
-}
-_672 = _678; break L_673;
-}
-default: { E(c, "LParen"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); _672 = F; break L_673; }
-}
-}
-if (_672 !== F) _669["source"] = _672;
-const _671 = _672;
-if (_671 === F) { c.idx = _667; c.bindings = _670; _666 = F; break L_668; }
-let _686;
-const _687 = c.idx;
-{
-
-const _689 = c.ruleDepth;
-if (c.track) { c.ruleNames[_689] = "AliasClause"; c.ruleDepth = _689 + 1; }
-const _688 = R[28](c);
-if (c.track) c.ruleDepth = _689;
-if (_688 === F) { c.idx = _687; _686 = null; } else _686 = _688;
-}
-if (_686 !== F) _669["alias"] = _686;
-const _685 = _686;
-if (_685 === F) { c.idx = _667; c.bindings = _670; _666 = F; break L_668; }
-const _690 = H[27](_669, c);
-c.bindings = _670;
-_666 = _690;
-}
-return _666;
+return _677;
 }
 
 // JoinClause
-R[30] = (c) => {
+R[32] = (c) => {
 
-let _691;
-L_692: {
-const _693 = c.tokens[c.idx];
-if (_693 === undefined) { E(c, "Cross"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); _691 = F; break L_692; }
-const _694 = _693.id !== undefined ? _693.id : I[_693.type];
-switch (_694) {
+let _704;
+L_705: {
+const _706 = c.tokens[c.idx];
+if (_706 === undefined) { if (c.track) { E(c, "Cross"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); } _704 = F; break L_705; }
+const _707 = _706.id !== undefined ? _706.id : I[_706.type];
+switch (_707) {
 case 23: {
-
-let _695;
-L_697: {
-const _696 = c.idx;
-const _699 = c.bindings;
-const _698 = {};
-c.bindings = _698;
-let _700;
-const _701 = c.tokens[c.idx];
-if (_701 !== undefined && (_701.id === 23 || (_701.id === undefined && _701.type === "Cross"))) { c.idx++; _700 = _701; }
-else { E(c, "Cross"); _700 = F; }
-if (_700 === F) { c.idx = _696; c.bindings = _699; _695 = F; break L_697; }
-let _702;
-const _703 = c.tokens[c.idx];
-if (_703 !== undefined && (_703.id === 24 || (_703.id === undefined && _703.type === "Join"))) { c.idx++; _702 = _703; }
-else { E(c, "Join"); _702 = F; }
-if (_702 === F) { c.idx = _696; c.bindings = _699; _695 = F; break L_697; }
-
-const _706 = c.ruleDepth;
-if (c.track) { c.ruleNames[_706] = "FromItem"; c.ruleDepth = _706 + 1; }
-const _705 = R[29](c);
-if (c.track) c.ruleDepth = _706;
-if (_705 !== F) _698["item"] = _705;
-const _704 = _705;
-if (_704 === F) { c.idx = _696; c.bindings = _699; _695 = F; break L_697; }
-const _707 = H[28](_698, c);
-c.bindings = _699;
-_695 = _707;
-}
-_691 = _695; break L_692;
-}
-case 18: case 19: case 20: case 21: case 24: {
 
 let _708;
 L_710: {
@@ -2990,2125 +3023,2362 @@ const _709 = c.idx;
 const _712 = c.bindings;
 const _711 = {};
 c.bindings = _711;
-
-const _715 = c.ruleDepth;
-if (c.track) { c.ruleNames[_715] = "JoinType"; c.ruleDepth = _715 + 1; }
-const _714 = R[36](c);
-if (c.track) c.ruleDepth = _715;
-if (_714 !== F) _711["joinType"] = _714;
-const _713 = _714;
+let _713;
+const _714 = c.tokens[c.idx];
+if (_714 !== undefined && (_714.id === 23 || (_714.id === undefined && _714.type === "Cross"))) { c.idx++; _713 = _714; }
+else { if (c.track) { E(c, "Cross"); } _713 = F; }
 if (_713 === F) { c.idx = _709; c.bindings = _712; _708 = F; break L_710; }
+let _715;
+const _716 = c.tokens[c.idx];
+if (_716 !== undefined && (_716.id === 24 || (_716.id === undefined && _716.type === "Join"))) { c.idx++; _715 = _716; }
+else { if (c.track) { E(c, "Join"); } _715 = F; }
+if (_715 === F) { c.idx = _709; c.bindings = _712; _708 = F; break L_710; }
 
-const _718 = c.ruleDepth;
-if (c.track) { c.ruleNames[_718] = "FromItem"; c.ruleDepth = _718 + 1; }
-const _717 = R[29](c);
-if (c.track) c.ruleDepth = _718;
-if (_717 !== F) _711["item"] = _717;
-const _716 = _717;
-if (_716 === F) { c.idx = _709; c.bindings = _712; _708 = F; break L_710; }
-let _720;
-const _721 = c.idx;
-{
+const _719 = c.ruleDepth;
+if (c.track) { c.ruleNames[_719] = "FromItem"; c.ruleDepth = _719 + 1; }
+const _718 = R[31](c);
+if (c.track) c.ruleDepth = _719;
+if (_718 !== F) _711["item"] = _718;
+const _717 = _718;
+if (_717 === F) { c.idx = _709; c.bindings = _712; _708 = F; break L_710; }
+const _720 = H[29](_711, c);
+c.bindings = _712;
+_708 = _720;
+}
+_704 = _708; break L_705;
+}
+case 18: case 19: case 20: case 21: case 24: {
 
-let _722;
+let _721;
 L_723: {
-const _724 = c.idx;
-let _725;
-const _726 = c.tokens[c.idx];
-if (_726 !== undefined && (_726.id === 25 || (_726.id === undefined && _726.type === "On"))) { c.idx++; _725 = _726; }
-else { E(c, "On"); _725 = F; }
-if (_725 === F) { c.idx = _724; _722 = F; break L_723; }
+const _722 = c.idx;
+const _725 = c.bindings;
+const _724 = {};
+c.bindings = _724;
 
 const _728 = c.ruleDepth;
-if (c.track) { c.ruleNames[_728] = "Expression"; c.ruleDepth = _728 + 1; }
-const _727 = R[19](c);
+if (c.track) { c.ruleNames[_728] = "JoinType"; c.ruleDepth = _728 + 1; }
+const _727 = R[40](c);
 if (c.track) c.ruleDepth = _728;
-if (_727 === F) { c.idx = _724; _722 = F; break L_723; }
-_722 = _727;
-}
-if (_722 === F) { c.idx = _721; _720 = null; } else _720 = _722;
-}
-if (_720 !== F) _711["on"] = _720;
-const _719 = _720;
-if (_719 === F) { c.idx = _709; c.bindings = _712; _708 = F; break L_710; }
-let _730;
-const _731 = c.idx;
+if (_727 !== F) _724["joinType"] = _727;
+const _726 = _727;
+if (_726 === F) { c.idx = _722; c.bindings = _725; _721 = F; break L_723; }
+
+const _731 = c.ruleDepth;
+if (c.track) { c.ruleNames[_731] = "FromItem"; c.ruleDepth = _731 + 1; }
+const _730 = R[31](c);
+if (c.track) c.ruleDepth = _731;
+if (_730 !== F) _724["item"] = _730;
+const _729 = _730;
+if (_729 === F) { c.idx = _722; c.bindings = _725; _721 = F; break L_723; }
+let _733;
+const _734 = c.idx;
 {
 
-let _732;
-L_733: {
-const _734 = c.idx;
 let _735;
-const _736 = c.tokens[c.idx];
-if (_736 !== undefined && (_736.id === 26 || (_736.id === undefined && _736.type === "Using"))) { c.idx++; _735 = _736; }
-else { E(c, "Using"); _735 = F; }
-if (_735 === F) { c.idx = _734; _732 = F; break L_733; }
+L_736: {
+const _737 = c.idx;
+let _738;
+const _739 = c.tokens[c.idx];
+if (_739 !== undefined && (_739.id === 25 || (_739.id === undefined && _739.type === "On"))) { c.idx++; _738 = _739; }
+else { if (c.track) { E(c, "On"); } _738 = F; }
+if (_738 === F) { c.idx = _737; _735 = F; break L_736; }
 
-let _737;
-L_738: {
-const _739 = c.idx;
-let _740;
-const _741 = c.tokens[c.idx];
-if (_741 !== undefined && (_741.id === 80 || (_741.id === undefined && _741.type === "LParen"))) { c.idx++; _740 = _741; }
-else { E(c, "LParen"); _740 = F; }
-if (_740 === F) { c.idx = _739; _737 = F; break L_738; }
-
-let _742 = [];
-L_746: {
-const _743 = c.idx;
-
-const _748 = c.ruleDepth;
-if (c.track) { c.ruleNames[_748] = "Ident"; c.ruleDepth = _748 + 1; }
-const _747 = R[15](c);
-if (c.track) c.ruleDepth = _748;
-if (_747 === F) { c.idx = _743; _742 = F; break L_746; }
-_742.push(_747);
-for (;;) {
+const _741 = c.ruleDepth;
+if (c.track) { c.ruleNames[_741] = "Expression"; c.ruleDepth = _741 + 1; }
+const _740 = R[19](c);
+if (c.track) c.ruleDepth = _741;
+if (_740 === F) { c.idx = _737; _735 = F; break L_736; }
+_735 = _740;
+}
+if (_735 === F) { c.idx = _734; _733 = null; } else _733 = _735;
+}
+if (_733 !== F) _724["on"] = _733;
+const _732 = _733;
+if (_732 === F) { c.idx = _722; c.bindings = _725; _721 = F; break L_723; }
+let _743;
 const _744 = c.idx;
-let _749;
-const _750 = c.tokens[c.idx];
-if (_750 !== undefined && (_750.id === 84 || (_750.id === undefined && _750.type === "Comma"))) { c.idx++; _749 = _750; }
-else { E(c, "Comma"); _749 = F; }
-if (_749 === F) { c.idx = _744; break; }
-const _745 = c.idx;
+{
 
-const _752 = c.ruleDepth;
-if (c.track) { c.ruleNames[_752] = "Ident"; c.ruleDepth = _752 + 1; }
-const _751 = R[15](c);
-if (c.track) c.ruleDepth = _752;
-if (_751 === F) { c.idx = _744; break; }
-_742.push(_751);
-}
-}
-if (_742 === F) { c.idx = _739; _737 = F; break L_738; }
+let _745;
+L_746: {
+const _747 = c.idx;
+let _748;
+const _749 = c.tokens[c.idx];
+if (_749 !== undefined && (_749.id === 26 || (_749.id === undefined && _749.type === "Using"))) { c.idx++; _748 = _749; }
+else { if (c.track) { E(c, "Using"); } _748 = F; }
+if (_748 === F) { c.idx = _747; _745 = F; break L_746; }
+
+let _750;
+L_751: {
+const _752 = c.idx;
 let _753;
 const _754 = c.tokens[c.idx];
-if (_754 !== undefined && (_754.id === 81 || (_754.id === undefined && _754.type === "RParen"))) { c.idx++; _753 = _754; }
-else { E(c, "RParen"); _753 = F; }
-if (_753 === F) { c.idx = _739; _737 = F; break L_738; }
-_737 = _742;
-}
-if (_737 === F) { c.idx = _734; _732 = F; break L_733; }
-_732 = _737;
-}
-if (_732 === F) { c.idx = _731; _730 = null; } else _730 = _732;
-}
-if (_730 !== F) _711["using"] = _730;
-const _729 = _730;
-if (_729 === F) { c.idx = _709; c.bindings = _712; _708 = F; break L_710; }
-const _755 = H[29](_711, c);
-c.bindings = _712;
-_708 = _755;
-}
-_691 = _708; break L_692;
-}
-default: { E(c, "Cross"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); _691 = F; break L_692; }
-}
-}
-return _691;
-}
+if (_754 !== undefined && (_754.id === 80 || (_754.id === undefined && _754.type === "LParen"))) { c.idx++; _753 = _754; }
+else { if (c.track) { E(c, "LParen"); } _753 = F; }
+if (_753 === F) { c.idx = _752; _750 = F; break L_751; }
 
-// AndExpr
-R[31] = (c) => {
+let _755 = [];
+L_759: {
+const _756 = c.idx;
 
-let _756;
-L_757: {
-
-const _762 = c.ruleDepth;
-if (c.track) { c.ruleNames[_762] = "NotExpr"; c.ruleDepth = _762 + 1; }
-const _761 = R[37](c);
-if (c.track) c.ruleDepth = _762;
-if (_761 === F) { _756 = F; break L_757; }
-let _758 = _761;
-let _759 = null;
+const _761 = c.ruleDepth;
+if (c.track) { c.ruleNames[_761] = "Ident"; c.ruleDepth = _761 + 1; }
+const _760 = R[15](c);
+if (c.track) c.ruleDepth = _761;
+if (_760 === F) { c.idx = _756; _755 = F; break L_759; }
+_755.push(_760);
 for (;;) {
-const _760 = c.idx;
-let _763;
-const _764 = c.tokens[c.idx];
-if (_764 !== undefined && (_764.id === 9 || (_764.id === undefined && _764.type === "And"))) { c.idx++; _763 = _764; }
-else { E(c, "And"); _763 = F; }
-if (_763 === F) { c.idx = _760; break; }
+const _757 = c.idx;
+let _762;
+const _763 = c.tokens[c.idx];
+if (_763 !== undefined && (_763.id === 84 || (_763.id === undefined && _763.type === "Comma"))) { c.idx++; _762 = _763; }
+else { if (c.track) { E(c, "Comma"); } _762 = F; }
+if (_762 === F) { c.idx = _757; break; }
+const _758 = c.idx;
 
-const _766 = c.ruleDepth;
-if (c.track) { c.ruleNames[_766] = "NotExpr"; c.ruleDepth = _766 + 1; }
-const _765 = R[37](c);
-if (c.track) c.ruleDepth = _766;
-if (_765 === F) { c.idx = _760; break; }
-if (_759 === null) _759 = { left: null, op: null, right: null };
-_759.left = _758; _759.op = _763; _759.right = _765;
-_758 = H[30](_759, c);
+const _765 = c.ruleDepth;
+if (c.track) { c.ruleNames[_765] = "Ident"; c.ruleDepth = _765 + 1; }
+const _764 = R[15](c);
+if (c.track) c.ruleDepth = _765;
+if (_764 === F) { c.idx = _757; break; }
+_755.push(_764);
 }
-_756 = _758;
 }
-return _756;
+if (_755 === F) { c.idx = _752; _750 = F; break L_751; }
+let _766;
+const _767 = c.tokens[c.idx];
+if (_767 !== undefined && (_767.id === 81 || (_767.id === undefined && _767.type === "RParen"))) { c.idx++; _766 = _767; }
+else { if (c.track) { E(c, "RParen"); } _766 = F; }
+if (_766 === F) { c.idx = _752; _750 = F; break L_751; }
+_750 = _755;
+}
+if (_750 === F) { c.idx = _747; _745 = F; break L_746; }
+_745 = _750;
+}
+if (_745 === F) { c.idx = _744; _743 = null; } else _743 = _745;
+}
+if (_743 !== F) _724["using"] = _743;
+const _742 = _743;
+if (_742 === F) { c.idx = _722; c.bindings = _725; _721 = F; break L_723; }
+const _768 = H[30](_724, c);
+c.bindings = _725;
+_721 = _768;
+}
+_704 = _721; break L_705;
+}
+default: { if (c.track) { E(c, "Cross"); E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); } _704 = F; break L_705; }
+}
+}
+return _704;
+}
+
+// OrExpr$tower
+R[33] = (c) => {
+
+let _769;
+L_770: {
+
+const _775 = c.ruleDepth;
+if (c.track) { c.ruleNames[_775] = "AndExpr"; c.ruleDepth = _775 + 1; }
+const _774 = R[41](c);
+if (c.track) c.ruleDepth = _775;
+if (_774 === F) { _769 = F; break L_770; }
+let _771 = _774;
+let _772 = null;
+for (;;) {
+const _773 = c.idx;
+let _776;
+const _777 = c.tokens[c.idx];
+if (_777 !== undefined && (_777.id === 10 || (_777.id === undefined && _777.type === "Or"))) { c.idx++; _776 = _777; }
+else { if (c.track) { E(c, "Or"); } _776 = F; }
+if (_776 === F) { c.idx = _773; break; }
+
+const _779 = c.ruleDepth;
+if (c.track) { c.ruleNames[_779] = "AndExpr"; c.ruleDepth = _779 + 1; }
+const _778 = R[41](c);
+if (c.track) c.ruleDepth = _779;
+if (_778 === F) { c.idx = _773; break; }
+if (_772 === null) _772 = { left: null, op: null, right: null };
+_772.left = _771; _772.op = _776; _772.right = _778;
+_771 = H[31](_772, c);
+}
+_769 = _771;
+}
+return _769;
+}
+
+// OrExpr$climb
+R[34] = (c, from) => {
+
+
+const _788 = c.ruleDepth;
+if (c.track) { c.ruleNames[_788] = "NotExpr"; c.ruleDepth = _788 + 1; }
+const _787 = R[42](c);
+if (c.track) c.ruleDepth = _788;
+if (_787 === F) return F;
+let _784 = _787;
+let _785 = null, _786 = null;
+L_780: for (;;) {
+const _781 = c.idx;
+const _782 = c.tokens[_781];
+if (_782 === undefined) break;
+let _783;
+switch (_782.id !== undefined ? _782.id : I[_782.type]) {
+case 10: _783 = 0; break;
+case 9: _783 = 1; break;
+default: break L_780;
+}
+if (_783 < from) break;
+switch (_783) {
+case 0: {
+let _789;
+const _790 = c.tokens[c.idx];
+if (_790 !== undefined && (_790.id === 10 || (_790.id === undefined && _790.type === "Or"))) { c.idx++; _789 = _790; }
+else { if (c.track) { E(c, "Or"); } _789 = F; }
+if (_789 === F) { c.idx = _781; break L_780; }
+const _791 = R[34](c, 1);
+if (_791 === F) { c.idx = _781; break L_780; }
+if (_785 === null) _785 = { left: null, op: null, right: null };
+_785.left = _784; _785.op = _789; _785.right = _791;
+_784 = H[32](_785, c);
+break;
+}
+case 1: {
+let _792;
+const _793 = c.tokens[c.idx];
+if (_793 !== undefined && (_793.id === 9 || (_793.id === undefined && _793.type === "And"))) { c.idx++; _792 = _793; }
+else { if (c.track) { E(c, "And"); } _792 = F; }
+if (_792 === F) { c.idx = _781; break L_780; }
+const _794 = R[34](c, 2);
+if (_794 === F) { c.idx = _781; break L_780; }
+if (_786 === null) _786 = { left: null, op: null, right: null };
+_786.left = _784; _786.op = _792; _786.right = _794;
+_784 = H[33](_786, c);
+break;
+}
+}
+}
+return _784;
+}
+
+// Multiplicative$tower
+R[35] = (c) => {
+
+let _795;
+L_796: {
+
+const _801 = c.ruleDepth;
+if (c.track) { c.ruleNames[_801] = "Unary"; c.ruleDepth = _801 + 1; }
+const _800 = R[29](c);
+if (c.track) c.ruleDepth = _801;
+if (_800 === F) { _795 = F; break L_796; }
+let _797 = _800;
+let _798 = null;
+for (;;) {
+const _799 = c.idx;
+
+let _802;
+L_803: {
+const _804 = c.tokens[c.idx];
+if (_804 === undefined) { if (c.track) { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); } _802 = F; break L_803; }
+const _805 = _804.id !== undefined ? _804.id : I[_804.type];
+switch (_805) {
+case 77: {
+
+let _806;
+L_807: {
+const _808 = c.idx;
+let _809;
+const _810 = c.tokens[c.idx];
+if (_810 !== undefined && (_810.id === 77 || (_810.id === undefined && _810.type === "Star"))) { c.idx++; _809 = _810; }
+else { if (c.track) { E(c, "Star"); } _809 = F; }
+if (_809 === F) { c.idx = _808; _806 = F; break L_807; }
+_806 = "MUL";
+}
+_802 = _806; break L_803;
+}
+case 78: {
+
+let _811;
+L_812: {
+const _813 = c.idx;
+let _814;
+const _815 = c.tokens[c.idx];
+if (_815 !== undefined && (_815.id === 78 || (_815.id === undefined && _815.type === "Slash"))) { c.idx++; _814 = _815; }
+else { if (c.track) { E(c, "Slash"); } _814 = F; }
+if (_814 === F) { c.idx = _813; _811 = F; break L_812; }
+_811 = "DIV";
+}
+_802 = _811; break L_803;
+}
+case 79: {
+
+let _816;
+L_817: {
+const _818 = c.idx;
+let _819;
+const _820 = c.tokens[c.idx];
+if (_820 !== undefined && (_820.id === 79 || (_820.id === undefined && _820.type === "Percent"))) { c.idx++; _819 = _820; }
+else { if (c.track) { E(c, "Percent"); } _819 = F; }
+if (_819 === F) { c.idx = _818; _816 = F; break L_817; }
+_816 = "MOD";
+}
+_802 = _816; break L_803;
+}
+default: { if (c.track) { E(c, "Star"); E(c, "Slash"); E(c, "Percent"); } _802 = F; break L_803; }
+}
+}
+if (_802 === F) { c.idx = _799; break; }
+
+const _822 = c.ruleDepth;
+if (c.track) { c.ruleNames[_822] = "Unary"; c.ruleDepth = _822 + 1; }
+const _821 = R[29](c);
+if (c.track) c.ruleDepth = _822;
+if (_821 === F) { c.idx = _799; break; }
+if (_798 === null) _798 = { left: null, op: null, right: null };
+_798.left = _797; _798.op = _802; _798.right = _821;
+_797 = H[34](_798, c);
+}
+_795 = _797;
+}
+return _795;
 }
 
 // PostfixExpr
-R[32] = (c) => {
+R[36] = (c) => {
 
-let _767;
-L_768: {
+let _823;
+L_824: {
 
-const _773 = c.ruleDepth;
-if (c.track) { c.ruleNames[_773] = "Primary"; c.ruleDepth = _773 + 1; }
-const _772 = R[38](c);
-if (c.track) c.ruleDepth = _773;
-if (_772 === F) { _767 = F; break L_768; }
-let _769 = _772;
-let _770 = null;
+const _829 = c.ruleDepth;
+if (c.track) { c.ruleNames[_829] = "Primary"; c.ruleDepth = _829 + 1; }
+const _828 = R[43](c);
+if (c.track) c.ruleDepth = _829;
+if (_828 === F) { _823 = F; break L_824; }
+let _825 = _828;
+let _826 = null;
 for (;;) {
-const _771 = c.idx;
+const _827 = c.idx;
 
-let _774;
-L_775: {
-const _776 = c.tokens[c.idx];
-if (_776 === undefined) { E(c, "DoubleColon"); E(c, "LongArrow"); E(c, "Arrow"); _774 = F; break L_775; }
-const _777 = _776.id !== undefined ? _776.id : I[_776.type];
-switch (_777) {
+let _830;
+L_831: {
+const _832 = c.tokens[c.idx];
+if (_832 === undefined) { if (c.track) { E(c, "DoubleColon"); E(c, "LongArrow"); E(c, "Arrow"); } _830 = F; break L_831; }
+const _833 = _832.id !== undefined ? _832.id : I[_832.type];
+switch (_833) {
 case 64: {
 
-let _778;
-L_780: {
-const _779 = c.idx;
-const _782 = c.bindings;
-const _781 = {};
-c.bindings = _781;
-let _783;
-const _784 = c.tokens[c.idx];
-if (_784 !== undefined && (_784.id === 64 || (_784.id === undefined && _784.type === "DoubleColon"))) { c.idx++; _783 = _784; }
-else { E(c, "DoubleColon"); _783 = F; }
-if (_783 === F) { c.idx = _779; c.bindings = _782; _778 = F; break L_780; }
+let _834;
+L_836: {
+const _835 = c.idx;
+const _838 = c.bindings;
+const _837 = {};
+c.bindings = _837;
+let _839;
+const _840 = c.tokens[c.idx];
+if (_840 !== undefined && (_840.id === 64 || (_840.id === undefined && _840.type === "DoubleColon"))) { c.idx++; _839 = _840; }
+else { if (c.track) { E(c, "DoubleColon"); } _839 = F; }
+if (_839 === F) { c.idx = _835; c.bindings = _838; _834 = F; break L_836; }
 
-const _787 = c.ruleDepth;
-if (c.track) { c.ruleNames[_787] = "TypeName"; c.ruleDepth = _787 + 1; }
-const _786 = R[39](c);
-if (c.track) c.ruleDepth = _787;
-if (_786 !== F) _781["t"] = _786;
-const _785 = _786;
-if (_785 === F) { c.idx = _779; c.bindings = _782; _778 = F; break L_780; }
-const _788 = H[32](_781, c);
-c.bindings = _782;
-_778 = _788;
+const _843 = c.ruleDepth;
+if (c.track) { c.ruleNames[_843] = "TypeName"; c.ruleDepth = _843 + 1; }
+const _842 = R[44](c);
+if (c.track) c.ruleDepth = _843;
+if (_842 !== F) _837["t"] = _842;
+const _841 = _842;
+if (_841 === F) { c.idx = _835; c.bindings = _838; _834 = F; break L_836; }
+const _844 = H[36](_837, c);
+c.bindings = _838;
+_834 = _844;
 }
-_774 = _778; break L_775;
+_830 = _834; break L_831;
 }
 case 62: {
 
-let _789;
-L_791: {
-const _790 = c.idx;
-const _793 = c.bindings;
-const _792 = {};
-c.bindings = _792;
-let _794;
-const _795 = c.tokens[c.idx];
-if (_795 !== undefined && (_795.id === 62 || (_795.id === undefined && _795.type === "LongArrow"))) { c.idx++; _794 = _795; }
-else { E(c, "LongArrow"); _794 = F; }
-if (_794 === F) { c.idx = _790; c.bindings = _793; _789 = F; break L_791; }
+let _845;
+L_847: {
+const _846 = c.idx;
+const _849 = c.bindings;
+const _848 = {};
+c.bindings = _848;
+let _850;
+const _851 = c.tokens[c.idx];
+if (_851 !== undefined && (_851.id === 62 || (_851.id === undefined && _851.type === "LongArrow"))) { c.idx++; _850 = _851; }
+else { if (c.track) { E(c, "LongArrow"); } _850 = F; }
+if (_850 === F) { c.idx = _846; c.bindings = _849; _845 = F; break L_847; }
 
-const _798 = c.ruleDepth;
-if (c.track) { c.ruleNames[_798] = "Primary"; c.ruleDepth = _798 + 1; }
-const _797 = R[38](c);
-if (c.track) c.ruleDepth = _798;
-if (_797 !== F) _792["k"] = _797;
-const _796 = _797;
-if (_796 === F) { c.idx = _790; c.bindings = _793; _789 = F; break L_791; }
-const _799 = H[33](_792, c);
-c.bindings = _793;
-_789 = _799;
+const _854 = c.ruleDepth;
+if (c.track) { c.ruleNames[_854] = "Primary"; c.ruleDepth = _854 + 1; }
+const _853 = R[43](c);
+if (c.track) c.ruleDepth = _854;
+if (_853 !== F) _848["k"] = _853;
+const _852 = _853;
+if (_852 === F) { c.idx = _846; c.bindings = _849; _845 = F; break L_847; }
+const _855 = H[37](_848, c);
+c.bindings = _849;
+_845 = _855;
 }
-_774 = _789; break L_775;
+_830 = _845; break L_831;
 }
 case 63: {
 
-let _800;
-L_802: {
-const _801 = c.idx;
-const _804 = c.bindings;
-const _803 = {};
-c.bindings = _803;
-let _805;
-const _806 = c.tokens[c.idx];
-if (_806 !== undefined && (_806.id === 63 || (_806.id === undefined && _806.type === "Arrow"))) { c.idx++; _805 = _806; }
-else { E(c, "Arrow"); _805 = F; }
-if (_805 === F) { c.idx = _801; c.bindings = _804; _800 = F; break L_802; }
+let _856;
+L_858: {
+const _857 = c.idx;
+const _860 = c.bindings;
+const _859 = {};
+c.bindings = _859;
+let _861;
+const _862 = c.tokens[c.idx];
+if (_862 !== undefined && (_862.id === 63 || (_862.id === undefined && _862.type === "Arrow"))) { c.idx++; _861 = _862; }
+else { if (c.track) { E(c, "Arrow"); } _861 = F; }
+if (_861 === F) { c.idx = _857; c.bindings = _860; _856 = F; break L_858; }
 
-const _809 = c.ruleDepth;
-if (c.track) { c.ruleNames[_809] = "Primary"; c.ruleDepth = _809 + 1; }
-const _808 = R[38](c);
-if (c.track) c.ruleDepth = _809;
-if (_808 !== F) _803["k"] = _808;
-const _807 = _808;
-if (_807 === F) { c.idx = _801; c.bindings = _804; _800 = F; break L_802; }
-const _810 = H[34](_803, c);
-c.bindings = _804;
-_800 = _810;
+const _865 = c.ruleDepth;
+if (c.track) { c.ruleNames[_865] = "Primary"; c.ruleDepth = _865 + 1; }
+const _864 = R[43](c);
+if (c.track) c.ruleDepth = _865;
+if (_864 !== F) _859["k"] = _864;
+const _863 = _864;
+if (_863 === F) { c.idx = _857; c.bindings = _860; _856 = F; break L_858; }
+const _866 = H[38](_859, c);
+c.bindings = _860;
+_856 = _866;
 }
-_774 = _800; break L_775;
+_830 = _856; break L_831;
 }
-default: { E(c, "DoubleColon"); E(c, "LongArrow"); E(c, "Arrow"); _774 = F; break L_775; }
+default: { if (c.track) { E(c, "DoubleColon"); E(c, "LongArrow"); E(c, "Arrow"); } _830 = F; break L_831; }
 }
 }
-if (_774 === F) { c.idx = _771; break; }
-if (_770 === null) _770 = { left: null, suffix: null };
-_770.left = _769; _770.suffix = _774;
-_769 = H[31](_770, c);
+if (_830 === F) { c.idx = _827; break; }
+if (_826 === null) _826 = { left: null, suffix: null };
+_826.left = _825; _826.suffix = _830;
+_825 = H[35](_826, c);
 }
-_767 = _769;
+_823 = _825;
 }
-return _767;
+return _823;
 }
 
 // SubquerySource
-R[33] = (c) => {
+R[37] = (c) => {
 
-let _813;
-L_814: {
-const _815 = c.idx;
-let _816;
-const _817 = c.tokens[c.idx];
-if (_817 !== undefined && (_817.id === 80 || (_817.id === undefined && _817.type === "LParen"))) { c.idx++; _816 = _817; }
-else { E(c, "LParen"); _816 = F; }
-if (_816 === F) { c.idx = _815; _813 = F; break L_814; }
+let _869;
+L_870: {
+const _871 = c.idx;
+let _872;
+const _873 = c.tokens[c.idx];
+if (_873 !== undefined && (_873.id === 80 || (_873.id === undefined && _873.type === "LParen"))) { c.idx++; _872 = _873; }
+else { if (c.track) { E(c, "LParen"); } _872 = F; }
+if (_872 === F) { c.idx = _871; _869 = F; break L_870; }
 
-const _819 = c.ruleDepth;
-if (c.track) { c.ruleNames[_819] = "Query"; c.ruleDepth = _819 + 1; }
-const _818 = R[2](c);
-if (c.track) c.ruleDepth = _819;
-if (_818 === F) { c.idx = _815; _813 = F; break L_814; }
-let _820;
-const _821 = c.tokens[c.idx];
-if (_821 !== undefined && (_821.id === 81 || (_821.id === undefined && _821.type === "RParen"))) { c.idx++; _820 = _821; }
-else { E(c, "RParen"); _820 = F; }
-if (_820 === F) { c.idx = _815; _813 = F; break L_814; }
-_813 = _818;
+const _875 = c.ruleDepth;
+if (c.track) { c.ruleNames[_875] = "Query"; c.ruleDepth = _875 + 1; }
+const _874 = R[2](c);
+if (c.track) c.ruleDepth = _875;
+if (_874 === F) { c.idx = _871; _869 = F; break L_870; }
+let _876;
+const _877 = c.tokens[c.idx];
+if (_877 !== undefined && (_877.id === 81 || (_877.id === undefined && _877.type === "RParen"))) { c.idx++; _876 = _877; }
+else { if (c.track) { E(c, "RParen"); } _876 = F; }
+if (_876 === F) { c.idx = _871; _869 = F; break L_870; }
+_869 = _874;
 }
-const _812 = _813 === F ? F : H[35](_813, c);
-return _812;
+const _868 = _869 === F ? F : H[39](_869, c);
+return _868;
 }
 
 // FunctionSource
-R[34] = (c) => {
+R[38] = (c) => {
 
-let _822;
-L_824: {
-const _823 = c.idx;
-const _826 = c.bindings;
-const _825 = {};
-c.bindings = _825;
+let _878;
+L_880: {
+const _879 = c.idx;
+const _882 = c.bindings;
+const _881 = {};
+c.bindings = _881;
 
-const _829 = c.ruleDepth;
-if (c.track) { c.ruleNames[_829] = "Ident"; c.ruleDepth = _829 + 1; }
-const _828 = R[15](c);
-if (c.track) c.ruleDepth = _829;
-if (_828 !== F) _825["name"] = _828;
-const _827 = _828;
-if (_827 === F) { c.idx = _823; c.bindings = _826; _822 = F; break L_824; }
-let _830;
-const _831 = c.tokens[c.idx];
-if (_831 !== undefined && (_831.id === 80 || (_831.id === undefined && _831.type === "LParen"))) { c.idx++; _830 = _831; }
-else { E(c, "LParen"); _830 = F; }
-if (_830 === F) { c.idx = _823; c.bindings = _826; _822 = F; break L_824; }
+const _885 = c.ruleDepth;
+if (c.track) { c.ruleNames[_885] = "Ident"; c.ruleDepth = _885 + 1; }
+const _884 = R[15](c);
+if (c.track) c.ruleDepth = _885;
+if (_884 !== F) _881["name"] = _884;
+const _883 = _884;
+if (_883 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
+let _886;
+const _887 = c.tokens[c.idx];
+if (_887 !== undefined && (_887.id === 80 || (_887.id === undefined && _887.type === "LParen"))) { c.idx++; _886 = _887; }
+else { if (c.track) { E(c, "LParen"); } _886 = F; }
+if (_886 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
 
-let _833 = [];
-L_837: {
-const _834 = c.idx;
+let _889 = [];
+L_893: {
+const _890 = c.idx;
 
-const _839 = c.ruleDepth;
-if (c.track) { c.ruleNames[_839] = "Expression"; c.ruleDepth = _839 + 1; }
-const _838 = R[19](c);
-if (c.track) c.ruleDepth = _839;
-if (_838 === F) { c.idx = _834; _833 = []; break L_837; }
-_833.push(_838);
+const _895 = c.ruleDepth;
+if (c.track) { c.ruleNames[_895] = "Expression"; c.ruleDepth = _895 + 1; }
+const _894 = R[19](c);
+if (c.track) c.ruleDepth = _895;
+if (_894 === F) { c.idx = _890; _889 = []; break L_893; }
+_889.push(_894);
 for (;;) {
-const _835 = c.idx;
-let _840;
-const _841 = c.tokens[c.idx];
-if (_841 !== undefined && (_841.id === 84 || (_841.id === undefined && _841.type === "Comma"))) { c.idx++; _840 = _841; }
-else { E(c, "Comma"); _840 = F; }
-if (_840 === F) { c.idx = _835; break; }
-const _836 = c.idx;
+const _891 = c.idx;
+let _896;
+const _897 = c.tokens[c.idx];
+if (_897 !== undefined && (_897.id === 84 || (_897.id === undefined && _897.type === "Comma"))) { c.idx++; _896 = _897; }
+else { if (c.track) { E(c, "Comma"); } _896 = F; }
+if (_896 === F) { c.idx = _891; break; }
+const _892 = c.idx;
 
-const _843 = c.ruleDepth;
-if (c.track) { c.ruleNames[_843] = "Expression"; c.ruleDepth = _843 + 1; }
-const _842 = R[19](c);
-if (c.track) c.ruleDepth = _843;
-if (_842 === F) { c.idx = _835; break; }
-_833.push(_842);
+const _899 = c.ruleDepth;
+if (c.track) { c.ruleNames[_899] = "Expression"; c.ruleDepth = _899 + 1; }
+const _898 = R[19](c);
+if (c.track) c.ruleDepth = _899;
+if (_898 === F) { c.idx = _891; break; }
+_889.push(_898);
 }
 }
-if (_833 !== F) _825["args"] = _833;
-const _832 = _833;
-if (_832 === F) { c.idx = _823; c.bindings = _826; _822 = F; break L_824; }
-let _844;
-const _845 = c.tokens[c.idx];
-if (_845 !== undefined && (_845.id === 81 || (_845.id === undefined && _845.type === "RParen"))) { c.idx++; _844 = _845; }
-else { E(c, "RParen"); _844 = F; }
-if (_844 === F) { c.idx = _823; c.bindings = _826; _822 = F; break L_824; }
-const _846 = H[36](_825, c);
-c.bindings = _826;
-_822 = _846;
+if (_889 !== F) _881["args"] = _889;
+const _888 = _889;
+if (_888 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
+let _900;
+const _901 = c.tokens[c.idx];
+if (_901 !== undefined && (_901.id === 81 || (_901.id === undefined && _901.type === "RParen"))) { c.idx++; _900 = _901; }
+else { if (c.track) { E(c, "RParen"); } _900 = F; }
+if (_900 === F) { c.idx = _879; c.bindings = _882; _878 = F; break L_880; }
+const _902 = H[40](_881, c);
+c.bindings = _882;
+_878 = _902;
 }
-return _822;
+return _878;
 }
 
 // PathSource
-R[35] = (c) => {
+R[39] = (c) => {
 
-const _850 = c.ruleDepth;
-if (c.track) { c.ruleNames[_850] = "PathSegments"; c.ruleDepth = _850 + 1; }
-const _849 = R[8](c);
-if (c.track) c.ruleDepth = _850;
-const _848 = _849 === F ? F : H[37](_849, c);
-return _848;
+const _906 = c.ruleDepth;
+if (c.track) { c.ruleNames[_906] = "PathSegments"; c.ruleDepth = _906 + 1; }
+const _905 = R[8](c);
+if (c.track) c.ruleDepth = _906;
+const _904 = _905 === F ? F : H[41](_905, c);
+return _904;
 }
 
 // JoinType
-R[36] = (c) => {
+R[40] = (c) => {
 
-let _851;
-L_852: {
-const _853 = c.tokens[c.idx];
-if (_853 === undefined) { E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); _851 = F; break L_852; }
-const _854 = _853.id !== undefined ? _853.id : I[_853.type];
-switch (_854) {
-case 18: {
-
-let _855;
-L_856: {
-const _857 = c.idx;
-let _858;
-const _859 = c.tokens[c.idx];
-if (_859 !== undefined && (_859.id === 18 || (_859.id === undefined && _859.type === "Inner"))) { c.idx++; _858 = _859; }
-else { E(c, "Inner"); _858 = F; }
-if (_858 === F) { c.idx = _857; _855 = F; break L_856; }
-let _860;
-const _861 = c.tokens[c.idx];
-if (_861 !== undefined && (_861.id === 24 || (_861.id === undefined && _861.type === "Join"))) { c.idx++; _860 = _861; }
-else { E(c, "Join"); _860 = F; }
-if (_860 === F) { c.idx = _857; _855 = F; break L_856; }
-_855 = "INNER";
-}
-_851 = _855; break L_852;
-}
-case 19: {
-
-let _862;
-L_863: {
-const _864 = c.idx;
-let _865;
-const _866 = c.tokens[c.idx];
-if (_866 !== undefined && (_866.id === 19 || (_866.id === undefined && _866.type === "Left"))) { c.idx++; _865 = _866; }
-else { E(c, "Left"); _865 = F; }
-if (_865 === F) { c.idx = _864; _862 = F; break L_863; }
-let _867;
-const _868 = c.idx;
-{
-let _869;
-const _870 = c.tokens[c.idx];
-if (_870 !== undefined && (_870.id === 22 || (_870.id === undefined && _870.type === "Outer"))) { c.idx++; _869 = _870; }
-else { E(c, "Outer"); _869 = F; }
-if (_869 === F) { c.idx = _868; _867 = null; } else _867 = _869;
-}
-if (_867 === F) { c.idx = _864; _862 = F; break L_863; }
-let _871;
-const _872 = c.tokens[c.idx];
-if (_872 !== undefined && (_872.id === 24 || (_872.id === undefined && _872.type === "Join"))) { c.idx++; _871 = _872; }
-else { E(c, "Join"); _871 = F; }
-if (_871 === F) { c.idx = _864; _862 = F; break L_863; }
-_862 = "LEFT";
-}
-_851 = _862; break L_852;
-}
-case 20: {
-
-let _873;
-L_874: {
-const _875 = c.idx;
-let _876;
-const _877 = c.tokens[c.idx];
-if (_877 !== undefined && (_877.id === 20 || (_877.id === undefined && _877.type === "Right"))) { c.idx++; _876 = _877; }
-else { E(c, "Right"); _876 = F; }
-if (_876 === F) { c.idx = _875; _873 = F; break L_874; }
-let _878;
-const _879 = c.idx;
-{
-let _880;
-const _881 = c.tokens[c.idx];
-if (_881 !== undefined && (_881.id === 22 || (_881.id === undefined && _881.type === "Outer"))) { c.idx++; _880 = _881; }
-else { E(c, "Outer"); _880 = F; }
-if (_880 === F) { c.idx = _879; _878 = null; } else _878 = _880;
-}
-if (_878 === F) { c.idx = _875; _873 = F; break L_874; }
-let _882;
-const _883 = c.tokens[c.idx];
-if (_883 !== undefined && (_883.id === 24 || (_883.id === undefined && _883.type === "Join"))) { c.idx++; _882 = _883; }
-else { E(c, "Join"); _882 = F; }
-if (_882 === F) { c.idx = _875; _873 = F; break L_874; }
-_873 = "RIGHT";
-}
-_851 = _873; break L_852;
-}
-case 21: {
-
-let _884;
-L_885: {
-const _886 = c.idx;
-let _887;
-const _888 = c.tokens[c.idx];
-if (_888 !== undefined && (_888.id === 21 || (_888.id === undefined && _888.type === "Full"))) { c.idx++; _887 = _888; }
-else { E(c, "Full"); _887 = F; }
-if (_887 === F) { c.idx = _886; _884 = F; break L_885; }
-let _889;
-const _890 = c.idx;
-{
-let _891;
-const _892 = c.tokens[c.idx];
-if (_892 !== undefined && (_892.id === 22 || (_892.id === undefined && _892.type === "Outer"))) { c.idx++; _891 = _892; }
-else { E(c, "Outer"); _891 = F; }
-if (_891 === F) { c.idx = _890; _889 = null; } else _889 = _891;
-}
-if (_889 === F) { c.idx = _886; _884 = F; break L_885; }
-let _893;
-const _894 = c.tokens[c.idx];
-if (_894 !== undefined && (_894.id === 24 || (_894.id === undefined && _894.type === "Join"))) { c.idx++; _893 = _894; }
-else { E(c, "Join"); _893 = F; }
-if (_893 === F) { c.idx = _886; _884 = F; break L_885; }
-_884 = "FULL";
-}
-_851 = _884; break L_852;
-}
-case 24: {
-
-let _895;
-L_896: {
-const _897 = c.idx;
-let _898;
-const _899 = c.tokens[c.idx];
-if (_899 !== undefined && (_899.id === 24 || (_899.id === undefined && _899.type === "Join"))) { c.idx++; _898 = _899; }
-else { E(c, "Join"); _898 = F; }
-if (_898 === F) { c.idx = _897; _895 = F; break L_896; }
-_895 = "INNER";
-}
-_851 = _895; break L_852;
-}
-default: { E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); _851 = F; break L_852; }
-}
-}
-return _851;
-}
-
-// NotExpr
-R[37] = (c) => {
-
-let _900;
-L_901: {
-const _902 = c.idx;
-let _903 = null;
-for (;;) {
-const _904 = c.idx;
 let _907;
-const _908 = c.tokens[c.idx];
-if (_908 !== undefined && (_908.id === 11 || (_908.id === undefined && _908.type === "Not"))) { c.idx++; _907 = _908; }
-else { E(c, "Not"); _907 = F; }
-if (_907 === F) { c.idx = _904; break; }
-if (_903 === null) _903 = [];
-_903.push(_907);
-}
-
-const _910 = c.ruleDepth;
-if (c.track) { c.ruleNames[_910] = "Predicate"; c.ruleDepth = _910 + 1; }
-const _909 = R[40](c);
-if (c.track) c.ruleDepth = _910;
-if (_909 === F) { c.idx = _902; _900 = F; break L_901; }
-let _906 = _909;
-if (_903 !== null) {
-const _905 = { op: null, operand: null };
-for (let i = _903.length - 1; i >= 0; i--) { _905.op = _903[i]; _905.operand = _906; _906 = H[38](_905, c); }
-}
-_900 = _906;
-}
-return _900;
-}
-
-// Primary
-R[38] = (c) => {
+L_908: {
+const _909 = c.tokens[c.idx];
+if (_909 === undefined) { if (c.track) { E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); } _907 = F; break L_908; }
+const _910 = _909.id !== undefined ? _909.id : I[_909.type];
+switch (_910) {
+case 18: {
 
 let _911;
 L_912: {
-const _913 = c.tokens[c.idx];
-if (_913 === undefined) { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _911 = F; break L_912; }
-const _914 = _913.id !== undefined ? _913.id : I[_913.type];
-switch (_914) {
-case 80: {
-
-const _916 = c.ruleDepth;
-if (c.track) { c.ruleNames[_916] = "ParenExpr"; c.ruleDepth = _916 + 1; }
-const _915 = R[41](c);
-if (c.track) c.ruleDepth = _916;
-_911 = _915; break L_912;
+const _913 = c.idx;
+let _914;
+const _915 = c.tokens[c.idx];
+if (_915 !== undefined && (_915.id === 18 || (_915.id === undefined && _915.type === "Inner"))) { c.idx++; _914 = _915; }
+else { if (c.track) { E(c, "Inner"); } _914 = F; }
+if (_914 === F) { c.idx = _913; _911 = F; break L_912; }
+let _916;
+const _917 = c.tokens[c.idx];
+if (_917 !== undefined && (_917.id === 24 || (_917.id === undefined && _917.type === "Join"))) { c.idx++; _916 = _917; }
+else { if (c.track) { E(c, "Join"); } _916 = F; }
+if (_916 === F) { c.idx = _913; _911 = F; break L_912; }
+_911 = "INNER";
 }
-case 50: {
-
-const _918 = c.ruleDepth;
-if (c.track) { c.ruleNames[_918] = "ExistsExpr"; c.ruleDepth = _918 + 1; }
-const _917 = R[42](c);
-if (c.track) c.ruleDepth = _918;
-_911 = _917; break L_912;
+_907 = _911; break L_908;
 }
-case 41: {
+case 19: {
 
-const _920 = c.ruleDepth;
-if (c.track) { c.ruleNames[_920] = "CaseExpr"; c.ruleDepth = _920 + 1; }
-const _919 = R[43](c);
-if (c.track) c.ruleDepth = _920;
-_911 = _919; break L_912;
-}
-case 51: {
-
-const _922 = c.ruleDepth;
-if (c.track) { c.ruleNames[_922] = "CastExpr"; c.ruleDepth = _922 + 1; }
-const _921 = R[44](c);
-if (c.track) c.ruleDepth = _922;
-_911 = _921; break L_912;
-}
-case 52: {
-
-const _924 = c.ruleDepth;
-if (c.track) { c.ruleNames[_924] = "ExtractExpr"; c.ruleDepth = _924 + 1; }
-const _923 = R[45](c);
-if (c.track) c.ruleDepth = _924;
-_911 = _923; break L_912;
-}
-case 60: case 58: case 59: {
+let _918;
+L_919: {
+const _920 = c.idx;
+let _921;
+const _922 = c.tokens[c.idx];
+if (_922 !== undefined && (_922.id === 19 || (_922.id === undefined && _922.type === "Left"))) { c.idx++; _921 = _922; }
+else { if (c.track) { E(c, "Left"); } _921 = F; }
+if (_921 === F) { c.idx = _920; _918 = F; break L_919; }
+let _923;
+const _924 = c.idx;
+{
 let _925;
-L_926: {
-const _927 = c.idx;
+const _926 = c.tokens[c.idx];
+if (_926 !== undefined && (_926.id === 22 || (_926.id === undefined && _926.type === "Outer"))) { c.idx++; _925 = _926; }
+else { if (c.track) { E(c, "Outer"); } _925 = F; }
+if (_925 === F) { c.idx = _924; _923 = null; } else _923 = _925;
+}
+if (_923 === F) { c.idx = _920; _918 = F; break L_919; }
+let _927;
+const _928 = c.tokens[c.idx];
+if (_928 !== undefined && (_928.id === 24 || (_928.id === undefined && _928.type === "Join"))) { c.idx++; _927 = _928; }
+else { if (c.track) { E(c, "Join"); } _927 = F; }
+if (_927 === F) { c.idx = _920; _918 = F; break L_919; }
+_918 = "LEFT";
+}
+_907 = _918; break L_908;
+}
+case 20: {
+
+let _929;
+L_930: {
+const _931 = c.idx;
+let _932;
+const _933 = c.tokens[c.idx];
+if (_933 !== undefined && (_933.id === 20 || (_933.id === undefined && _933.type === "Right"))) { c.idx++; _932 = _933; }
+else { if (c.track) { E(c, "Right"); } _932 = F; }
+if (_932 === F) { c.idx = _931; _929 = F; break L_930; }
+let _934;
+const _935 = c.idx;
 {
-
-const _929 = c.ruleDepth;
-if (c.track) { c.ruleNames[_929] = "FunctionCall"; c.ruleDepth = _929 + 1; }
-const _928 = R[46](c);
-if (c.track) c.ruleDepth = _929;
-if (_928 !== F) { _925 = _928; break L_926; }
-c.idx = _927;
+let _936;
+const _937 = c.tokens[c.idx];
+if (_937 !== undefined && (_937.id === 22 || (_937.id === undefined && _937.type === "Outer"))) { c.idx++; _936 = _937; }
+else { if (c.track) { E(c, "Outer"); } _936 = F; }
+if (_936 === F) { c.idx = _935; _934 = null; } else _934 = _936;
 }
-{
-
-const _931 = c.ruleDepth;
-if (c.track) { c.ruleNames[_931] = "ColumnRef"; c.ruleDepth = _931 + 1; }
-const _930 = R[47](c);
-if (c.track) c.ruleDepth = _931;
-if (_930 !== F) { _925 = _930; break L_926; }
-c.idx = _927;
-}
-_925 = F;
-}
-_911 = _925; break L_912;
-}
-case 19: case 20: {
-
-const _933 = c.ruleDepth;
-if (c.track) { c.ruleNames[_933] = "FunctionCall"; c.ruleDepth = _933 + 1; }
-const _932 = R[46](c);
-if (c.track) c.ruleDepth = _933;
-_911 = _932; break L_912;
-}
-case 56: {
-
-const _935 = c.ruleDepth;
-if (c.track) { c.ruleNames[_935] = "NumberLiteral"; c.ruleDepth = _935 + 1; }
-const _934 = R[21](c);
-if (c.track) c.ruleDepth = _935;
-_911 = _934; break L_912;
-}
-case 57: {
-
-const _937 = c.ruleDepth;
-if (c.track) { c.ruleNames[_937] = "StringLiteral"; c.ruleDepth = _937 + 1; }
-const _936 = R[22](c);
-if (c.track) c.ruleDepth = _937;
-_911 = _936; break L_912;
-}
-case 39: {
-
+if (_934 === F) { c.idx = _931; _929 = F; break L_930; }
 let _938;
-L_939: {
-const _940 = c.idx;
-let _941;
-const _942 = c.tokens[c.idx];
-if (_942 !== undefined && (_942.id === 39 || (_942.id === undefined && _942.type === "True"))) { c.idx++; _941 = _942; }
-else { E(c, "True"); _941 = F; }
-if (_941 === F) { c.idx = _940; _938 = F; break L_939; }
-_938 = true;
+const _939 = c.tokens[c.idx];
+if (_939 !== undefined && (_939.id === 24 || (_939.id === undefined && _939.type === "Join"))) { c.idx++; _938 = _939; }
+else { if (c.track) { E(c, "Join"); } _938 = F; }
+if (_938 === F) { c.idx = _931; _929 = F; break L_930; }
+_929 = "RIGHT";
 }
-_911 = _938; break L_912;
+_907 = _929; break L_908;
 }
-case 40: {
+case 21: {
 
+let _940;
+L_941: {
+const _942 = c.idx;
 let _943;
-L_944: {
-const _945 = c.idx;
-let _946;
-const _947 = c.tokens[c.idx];
-if (_947 !== undefined && (_947.id === 40 || (_947.id === undefined && _947.type === "False"))) { c.idx++; _946 = _947; }
-else { E(c, "False"); _946 = F; }
-if (_946 === F) { c.idx = _945; _943 = F; break L_944; }
-_943 = false;
+const _944 = c.tokens[c.idx];
+if (_944 !== undefined && (_944.id === 21 || (_944.id === undefined && _944.type === "Full"))) { c.idx++; _943 = _944; }
+else { if (c.track) { E(c, "Full"); } _943 = F; }
+if (_943 === F) { c.idx = _942; _940 = F; break L_941; }
+let _945;
+const _946 = c.idx;
+{
+let _947;
+const _948 = c.tokens[c.idx];
+if (_948 !== undefined && (_948.id === 22 || (_948.id === undefined && _948.type === "Outer"))) { c.idx++; _947 = _948; }
+else { if (c.track) { E(c, "Outer"); } _947 = F; }
+if (_947 === F) { c.idx = _946; _945 = null; } else _945 = _947;
 }
-_911 = _943; break L_912;
+if (_945 === F) { c.idx = _942; _940 = F; break L_941; }
+let _949;
+const _950 = c.tokens[c.idx];
+if (_950 !== undefined && (_950.id === 24 || (_950.id === undefined && _950.type === "Join"))) { c.idx++; _949 = _950; }
+else { if (c.track) { E(c, "Join"); } _949 = F; }
+if (_949 === F) { c.idx = _942; _940 = F; break L_941; }
+_940 = "FULL";
 }
-case 14: {
+_907 = _940; break L_908;
+}
+case 24: {
 
-let _948;
-L_949: {
-const _950 = c.idx;
 let _951;
-const _952 = c.tokens[c.idx];
-if (_952 !== undefined && (_952.id === 14 || (_952.id === undefined && _952.type === "Null"))) { c.idx++; _951 = _952; }
-else { E(c, "Null"); _951 = F; }
-if (_951 === F) { c.idx = _950; _948 = F; break L_949; }
-_948 = null;
+L_952: {
+const _953 = c.idx;
+let _954;
+const _955 = c.tokens[c.idx];
+if (_955 !== undefined && (_955.id === 24 || (_955.id === undefined && _955.type === "Join"))) { c.idx++; _954 = _955; }
+else { if (c.track) { E(c, "Join"); } _954 = F; }
+if (_954 === F) { c.idx = _953; _951 = F; break L_952; }
+_951 = "INNER";
 }
-_911 = _948; break L_912;
+_907 = _951; break L_908;
 }
-case 87: case 61: case 65: {
-
-const _954 = c.ruleDepth;
-if (c.track) { c.ruleNames[_954] = "Param"; c.ruleDepth = _954 + 1; }
-const _953 = R[48](c);
-if (c.track) c.ruleDepth = _954;
-_911 = _953; break L_912;
-}
-default: { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _911 = F; break L_912; }
+default: { if (c.track) { E(c, "Inner"); E(c, "Left"); E(c, "Right"); E(c, "Full"); E(c, "Join"); } _907 = F; break L_908; }
 }
 }
-return _911;
+return _907;
 }
 
-// TypeName
-R[39] = (c) => {
+// AndExpr
+R[41] = (c) => c.track ? R[45](c) : R[34](c, 1)
+
+// NotExpr
+R[42] = (c) => {
 
 let _956;
 L_957: {
 const _958 = c.idx;
-
-const _960 = c.ruleDepth;
-if (c.track) { c.ruleNames[_960] = "Ident"; c.ruleDepth = _960 + 1; }
-const _959 = R[15](c);
-if (c.track) c.ruleDepth = _960;
-if (_959 === F) { c.idx = _958; _956 = F; break L_957; }
-let _961;
-const _962 = c.idx;
-{
-
-let _963;
-L_964: {
-const _965 = c.idx;
-let _966;
-const _967 = c.tokens[c.idx];
-if (_967 !== undefined && (_967.id === 80 || (_967.id === undefined && _967.type === "LParen"))) { c.idx++; _966 = _967; }
-else { E(c, "LParen"); _966 = F; }
-if (_966 === F) { c.idx = _965; _963 = F; break L_964; }
-
-let _968 = [];
-L_972: {
-const _969 = c.idx;
-let _973;
-const _974 = c.tokens[c.idx];
-if (_974 !== undefined && (_974.id === 56 || (_974.id === undefined && _974.type === "Number"))) { c.idx++; _973 = _974; }
-else { E(c, "Number"); _973 = F; }
-if (_973 === F) { c.idx = _969; _968 = F; break L_972; }
-_968.push(_973);
+let _959 = null;
 for (;;) {
-const _970 = c.idx;
-let _975;
-const _976 = c.tokens[c.idx];
-if (_976 !== undefined && (_976.id === 84 || (_976.id === undefined && _976.type === "Comma"))) { c.idx++; _975 = _976; }
-else { E(c, "Comma"); _975 = F; }
-if (_975 === F) { c.idx = _970; break; }
-const _971 = c.idx;
-let _977;
-const _978 = c.tokens[c.idx];
-if (_978 !== undefined && (_978.id === 56 || (_978.id === undefined && _978.type === "Number"))) { c.idx++; _977 = _978; }
-else { E(c, "Number"); _977 = F; }
-if (_977 === F) { c.idx = _970; break; }
-_968.push(_977);
+const _960 = c.idx;
+let _963;
+const _964 = c.tokens[c.idx];
+if (_964 !== undefined && (_964.id === 11 || (_964.id === undefined && _964.type === "Not"))) { c.idx++; _963 = _964; }
+else { if (c.track) { E(c, "Not"); } _963 = F; }
+if (_963 === F) { c.idx = _960; break; }
+if (_959 === null) _959 = [];
+_959.push(_963);
 }
+
+const _966 = c.ruleDepth;
+if (c.track) { c.ruleNames[_966] = "Predicate"; c.ruleDepth = _966 + 1; }
+const _965 = R[46](c);
+if (c.track) c.ruleDepth = _966;
+if (_965 === F) { c.idx = _958; _956 = F; break L_957; }
+let _962 = _965;
+if (_959 !== null) {
+const _961 = { op: null, operand: null };
+for (let i = _959.length - 1; i >= 0; i--) { _961.op = _959[i]; _961.operand = _962; _962 = H[42](_961, c); }
 }
-if (_968 === F) { c.idx = _965; _963 = F; break L_964; }
-let _979;
-const _980 = c.tokens[c.idx];
-if (_980 !== undefined && (_980.id === 81 || (_980.id === undefined && _980.type === "RParen"))) { c.idx++; _979 = _980; }
-else { E(c, "RParen"); _979 = F; }
-if (_979 === F) { c.idx = _965; _963 = F; break L_964; }
-_963 = _968;
-}
-if (_963 === F) { c.idx = _962; _961 = null; } else _961 = _963;
-}
-if (_961 === F) { c.idx = _958; _956 = F; break L_957; }
-_956 = _959;
+_956 = _962;
 }
 return _956;
 }
 
-// Predicate
-R[40] = (c) => {
+// Primary
+R[43] = (c) => {
 
+let _967;
+L_968: {
+const _969 = c.tokens[c.idx];
+if (_969 === undefined) { if (c.track) { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _967 = F; break L_968; }
+const _970 = _969.id !== undefined ? _969.id : I[_969.type];
+switch (_970) {
+case 80: {
+
+const _972 = c.ruleDepth;
+if (c.track) { c.ruleNames[_972] = "ParenExpr"; c.ruleDepth = _972 + 1; }
+const _971 = R[47](c);
+if (c.track) c.ruleDepth = _972;
+_967 = _971; break L_968;
+}
+case 50: {
+
+const _974 = c.ruleDepth;
+if (c.track) { c.ruleNames[_974] = "ExistsExpr"; c.ruleDepth = _974 + 1; }
+const _973 = R[48](c);
+if (c.track) c.ruleDepth = _974;
+_967 = _973; break L_968;
+}
+case 41: {
+
+const _976 = c.ruleDepth;
+if (c.track) { c.ruleNames[_976] = "CaseExpr"; c.ruleDepth = _976 + 1; }
+const _975 = R[49](c);
+if (c.track) c.ruleDepth = _976;
+_967 = _975; break L_968;
+}
+case 51: {
+
+const _978 = c.ruleDepth;
+if (c.track) { c.ruleNames[_978] = "CastExpr"; c.ruleDepth = _978 + 1; }
+const _977 = R[50](c);
+if (c.track) c.ruleDepth = _978;
+_967 = _977; break L_968;
+}
+case 52: {
+
+const _980 = c.ruleDepth;
+if (c.track) { c.ruleNames[_980] = "ExtractExpr"; c.ruleDepth = _980 + 1; }
+const _979 = R[51](c);
+if (c.track) c.ruleDepth = _980;
+_967 = _979; break L_968;
+}
+case 60: case 58: case 59: {
 let _981;
 L_982: {
+const _983 = c.idx;
+let _984 = 3;
+if (!c.track) {
+const _985 = c.tokens[_983 + 1];
+switch (_985 === undefined ? -1 : (_985.id !== undefined ? _985.id : I[_985.type])) {
+case 80: _984 = 3; break;
+case 85: case 82: _984 = 2; break;
+default: _984 = 2; break;
+}
+}
+if (_984 & 1) {
 
 const _987 = c.ruleDepth;
-if (c.track) { c.ruleNames[_987] = "ConcatExpr"; c.ruleDepth = _987 + 1; }
-const _986 = R[49](c);
+if (c.track) { c.ruleNames[_987] = "FunctionCall"; c.ruleDepth = _987 + 1; }
+const _986 = R[52](c);
 if (c.track) c.ruleDepth = _987;
-if (_986 === F) { _981 = F; break L_982; }
-let _983 = _986;
-let _984 = null;
-for (;;) {
-const _985 = c.idx;
+if (_986 !== F) { _981 = _986; break L_982; }
+c.idx = _983;
+}
+if (_984 & 2) {
 
 const _989 = c.ruleDepth;
-if (c.track) { c.ruleNames[_989] = "PredicateTail"; c.ruleDepth = _989 + 1; }
-const _988 = R[50](c);
+if (c.track) { c.ruleNames[_989] = "ColumnRef"; c.ruleDepth = _989 + 1; }
+const _988 = R[53](c);
 if (c.track) c.ruleDepth = _989;
-if (_988 === F) { c.idx = _985; break; }
-if (_984 === null) _984 = { left: null, suffix: null };
-_984.left = _983; _984.suffix = _988;
-_983 = H[39](_984, c);
+if (_988 !== F) { _981 = _988; break L_982; }
+c.idx = _983;
 }
-_981 = _983;
+_981 = F;
 }
-return _981;
+_967 = _981; break L_968;
+}
+case 19: case 20: {
+
+const _991 = c.ruleDepth;
+if (c.track) { c.ruleNames[_991] = "FunctionCall"; c.ruleDepth = _991 + 1; }
+const _990 = R[52](c);
+if (c.track) c.ruleDepth = _991;
+_967 = _990; break L_968;
+}
+case 56: {
+
+const _993 = c.ruleDepth;
+if (c.track) { c.ruleNames[_993] = "NumberLiteral"; c.ruleDepth = _993 + 1; }
+const _992 = R[22](c);
+if (c.track) c.ruleDepth = _993;
+_967 = _992; break L_968;
+}
+case 57: {
+
+const _995 = c.ruleDepth;
+if (c.track) { c.ruleNames[_995] = "StringLiteral"; c.ruleDepth = _995 + 1; }
+const _994 = R[23](c);
+if (c.track) c.ruleDepth = _995;
+_967 = _994; break L_968;
+}
+case 39: {
+
+let _996;
+L_997: {
+const _998 = c.idx;
+let _999;
+const _1000 = c.tokens[c.idx];
+if (_1000 !== undefined && (_1000.id === 39 || (_1000.id === undefined && _1000.type === "True"))) { c.idx++; _999 = _1000; }
+else { if (c.track) { E(c, "True"); } _999 = F; }
+if (_999 === F) { c.idx = _998; _996 = F; break L_997; }
+_996 = true;
+}
+_967 = _996; break L_968;
+}
+case 40: {
+
+let _1001;
+L_1002: {
+const _1003 = c.idx;
+let _1004;
+const _1005 = c.tokens[c.idx];
+if (_1005 !== undefined && (_1005.id === 40 || (_1005.id === undefined && _1005.type === "False"))) { c.idx++; _1004 = _1005; }
+else { if (c.track) { E(c, "False"); } _1004 = F; }
+if (_1004 === F) { c.idx = _1003; _1001 = F; break L_1002; }
+_1001 = false;
+}
+_967 = _1001; break L_968;
+}
+case 14: {
+
+let _1006;
+L_1007: {
+const _1008 = c.idx;
+let _1009;
+const _1010 = c.tokens[c.idx];
+if (_1010 !== undefined && (_1010.id === 14 || (_1010.id === undefined && _1010.type === "Null"))) { c.idx++; _1009 = _1010; }
+else { if (c.track) { E(c, "Null"); } _1009 = F; }
+if (_1009 === F) { c.idx = _1008; _1006 = F; break L_1007; }
+_1006 = null;
+}
+_967 = _1006; break L_968;
+}
+case 87: case 61: case 65: {
+
+const _1012 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1012] = "Param"; c.ruleDepth = _1012 + 1; }
+const _1011 = R[54](c);
+if (c.track) c.ruleDepth = _1012;
+_967 = _1011; break L_968;
+}
+default: { if (c.track) { E(c, "LParen"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _967 = F; break L_968; }
+}
+}
+return _967;
+}
+
+// TypeName
+R[44] = (c) => {
+
+let _1014;
+L_1015: {
+const _1016 = c.idx;
+
+const _1018 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1018] = "Ident"; c.ruleDepth = _1018 + 1; }
+const _1017 = R[15](c);
+if (c.track) c.ruleDepth = _1018;
+if (_1017 === F) { c.idx = _1016; _1014 = F; break L_1015; }
+let _1019;
+const _1020 = c.idx;
+{
+
+let _1021;
+L_1022: {
+const _1023 = c.idx;
+let _1024;
+const _1025 = c.tokens[c.idx];
+if (_1025 !== undefined && (_1025.id === 80 || (_1025.id === undefined && _1025.type === "LParen"))) { c.idx++; _1024 = _1025; }
+else { if (c.track) { E(c, "LParen"); } _1024 = F; }
+if (_1024 === F) { c.idx = _1023; _1021 = F; break L_1022; }
+
+let _1026 = [];
+L_1030: {
+const _1027 = c.idx;
+let _1031;
+const _1032 = c.tokens[c.idx];
+if (_1032 !== undefined && (_1032.id === 56 || (_1032.id === undefined && _1032.type === "Number"))) { c.idx++; _1031 = _1032; }
+else { if (c.track) { E(c, "Number"); } _1031 = F; }
+if (_1031 === F) { c.idx = _1027; _1026 = F; break L_1030; }
+_1026.push(_1031);
+for (;;) {
+const _1028 = c.idx;
+let _1033;
+const _1034 = c.tokens[c.idx];
+if (_1034 !== undefined && (_1034.id === 84 || (_1034.id === undefined && _1034.type === "Comma"))) { c.idx++; _1033 = _1034; }
+else { if (c.track) { E(c, "Comma"); } _1033 = F; }
+if (_1033 === F) { c.idx = _1028; break; }
+const _1029 = c.idx;
+let _1035;
+const _1036 = c.tokens[c.idx];
+if (_1036 !== undefined && (_1036.id === 56 || (_1036.id === undefined && _1036.type === "Number"))) { c.idx++; _1035 = _1036; }
+else { if (c.track) { E(c, "Number"); } _1035 = F; }
+if (_1035 === F) { c.idx = _1028; break; }
+_1026.push(_1035);
+}
+}
+if (_1026 === F) { c.idx = _1023; _1021 = F; break L_1022; }
+let _1037;
+const _1038 = c.tokens[c.idx];
+if (_1038 !== undefined && (_1038.id === 81 || (_1038.id === undefined && _1038.type === "RParen"))) { c.idx++; _1037 = _1038; }
+else { if (c.track) { E(c, "RParen"); } _1037 = F; }
+if (_1037 === F) { c.idx = _1023; _1021 = F; break L_1022; }
+_1021 = _1026;
+}
+if (_1021 === F) { c.idx = _1020; _1019 = null; } else _1019 = _1021;
+}
+if (_1019 === F) { c.idx = _1016; _1014 = F; break L_1015; }
+_1014 = _1017;
+}
+return _1014;
+}
+
+// AndExpr$tower
+R[45] = (c) => {
+
+let _1039;
+L_1040: {
+
+const _1045 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1045] = "NotExpr"; c.ruleDepth = _1045 + 1; }
+const _1044 = R[42](c);
+if (c.track) c.ruleDepth = _1045;
+if (_1044 === F) { _1039 = F; break L_1040; }
+let _1041 = _1044;
+let _1042 = null;
+for (;;) {
+const _1043 = c.idx;
+let _1046;
+const _1047 = c.tokens[c.idx];
+if (_1047 !== undefined && (_1047.id === 9 || (_1047.id === undefined && _1047.type === "And"))) { c.idx++; _1046 = _1047; }
+else { if (c.track) { E(c, "And"); } _1046 = F; }
+if (_1046 === F) { c.idx = _1043; break; }
+
+const _1049 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1049] = "NotExpr"; c.ruleDepth = _1049 + 1; }
+const _1048 = R[42](c);
+if (c.track) c.ruleDepth = _1049;
+if (_1048 === F) { c.idx = _1043; break; }
+if (_1042 === null) _1042 = { left: null, op: null, right: null };
+_1042.left = _1041; _1042.op = _1046; _1042.right = _1048;
+_1041 = H[43](_1042, c);
+}
+_1039 = _1041;
+}
+return _1039;
+}
+
+// Predicate
+R[46] = (c) => {
+
+let _1050;
+L_1051: {
+
+const _1056 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1056] = "ConcatExpr"; c.ruleDepth = _1056 + 1; }
+const _1055 = R[55](c);
+if (c.track) c.ruleDepth = _1056;
+if (_1055 === F) { _1050 = F; break L_1051; }
+let _1052 = _1055;
+let _1053 = null;
+for (;;) {
+const _1054 = c.idx;
+
+const _1058 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1058] = "PredicateTail"; c.ruleDepth = _1058 + 1; }
+const _1057 = R[56](c);
+if (c.track) c.ruleDepth = _1058;
+if (_1057 === F) { c.idx = _1054; break; }
+if (_1053 === null) _1053 = { left: null, suffix: null };
+_1053.left = _1052; _1053.suffix = _1057;
+_1052 = H[44](_1053, c);
+}
+_1050 = _1052;
+}
+return _1050;
 }
 
 // ParenExpr
-R[41] = (c) => {
+R[47] = (c) => {
 
-let _990;
-L_991: {
-const _992 = c.idx;
-let _993;
-const _994 = c.tokens[c.idx];
-if (_994 !== undefined && (_994.id === 80 || (_994.id === undefined && _994.type === "LParen"))) { c.idx++; _993 = _994; }
-else { E(c, "LParen"); _993 = F; }
-if (_993 === F) { c.idx = _992; _990 = F; break L_991; }
+let _1059;
+L_1060: {
+const _1061 = c.idx;
+let _1062;
+const _1063 = c.tokens[c.idx];
+if (_1063 !== undefined && (_1063.id === 80 || (_1063.id === undefined && _1063.type === "LParen"))) { c.idx++; _1062 = _1063; }
+else { if (c.track) { E(c, "LParen"); } _1062 = F; }
+if (_1062 === F) { c.idx = _1061; _1059 = F; break L_1060; }
 
-let _995;
-L_996: {
-const _997 = c.tokens[c.idx];
-if (_997 === undefined) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _995 = F; break L_996; }
-const _998 = _997.id !== undefined ? _997.id : I[_997.type];
-switch (_998) {
+let _1064;
+L_1065: {
+const _1066 = c.tokens[c.idx];
+if (_1066 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1064 = F; break L_1065; }
+const _1067 = _1066.id !== undefined ? _1066.id : I[_1066.type];
+switch (_1067) {
 case 46: case 3: case 38: {
 
-const _1002 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1002] = "Query"; c.ruleDepth = _1002 + 1; }
-const _1001 = R[2](c);
-if (c.track) c.ruleDepth = _1002;
-const _1000 = _1001 === F ? F : H[40](_1001, c);
-_995 = _1000; break L_996;
+const _1071 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1071] = "Query"; c.ruleDepth = _1071 + 1; }
+const _1070 = R[2](c);
+if (c.track) c.ruleDepth = _1071;
+const _1069 = _1070 === F ? F : H[45](_1070, c);
+_1064 = _1069; break L_1065;
 }
 case 80: {
-let _1003;
-L_1004: {
-const _1005 = c.idx;
-{
+let _1072;
+L_1073: {
+const _1074 = c.idx;
+let _1075 = 3;
+if (!c.track) {
+const _1076 = c.tokens[_1074 + 1];
+switch (_1076 === undefined ? -1 : (_1076.id !== undefined ? _1076.id : I[_1076.type])) {
+case 46: case 3: case 80: case 38: _1075 = 3; break;
+case 11: case 76: case 75: case 39: case 40: case 14: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: case 50: case 41: _1075 = 2; break;
+default: _1075 = 0; break;
+}
+}
+if (_1075 & 1) {
 
-const _1009 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1009] = "Query"; c.ruleDepth = _1009 + 1; }
-const _1008 = R[2](c);
-if (c.track) c.ruleDepth = _1009;
-const _1007 = _1008 === F ? F : H[41](_1008, c);
-if (_1007 !== F) { _1003 = _1007; break L_1004; }
-c.idx = _1005;
+const _1080 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1080] = "Query"; c.ruleDepth = _1080 + 1; }
+const _1079 = R[2](c);
+if (c.track) c.ruleDepth = _1080;
+const _1078 = _1079 === F ? F : H[46](_1079, c);
+if (_1078 !== F) { _1072 = _1078; break L_1073; }
+c.idx = _1074;
 }
-{
+if (_1075 & 2) {
 
-const _1011 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1011] = "Expression"; c.ruleDepth = _1011 + 1; }
-const _1010 = R[19](c);
-if (c.track) c.ruleDepth = _1011;
-if (_1010 !== F) { _1003 = _1010; break L_1004; }
-c.idx = _1005;
+const _1082 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1082] = "Expression"; c.ruleDepth = _1082 + 1; }
+const _1081 = R[19](c);
+if (c.track) c.ruleDepth = _1082;
+if (_1081 !== F) { _1072 = _1081; break L_1073; }
+c.idx = _1074;
 }
-_1003 = F;
+_1072 = F;
 }
-_995 = _1003; break L_996;
+_1064 = _1072; break L_1065;
 }
 case 11: case 76: case 75: case 39: case 40: case 14: case 50: case 41: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
 
-const _1013 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1013] = "Expression"; c.ruleDepth = _1013 + 1; }
-const _1012 = R[19](c);
-if (c.track) c.ruleDepth = _1013;
-_995 = _1012; break L_996;
-}
-default: { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _995 = F; break L_996; }
-}
-}
-if (_995 === F) { c.idx = _992; _990 = F; break L_991; }
-let _1014;
-const _1015 = c.tokens[c.idx];
-if (_1015 !== undefined && (_1015.id === 81 || (_1015.id === undefined && _1015.type === "RParen"))) { c.idx++; _1014 = _1015; }
-else { E(c, "RParen"); _1014 = F; }
-if (_1014 === F) { c.idx = _992; _990 = F; break L_991; }
-_990 = _995;
-}
-return _990;
-}
-
-// ExistsExpr
-R[42] = (c) => {
-
-let _1016;
-L_1018: {
-const _1017 = c.idx;
-const _1020 = c.bindings;
-const _1019 = {};
-c.bindings = _1019;
-let _1021;
-const _1022 = c.tokens[c.idx];
-if (_1022 !== undefined && (_1022.id === 50 || (_1022.id === undefined && _1022.type === "Exists"))) { c.idx++; _1021 = _1022; }
-else { E(c, "Exists"); _1021 = F; }
-if (_1021 === F) { c.idx = _1017; c.bindings = _1020; _1016 = F; break L_1018; }
-
-let _1024;
-L_1025: {
-const _1026 = c.idx;
-let _1027;
-const _1028 = c.tokens[c.idx];
-if (_1028 !== undefined && (_1028.id === 80 || (_1028.id === undefined && _1028.type === "LParen"))) { c.idx++; _1027 = _1028; }
-else { E(c, "LParen"); _1027 = F; }
-if (_1027 === F) { c.idx = _1026; _1024 = F; break L_1025; }
-
-const _1030 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1030] = "Query"; c.ruleDepth = _1030 + 1; }
-const _1029 = R[2](c);
-if (c.track) c.ruleDepth = _1030;
-if (_1029 === F) { c.idx = _1026; _1024 = F; break L_1025; }
-let _1031;
-const _1032 = c.tokens[c.idx];
-if (_1032 !== undefined && (_1032.id === 81 || (_1032.id === undefined && _1032.type === "RParen"))) { c.idx++; _1031 = _1032; }
-else { E(c, "RParen"); _1031 = F; }
-if (_1031 === F) { c.idx = _1026; _1024 = F; break L_1025; }
-_1024 = _1029;
-}
-if (_1024 !== F) _1019["q"] = _1024;
-const _1023 = _1024;
-if (_1023 === F) { c.idx = _1017; c.bindings = _1020; _1016 = F; break L_1018; }
-const _1033 = H[42](_1019, c);
-c.bindings = _1020;
-_1016 = _1033;
-}
-return _1016;
-}
-
-// CaseExpr
-R[43] = (c) => {
-
-let _1034;
-L_1036: {
-const _1035 = c.idx;
-const _1038 = c.bindings;
-const _1037 = {};
-c.bindings = _1037;
-let _1039;
-const _1040 = c.tokens[c.idx];
-if (_1040 !== undefined && (_1040.id === 41 || (_1040.id === undefined && _1040.type === "Case"))) { c.idx++; _1039 = _1040; }
-else { E(c, "Case"); _1039 = F; }
-if (_1039 === F) { c.idx = _1035; c.bindings = _1038; _1034 = F; break L_1036; }
-let _1042;
-const _1043 = c.idx;
-{
-
-const _1045 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1045] = "Expression"; c.ruleDepth = _1045 + 1; }
-const _1044 = R[19](c);
-if (c.track) c.ruleDepth = _1045;
-if (_1044 === F) { c.idx = _1043; _1042 = null; } else _1042 = _1044;
-}
-if (_1042 !== F) _1037["subject"] = _1042;
-const _1041 = _1042;
-if (_1041 === F) { c.idx = _1035; c.bindings = _1038; _1034 = F; break L_1036; }
-
-let _1047 = [];
-L_1049: {
-const _1050 = c.idx;
-
-const _1052 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1052] = "WhenClause"; c.ruleDepth = _1052 + 1; }
-const _1051 = R[51](c);
-if (c.track) c.ruleDepth = _1052;
-if (_1051 === F) { c.idx = _1050; _1047 = F; break L_1049; }
-if (c.idx === _1050) P("many1", _1050);
-_1047.push(_1051);
-for (;;) {
-const _1048 = c.idx;
-
-const _1054 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1054] = "WhenClause"; c.ruleDepth = _1054 + 1; }
-const _1053 = R[51](c);
-if (c.track) c.ruleDepth = _1054;
-if (_1053 === F) { c.idx = _1048; break; }
-if (c.idx === _1048) P("many1", _1048);
-_1047.push(_1053);
-}
-}
-if (_1047 !== F) _1037["whens"] = _1047;
-const _1046 = _1047;
-if (_1046 === F) { c.idx = _1035; c.bindings = _1038; _1034 = F; break L_1036; }
-let _1056;
-const _1057 = c.idx;
-{
-
-let _1058;
-L_1059: {
-const _1060 = c.idx;
-let _1061;
-const _1062 = c.tokens[c.idx];
-if (_1062 !== undefined && (_1062.id === 44 || (_1062.id === undefined && _1062.type === "Else"))) { c.idx++; _1061 = _1062; }
-else { E(c, "Else"); _1061 = F; }
-if (_1061 === F) { c.idx = _1060; _1058 = F; break L_1059; }
-
-const _1064 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1064] = "Expression"; c.ruleDepth = _1064 + 1; }
-const _1063 = R[19](c);
-if (c.track) c.ruleDepth = _1064;
-if (_1063 === F) { c.idx = _1060; _1058 = F; break L_1059; }
-_1058 = _1063;
-}
-if (_1058 === F) { c.idx = _1057; _1056 = null; } else _1056 = _1058;
-}
-if (_1056 !== F) _1037["otherwise"] = _1056;
-const _1055 = _1056;
-if (_1055 === F) { c.idx = _1035; c.bindings = _1038; _1034 = F; break L_1036; }
-let _1065;
-const _1066 = c.tokens[c.idx];
-if (_1066 !== undefined && (_1066.id === 45 || (_1066.id === undefined && _1066.type === "End"))) { c.idx++; _1065 = _1066; }
-else { E(c, "End"); _1065 = F; }
-if (_1065 === F) { c.idx = _1035; c.bindings = _1038; _1034 = F; break L_1036; }
-const _1067 = H[43](_1037, c);
-c.bindings = _1038;
-_1034 = _1067;
-}
-return _1034;
-}
-
-// CastExpr
-R[44] = (c) => {
-
-let _1068;
-L_1070: {
-const _1069 = c.idx;
-const _1072 = c.bindings;
-const _1071 = {};
-c.bindings = _1071;
-let _1073;
-const _1074 = c.tokens[c.idx];
-if (_1074 !== undefined && (_1074.id === 51 || (_1074.id === undefined && _1074.type === "Cast"))) { c.idx++; _1073 = _1074; }
-else { E(c, "Cast"); _1073 = F; }
-if (_1073 === F) { c.idx = _1069; c.bindings = _1072; _1068 = F; break L_1070; }
-let _1075;
-const _1076 = c.tokens[c.idx];
-if (_1076 !== undefined && (_1076.id === 80 || (_1076.id === undefined && _1076.type === "LParen"))) { c.idx++; _1075 = _1076; }
-else { E(c, "LParen"); _1075 = F; }
-if (_1075 === F) { c.idx = _1069; c.bindings = _1072; _1068 = F; break L_1070; }
-
-const _1079 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1079] = "Expression"; c.ruleDepth = _1079 + 1; }
-const _1078 = R[19](c);
-if (c.track) c.ruleDepth = _1079;
-if (_1078 !== F) _1071["e"] = _1078;
-const _1077 = _1078;
-if (_1077 === F) { c.idx = _1069; c.bindings = _1072; _1068 = F; break L_1070; }
-let _1080;
-const _1081 = c.tokens[c.idx];
-if (_1081 !== undefined && (_1081.id === 6 || (_1081.id === undefined && _1081.type === "As"))) { c.idx++; _1080 = _1081; }
-else { E(c, "As"); _1080 = F; }
-if (_1080 === F) { c.idx = _1069; c.bindings = _1072; _1068 = F; break L_1070; }
-
 const _1084 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1084] = "TypeName"; c.ruleDepth = _1084 + 1; }
-const _1083 = R[39](c);
+if (c.track) { c.ruleNames[_1084] = "Expression"; c.ruleDepth = _1084 + 1; }
+const _1083 = R[19](c);
 if (c.track) c.ruleDepth = _1084;
-if (_1083 !== F) _1071["t"] = _1083;
-const _1082 = _1083;
-if (_1082 === F) { c.idx = _1069; c.bindings = _1072; _1068 = F; break L_1070; }
+_1064 = _1083; break L_1065;
+}
+default: { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1064 = F; break L_1065; }
+}
+}
+if (_1064 === F) { c.idx = _1061; _1059 = F; break L_1060; }
 let _1085;
 const _1086 = c.tokens[c.idx];
 if (_1086 !== undefined && (_1086.id === 81 || (_1086.id === undefined && _1086.type === "RParen"))) { c.idx++; _1085 = _1086; }
-else { E(c, "RParen"); _1085 = F; }
-if (_1085 === F) { c.idx = _1069; c.bindings = _1072; _1068 = F; break L_1070; }
-const _1087 = H[44](_1071, c);
-c.bindings = _1072;
-_1068 = _1087;
+else { if (c.track) { E(c, "RParen"); } _1085 = F; }
+if (_1085 === F) { c.idx = _1061; _1059 = F; break L_1060; }
+_1059 = _1064;
 }
-return _1068;
+return _1059;
+}
+
+// ExistsExpr
+R[48] = (c) => {
+
+let _1087;
+L_1089: {
+const _1088 = c.idx;
+const _1091 = c.bindings;
+const _1090 = {};
+c.bindings = _1090;
+let _1092;
+const _1093 = c.tokens[c.idx];
+if (_1093 !== undefined && (_1093.id === 50 || (_1093.id === undefined && _1093.type === "Exists"))) { c.idx++; _1092 = _1093; }
+else { if (c.track) { E(c, "Exists"); } _1092 = F; }
+if (_1092 === F) { c.idx = _1088; c.bindings = _1091; _1087 = F; break L_1089; }
+
+let _1095;
+L_1096: {
+const _1097 = c.idx;
+let _1098;
+const _1099 = c.tokens[c.idx];
+if (_1099 !== undefined && (_1099.id === 80 || (_1099.id === undefined && _1099.type === "LParen"))) { c.idx++; _1098 = _1099; }
+else { if (c.track) { E(c, "LParen"); } _1098 = F; }
+if (_1098 === F) { c.idx = _1097; _1095 = F; break L_1096; }
+
+const _1101 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1101] = "Query"; c.ruleDepth = _1101 + 1; }
+const _1100 = R[2](c);
+if (c.track) c.ruleDepth = _1101;
+if (_1100 === F) { c.idx = _1097; _1095 = F; break L_1096; }
+let _1102;
+const _1103 = c.tokens[c.idx];
+if (_1103 !== undefined && (_1103.id === 81 || (_1103.id === undefined && _1103.type === "RParen"))) { c.idx++; _1102 = _1103; }
+else { if (c.track) { E(c, "RParen"); } _1102 = F; }
+if (_1102 === F) { c.idx = _1097; _1095 = F; break L_1096; }
+_1095 = _1100;
+}
+if (_1095 !== F) _1090["q"] = _1095;
+const _1094 = _1095;
+if (_1094 === F) { c.idx = _1088; c.bindings = _1091; _1087 = F; break L_1089; }
+const _1104 = H[47](_1090, c);
+c.bindings = _1091;
+_1087 = _1104;
+}
+return _1087;
+}
+
+// CaseExpr
+R[49] = (c) => {
+
+let _1105;
+L_1107: {
+const _1106 = c.idx;
+const _1109 = c.bindings;
+const _1108 = {};
+c.bindings = _1108;
+let _1110;
+const _1111 = c.tokens[c.idx];
+if (_1111 !== undefined && (_1111.id === 41 || (_1111.id === undefined && _1111.type === "Case"))) { c.idx++; _1110 = _1111; }
+else { if (c.track) { E(c, "Case"); } _1110 = F; }
+if (_1110 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
+let _1113;
+const _1114 = c.idx;
+{
+
+const _1116 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1116] = "Expression"; c.ruleDepth = _1116 + 1; }
+const _1115 = R[19](c);
+if (c.track) c.ruleDepth = _1116;
+if (_1115 === F) { c.idx = _1114; _1113 = null; } else _1113 = _1115;
+}
+if (_1113 !== F) _1108["subject"] = _1113;
+const _1112 = _1113;
+if (_1112 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
+
+let _1118 = [];
+L_1120: {
+const _1121 = c.idx;
+
+const _1123 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1123] = "WhenClause"; c.ruleDepth = _1123 + 1; }
+const _1122 = R[57](c);
+if (c.track) c.ruleDepth = _1123;
+if (_1122 === F) { c.idx = _1121; _1118 = F; break L_1120; }
+if (c.idx === _1121) P("many1", _1121);
+_1118.push(_1122);
+for (;;) {
+const _1119 = c.idx;
+
+const _1125 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1125] = "WhenClause"; c.ruleDepth = _1125 + 1; }
+const _1124 = R[57](c);
+if (c.track) c.ruleDepth = _1125;
+if (_1124 === F) { c.idx = _1119; break; }
+if (c.idx === _1119) P("many1", _1119);
+_1118.push(_1124);
+}
+}
+if (_1118 !== F) _1108["whens"] = _1118;
+const _1117 = _1118;
+if (_1117 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
+let _1127;
+const _1128 = c.idx;
+{
+
+let _1129;
+L_1130: {
+const _1131 = c.idx;
+let _1132;
+const _1133 = c.tokens[c.idx];
+if (_1133 !== undefined && (_1133.id === 44 || (_1133.id === undefined && _1133.type === "Else"))) { c.idx++; _1132 = _1133; }
+else { if (c.track) { E(c, "Else"); } _1132 = F; }
+if (_1132 === F) { c.idx = _1131; _1129 = F; break L_1130; }
+
+const _1135 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1135] = "Expression"; c.ruleDepth = _1135 + 1; }
+const _1134 = R[19](c);
+if (c.track) c.ruleDepth = _1135;
+if (_1134 === F) { c.idx = _1131; _1129 = F; break L_1130; }
+_1129 = _1134;
+}
+if (_1129 === F) { c.idx = _1128; _1127 = null; } else _1127 = _1129;
+}
+if (_1127 !== F) _1108["otherwise"] = _1127;
+const _1126 = _1127;
+if (_1126 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
+let _1136;
+const _1137 = c.tokens[c.idx];
+if (_1137 !== undefined && (_1137.id === 45 || (_1137.id === undefined && _1137.type === "End"))) { c.idx++; _1136 = _1137; }
+else { if (c.track) { E(c, "End"); } _1136 = F; }
+if (_1136 === F) { c.idx = _1106; c.bindings = _1109; _1105 = F; break L_1107; }
+const _1138 = H[48](_1108, c);
+c.bindings = _1109;
+_1105 = _1138;
+}
+return _1105;
+}
+
+// CastExpr
+R[50] = (c) => {
+
+let _1139;
+L_1141: {
+const _1140 = c.idx;
+const _1143 = c.bindings;
+const _1142 = {};
+c.bindings = _1142;
+let _1144;
+const _1145 = c.tokens[c.idx];
+if (_1145 !== undefined && (_1145.id === 51 || (_1145.id === undefined && _1145.type === "Cast"))) { c.idx++; _1144 = _1145; }
+else { if (c.track) { E(c, "Cast"); } _1144 = F; }
+if (_1144 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+let _1146;
+const _1147 = c.tokens[c.idx];
+if (_1147 !== undefined && (_1147.id === 80 || (_1147.id === undefined && _1147.type === "LParen"))) { c.idx++; _1146 = _1147; }
+else { if (c.track) { E(c, "LParen"); } _1146 = F; }
+if (_1146 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+
+const _1150 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1150] = "Expression"; c.ruleDepth = _1150 + 1; }
+const _1149 = R[19](c);
+if (c.track) c.ruleDepth = _1150;
+if (_1149 !== F) _1142["e"] = _1149;
+const _1148 = _1149;
+if (_1148 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+let _1151;
+const _1152 = c.tokens[c.idx];
+if (_1152 !== undefined && (_1152.id === 6 || (_1152.id === undefined && _1152.type === "As"))) { c.idx++; _1151 = _1152; }
+else { if (c.track) { E(c, "As"); } _1151 = F; }
+if (_1151 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+
+const _1155 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1155] = "TypeName"; c.ruleDepth = _1155 + 1; }
+const _1154 = R[44](c);
+if (c.track) c.ruleDepth = _1155;
+if (_1154 !== F) _1142["t"] = _1154;
+const _1153 = _1154;
+if (_1153 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+let _1156;
+const _1157 = c.tokens[c.idx];
+if (_1157 !== undefined && (_1157.id === 81 || (_1157.id === undefined && _1157.type === "RParen"))) { c.idx++; _1156 = _1157; }
+else { if (c.track) { E(c, "RParen"); } _1156 = F; }
+if (_1156 === F) { c.idx = _1140; c.bindings = _1143; _1139 = F; break L_1141; }
+const _1158 = H[49](_1142, c);
+c.bindings = _1143;
+_1139 = _1158;
+}
+return _1139;
 }
 
 // ExtractExpr
-R[45] = (c) => {
+R[51] = (c) => {
 
-let _1088;
-L_1090: {
-const _1089 = c.idx;
-const _1092 = c.bindings;
-const _1091 = {};
-c.bindings = _1091;
-let _1093;
-const _1094 = c.tokens[c.idx];
-if (_1094 !== undefined && (_1094.id === 52 || (_1094.id === undefined && _1094.type === "Extract"))) { c.idx++; _1093 = _1094; }
-else { E(c, "Extract"); _1093 = F; }
-if (_1093 === F) { c.idx = _1089; c.bindings = _1092; _1088 = F; break L_1090; }
-let _1095;
-const _1096 = c.tokens[c.idx];
-if (_1096 !== undefined && (_1096.id === 80 || (_1096.id === undefined && _1096.type === "LParen"))) { c.idx++; _1095 = _1096; }
-else { E(c, "LParen"); _1095 = F; }
-if (_1095 === F) { c.idx = _1089; c.bindings = _1092; _1088 = F; break L_1090; }
+let _1159;
+L_1161: {
+const _1160 = c.idx;
+const _1163 = c.bindings;
+const _1162 = {};
+c.bindings = _1162;
+let _1164;
+const _1165 = c.tokens[c.idx];
+if (_1165 !== undefined && (_1165.id === 52 || (_1165.id === undefined && _1165.type === "Extract"))) { c.idx++; _1164 = _1165; }
+else { if (c.track) { E(c, "Extract"); } _1164 = F; }
+if (_1164 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
+let _1166;
+const _1167 = c.tokens[c.idx];
+if (_1167 !== undefined && (_1167.id === 80 || (_1167.id === undefined && _1167.type === "LParen"))) { c.idx++; _1166 = _1167; }
+else { if (c.track) { E(c, "LParen"); } _1166 = F; }
+if (_1166 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
 
-const _1099 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1099] = "Ident"; c.ruleDepth = _1099 + 1; }
-const _1098 = R[15](c);
-if (c.track) c.ruleDepth = _1099;
-if (_1098 !== F) _1091["field"] = _1098;
-const _1097 = _1098;
-if (_1097 === F) { c.idx = _1089; c.bindings = _1092; _1088 = F; break L_1090; }
-let _1100;
-const _1101 = c.tokens[c.idx];
-if (_1101 !== undefined && (_1101.id === 4 || (_1101.id === undefined && _1101.type === "From"))) { c.idx++; _1100 = _1101; }
-else { E(c, "From"); _1100 = F; }
-if (_1100 === F) { c.idx = _1089; c.bindings = _1092; _1088 = F; break L_1090; }
+const _1170 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1170] = "Ident"; c.ruleDepth = _1170 + 1; }
+const _1169 = R[15](c);
+if (c.track) c.ruleDepth = _1170;
+if (_1169 !== F) _1162["field"] = _1169;
+const _1168 = _1169;
+if (_1168 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
+let _1171;
+const _1172 = c.tokens[c.idx];
+if (_1172 !== undefined && (_1172.id === 4 || (_1172.id === undefined && _1172.type === "From"))) { c.idx++; _1171 = _1172; }
+else { if (c.track) { E(c, "From"); } _1171 = F; }
+if (_1171 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
 
-const _1104 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1104] = "Expression"; c.ruleDepth = _1104 + 1; }
-const _1103 = R[19](c);
-if (c.track) c.ruleDepth = _1104;
-if (_1103 !== F) _1091["e"] = _1103;
-const _1102 = _1103;
-if (_1102 === F) { c.idx = _1089; c.bindings = _1092; _1088 = F; break L_1090; }
-let _1105;
-const _1106 = c.tokens[c.idx];
-if (_1106 !== undefined && (_1106.id === 81 || (_1106.id === undefined && _1106.type === "RParen"))) { c.idx++; _1105 = _1106; }
-else { E(c, "RParen"); _1105 = F; }
-if (_1105 === F) { c.idx = _1089; c.bindings = _1092; _1088 = F; break L_1090; }
-const _1107 = H[45](_1091, c);
-c.bindings = _1092;
-_1088 = _1107;
+const _1175 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1175] = "Expression"; c.ruleDepth = _1175 + 1; }
+const _1174 = R[19](c);
+if (c.track) c.ruleDepth = _1175;
+if (_1174 !== F) _1162["e"] = _1174;
+const _1173 = _1174;
+if (_1173 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
+let _1176;
+const _1177 = c.tokens[c.idx];
+if (_1177 !== undefined && (_1177.id === 81 || (_1177.id === undefined && _1177.type === "RParen"))) { c.idx++; _1176 = _1177; }
+else { if (c.track) { E(c, "RParen"); } _1176 = F; }
+if (_1176 === F) { c.idx = _1160; c.bindings = _1163; _1159 = F; break L_1161; }
+const _1178 = H[50](_1162, c);
+c.bindings = _1163;
+_1159 = _1178;
 }
-return _1088;
+return _1159;
 }
 
 // FunctionCall
-R[46] = (c) => {
+R[52] = (c) => {
 
-let _1108;
-L_1110: {
-const _1109 = c.idx;
-const _1112 = c.bindings;
-const _1111 = {};
-c.bindings = _1111;
-
-let _1114;
-L_1115: {
-const _1116 = c.tokens[c.idx];
-if (_1116 === undefined) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); _1114 = F; break L_1115; }
-const _1117 = _1116.id !== undefined ? _1116.id : I[_1116.type];
-switch (_1117) {
-case 60: case 58: case 59: {
-
-const _1119 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1119] = "Ident"; c.ruleDepth = _1119 + 1; }
-const _1118 = R[15](c);
-if (c.track) c.ruleDepth = _1119;
-_1114 = _1118; break L_1115;
-}
-case 19: case 20: {
-let _1121;
-const _1122 = c.tokens[c.idx];
-if (_1122 !== undefined && ((_1122.id === 19 || (_1122.id === undefined && _1122.type === "Left")) || (_1122.id === 20 || (_1122.id === undefined && _1122.type === "Right")))) { c.idx++; _1121 = _1122; }
-else { E(c, "Left"); E(c, "Right"); _1121 = F; }
-const _1120 = _1121 === F ? F : H[46](_1121, c);
-_1114 = _1120; break L_1115;
-}
-default: { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); _1114 = F; break L_1115; }
-}
-}
-if (_1114 !== F) _1111["name"] = _1114;
-const _1113 = _1114;
-if (_1113 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-let _1123;
-const _1124 = c.tokens[c.idx];
-if (_1124 !== undefined && (_1124.id === 80 || (_1124.id === undefined && _1124.type === "LParen"))) { c.idx++; _1123 = _1124; }
-else { E(c, "LParen"); _1123 = F; }
-if (_1123 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-let _1126;
-const _1127 = c.idx;
-{
-let _1128;
-const _1129 = c.tokens[c.idx];
-if (_1129 !== undefined && (_1129.id === 7 || (_1129.id === undefined && _1129.type === "Distinct"))) { c.idx++; _1128 = _1129; }
-else { E(c, "Distinct"); _1128 = F; }
-if (_1128 === F) { c.idx = _1127; _1126 = false; } else _1126 = true;
-}
-if (_1126 !== F) _1111["distinct"] = _1126;
-const _1125 = _1126;
-if (_1125 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-let _1131;
-const _1132 = c.idx;
-{
-let _1133;
-const _1134 = c.tokens[c.idx];
-if (_1134 !== undefined && (_1134.id === 77 || (_1134.id === undefined && _1134.type === "Star"))) { c.idx++; _1133 = _1134; }
-else { E(c, "Star"); _1133 = F; }
-if (_1133 === F) { c.idx = _1132; _1131 = false; } else _1131 = true;
-}
-if (_1131 !== F) _1111["star"] = _1131;
-const _1130 = _1131;
-if (_1130 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-
-let _1136 = [];
-L_1140: {
-const _1137 = c.idx;
-
-const _1142 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1142] = "Expression"; c.ruleDepth = _1142 + 1; }
-const _1141 = R[19](c);
-if (c.track) c.ruleDepth = _1142;
-if (_1141 === F) { c.idx = _1137; _1136 = []; break L_1140; }
-_1136.push(_1141);
-for (;;) {
-const _1138 = c.idx;
-let _1143;
-const _1144 = c.tokens[c.idx];
-if (_1144 !== undefined && (_1144.id === 84 || (_1144.id === undefined && _1144.type === "Comma"))) { c.idx++; _1143 = _1144; }
-else { E(c, "Comma"); _1143 = F; }
-if (_1143 === F) { c.idx = _1138; break; }
-const _1139 = c.idx;
-
-const _1146 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1146] = "Expression"; c.ruleDepth = _1146 + 1; }
-const _1145 = R[19](c);
-if (c.track) c.ruleDepth = _1146;
-if (_1145 === F) { c.idx = _1138; break; }
-_1136.push(_1145);
-}
-}
-if (_1136 !== F) _1111["args"] = _1136;
-const _1135 = _1136;
-if (_1135 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-let _1148;
-const _1149 = c.idx;
-{
-
-const _1151 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1151] = "OrderByClause"; c.ruleDepth = _1151 + 1; }
-const _1150 = R[6](c);
-if (c.track) c.ruleDepth = _1151;
-if (_1150 === F) { c.idx = _1149; _1148 = null; } else _1148 = _1150;
-}
-if (_1148 !== F) _1111["orderBy"] = _1148;
-const _1147 = _1148;
-if (_1147 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-let _1152;
-const _1153 = c.tokens[c.idx];
-if (_1153 !== undefined && (_1153.id === 81 || (_1153.id === undefined && _1153.type === "RParen"))) { c.idx++; _1152 = _1153; }
-else { E(c, "RParen"); _1152 = F; }
-if (_1152 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-let _1155;
-const _1156 = c.idx;
-{
-
-let _1157;
-L_1158: {
-const _1159 = c.idx;
-let _1160;
-const _1161 = c.tokens[c.idx];
-if (_1161 !== undefined && (_1161.id === 55 || (_1161.id === undefined && _1161.type === "Filter"))) { c.idx++; _1160 = _1161; }
-else { E(c, "Filter"); _1160 = F; }
-if (_1160 === F) { c.idx = _1159; _1157 = F; break L_1158; }
-let _1162;
-const _1163 = c.tokens[c.idx];
-if (_1163 !== undefined && (_1163.id === 80 || (_1163.id === undefined && _1163.type === "LParen"))) { c.idx++; _1162 = _1163; }
-else { E(c, "LParen"); _1162 = F; }
-if (_1162 === F) { c.idx = _1159; _1157 = F; break L_1158; }
-let _1164;
-const _1165 = c.tokens[c.idx];
-if (_1165 !== undefined && (_1165.id === 5 || (_1165.id === undefined && _1165.type === "Where"))) { c.idx++; _1164 = _1165; }
-else { E(c, "Where"); _1164 = F; }
-if (_1164 === F) { c.idx = _1159; _1157 = F; break L_1158; }
-
-const _1167 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1167] = "Expression"; c.ruleDepth = _1167 + 1; }
-const _1166 = R[19](c);
-if (c.track) c.ruleDepth = _1167;
-if (_1166 === F) { c.idx = _1159; _1157 = F; break L_1158; }
-let _1168;
-const _1169 = c.tokens[c.idx];
-if (_1169 !== undefined && (_1169.id === 81 || (_1169.id === undefined && _1169.type === "RParen"))) { c.idx++; _1168 = _1169; }
-else { E(c, "RParen"); _1168 = F; }
-if (_1168 === F) { c.idx = _1159; _1157 = F; break L_1158; }
-_1157 = _1166;
-}
-if (_1157 === F) { c.idx = _1156; _1155 = null; } else _1155 = _1157;
-}
-if (_1155 !== F) _1111["filter"] = _1155;
-const _1154 = _1155;
-if (_1154 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-let _1171;
-const _1172 = c.idx;
-{
-
-let _1173;
-L_1174: {
-const _1175 = c.idx;
-let _1176;
-const _1177 = c.tokens[c.idx];
-if (_1177 !== undefined && (_1177.id === 53 || (_1177.id === undefined && _1177.type === "Over"))) { c.idx++; _1176 = _1177; }
-else { E(c, "Over"); _1176 = F; }
-if (_1176 === F) { c.idx = _1175; _1173 = F; break L_1174; }
-
-const _1179 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1179] = "WindowSpec"; c.ruleDepth = _1179 + 1; }
-const _1178 = R[52](c);
-if (c.track) c.ruleDepth = _1179;
-if (_1178 === F) { c.idx = _1175; _1173 = F; break L_1174; }
-_1173 = _1178;
-}
-if (_1173 === F) { c.idx = _1172; _1171 = null; } else _1171 = _1173;
-}
-if (_1171 !== F) _1111["over"] = _1171;
-const _1170 = _1171;
-if (_1170 === F) { c.idx = _1109; c.bindings = _1112; _1108 = F; break L_1110; }
-const _1180 = H[47](_1111, c);
-c.bindings = _1112;
-_1108 = _1180;
-}
-return _1108;
-}
-
-// ColumnRef
-R[47] = (c) => {
-
-const _1184 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1184] = "PathSegments"; c.ruleDepth = _1184 + 1; }
-const _1183 = R[8](c);
-if (c.track) c.ruleDepth = _1184;
-const _1182 = _1183 === F ? F : H[48](_1183, c);
-return _1182;
-}
-
-// Param
-R[48] = (c) => {
+let _1179;
+L_1181: {
+const _1180 = c.idx;
+const _1183 = c.bindings;
+const _1182 = {};
+c.bindings = _1182;
 
 let _1185;
 L_1186: {
 const _1187 = c.tokens[c.idx];
-if (_1187 === undefined) { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _1185 = F; break L_1186; }
+if (_1187 === undefined) { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); } _1185 = F; break L_1186; }
 const _1188 = _1187.id !== undefined ? _1187.id : I[_1187.type];
 switch (_1188) {
-case 87: {
+case 60: case 58: case 59: {
 
-let _1189;
-L_1191: {
-const _1190 = c.idx;
-const _1193 = c.bindings;
-const _1192 = {};
-c.bindings = _1192;
-let _1194;
-const _1195 = c.tokens[c.idx];
-if (_1195 !== undefined && (_1195.id === 87 || (_1195.id === undefined && _1195.type === "QMark"))) { c.idx++; _1194 = _1195; }
-else { E(c, "QMark"); _1194 = F; }
-if (_1194 === F) { c.idx = _1190; c.bindings = _1193; _1189 = F; break L_1191; }
-const _1196 = H[49](_1192, c);
-c.bindings = _1193;
-_1189 = _1196;
-}
+const _1190 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1190] = "Ident"; c.ruleDepth = _1190 + 1; }
+const _1189 = R[15](c);
+if (c.track) c.ruleDepth = _1190;
 _1185 = _1189; break L_1186;
 }
-case 61: {
-let _1198;
-const _1199 = c.tokens[c.idx];
-if (_1199 !== undefined && (_1199.id === 61 || (_1199.id === undefined && _1199.type === "DollarParam"))) { c.idx++; _1198 = _1199; }
-else { E(c, "DollarParam"); _1198 = F; }
-const _1197 = _1198 === F ? F : H[50](_1198, c);
-_1185 = _1197; break L_1186;
+case 19: case 20: {
+let _1192;
+const _1193 = c.tokens[c.idx];
+if (_1193 !== undefined && ((_1193.id === 19 || (_1193.id === undefined && _1193.type === "Left")) || (_1193.id === 20 || (_1193.id === undefined && _1193.type === "Right")))) { c.idx++; _1192 = _1193; }
+else { if (c.track) { E(c, "Left"); E(c, "Right"); } _1192 = F; }
+const _1191 = _1192 === F ? F : H[51](_1192, c);
+_1185 = _1191; break L_1186;
 }
-case 65: {
-let _1201;
-const _1202 = c.tokens[c.idx];
-if (_1202 !== undefined && (_1202.id === 65 || (_1202.id === undefined && _1202.type === "NamedParam"))) { c.idx++; _1201 = _1202; }
-else { E(c, "NamedParam"); _1201 = F; }
-const _1200 = _1201 === F ? F : H[51](_1201, c);
-_1185 = _1200; break L_1186;
-}
-default: { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _1185 = F; break L_1186; }
+default: { if (c.track) { E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); } _1185 = F; break L_1186; }
 }
 }
-return _1185;
+if (_1185 !== F) _1182["name"] = _1185;
+const _1184 = _1185;
+if (_1184 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+let _1194;
+const _1195 = c.tokens[c.idx];
+if (_1195 !== undefined && (_1195.id === 80 || (_1195.id === undefined && _1195.type === "LParen"))) { c.idx++; _1194 = _1195; }
+else { if (c.track) { E(c, "LParen"); } _1194 = F; }
+if (_1194 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+let _1197;
+const _1198 = c.idx;
+{
+let _1199;
+const _1200 = c.tokens[c.idx];
+if (_1200 !== undefined && (_1200.id === 7 || (_1200.id === undefined && _1200.type === "Distinct"))) { c.idx++; _1199 = _1200; }
+else { if (c.track) { E(c, "Distinct"); } _1199 = F; }
+if (_1199 === F) { c.idx = _1198; _1197 = false; } else _1197 = true;
 }
+if (_1197 !== F) _1182["distinct"] = _1197;
+const _1196 = _1197;
+if (_1196 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+let _1202;
+const _1203 = c.idx;
+{
+let _1204;
+const _1205 = c.tokens[c.idx];
+if (_1205 !== undefined && (_1205.id === 77 || (_1205.id === undefined && _1205.type === "Star"))) { c.idx++; _1204 = _1205; }
+else { if (c.track) { E(c, "Star"); } _1204 = F; }
+if (_1204 === F) { c.idx = _1203; _1202 = false; } else _1202 = true;
+}
+if (_1202 !== F) _1182["star"] = _1202;
+const _1201 = _1202;
+if (_1201 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
 
-// ConcatExpr
-R[49] = (c) => {
-
-let _1203;
-L_1204: {
-
-const _1209 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1209] = "Additive"; c.ruleDepth = _1209 + 1; }
-const _1208 = R[14](c);
-if (c.track) c.ruleDepth = _1209;
-if (_1208 === F) { _1203 = F; break L_1204; }
-let _1205 = _1208;
-let _1206 = null;
-for (;;) {
-const _1207 = c.idx;
-let _1210;
-const _1211 = c.tokens[c.idx];
-if (_1211 !== undefined && (_1211.id === 66 || (_1211.id === undefined && _1211.type === "Concat"))) { c.idx++; _1210 = _1211; }
-else { E(c, "Concat"); _1210 = F; }
-if (_1210 === F) { c.idx = _1207; break; }
+let _1207 = [];
+L_1211: {
+const _1208 = c.idx;
 
 const _1213 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1213] = "Additive"; c.ruleDepth = _1213 + 1; }
-const _1212 = R[14](c);
+if (c.track) { c.ruleNames[_1213] = "Expression"; c.ruleDepth = _1213 + 1; }
+const _1212 = R[19](c);
 if (c.track) c.ruleDepth = _1213;
-if (_1212 === F) { c.idx = _1207; break; }
-if (_1206 === null) _1206 = { left: null, op: null, right: null };
-_1206.left = _1205; _1206.op = _1210; _1206.right = _1212;
-_1205 = H[52](_1206, c);
-}
-_1203 = _1205;
-}
-return _1203;
-}
-
-// PredicateTail
-R[50] = (c) => {
-
+if (_1212 === F) { c.idx = _1208; _1207 = []; break L_1211; }
+_1207.push(_1212);
+for (;;) {
+const _1209 = c.idx;
 let _1214;
-L_1215: {
-const _1216 = c.tokens[c.idx];
-if (_1216 === undefined) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); _1214 = F; break L_1215; }
-const _1217 = _1216.id !== undefined ? _1216.id : I[_1216.type];
-switch (_1217) {
-case 74: case 71: case 67: case 70: case 68: case 69: case 72: case 73: {
+const _1215 = c.tokens[c.idx];
+if (_1215 !== undefined && (_1215.id === 84 || (_1215.id === undefined && _1215.type === "Comma"))) { c.idx++; _1214 = _1215; }
+else { if (c.track) { E(c, "Comma"); } _1214 = F; }
+if (_1214 === F) { c.idx = _1209; break; }
+const _1210 = c.idx;
 
-let _1218;
-L_1220: {
-const _1219 = c.idx;
-const _1222 = c.bindings;
-const _1221 = {};
-c.bindings = _1221;
+const _1217 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1217] = "Expression"; c.ruleDepth = _1217 + 1; }
+const _1216 = R[19](c);
+if (c.track) c.ruleDepth = _1217;
+if (_1216 === F) { c.idx = _1209; break; }
+_1207.push(_1216);
+}
+}
+if (_1207 !== F) _1182["args"] = _1207;
+const _1206 = _1207;
+if (_1206 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+let _1219;
+const _1220 = c.idx;
+{
 
-let _1224;
-L_1225: {
-const _1226 = c.tokens[c.idx];
-if (_1226 === undefined) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); _1224 = F; break L_1225; }
-const _1227 = _1226.id !== undefined ? _1226.id : I[_1226.type];
-switch (_1227) {
-case 74: {
+const _1222 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1222] = "OrderByClause"; c.ruleDepth = _1222 + 1; }
+const _1221 = R[6](c);
+if (c.track) c.ruleDepth = _1222;
+if (_1221 === F) { c.idx = _1220; _1219 = null; } else _1219 = _1221;
+}
+if (_1219 !== F) _1182["orderBy"] = _1219;
+const _1218 = _1219;
+if (_1218 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+let _1223;
+const _1224 = c.tokens[c.idx];
+if (_1224 !== undefined && (_1224.id === 81 || (_1224.id === undefined && _1224.type === "RParen"))) { c.idx++; _1223 = _1224; }
+else { if (c.track) { E(c, "RParen"); } _1223 = F; }
+if (_1223 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+let _1226;
+const _1227 = c.idx;
+{
 
 let _1228;
 L_1229: {
 const _1230 = c.idx;
 let _1231;
 const _1232 = c.tokens[c.idx];
-if (_1232 !== undefined && (_1232.id === 74 || (_1232.id === undefined && _1232.type === "Eq"))) { c.idx++; _1231 = _1232; }
-else { E(c, "Eq"); _1231 = F; }
+if (_1232 !== undefined && (_1232.id === 55 || (_1232.id === undefined && _1232.type === "Filter"))) { c.idx++; _1231 = _1232; }
+else { if (c.track) { E(c, "Filter"); } _1231 = F; }
 if (_1231 === F) { c.idx = _1230; _1228 = F; break L_1229; }
-_1228 = "EQ";
+let _1233;
+const _1234 = c.tokens[c.idx];
+if (_1234 !== undefined && (_1234.id === 80 || (_1234.id === undefined && _1234.type === "LParen"))) { c.idx++; _1233 = _1234; }
+else { if (c.track) { E(c, "LParen"); } _1233 = F; }
+if (_1233 === F) { c.idx = _1230; _1228 = F; break L_1229; }
+let _1235;
+const _1236 = c.tokens[c.idx];
+if (_1236 !== undefined && (_1236.id === 5 || (_1236.id === undefined && _1236.type === "Where"))) { c.idx++; _1235 = _1236; }
+else { if (c.track) { E(c, "Where"); } _1235 = F; }
+if (_1235 === F) { c.idx = _1230; _1228 = F; break L_1229; }
+
+const _1238 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1238] = "Expression"; c.ruleDepth = _1238 + 1; }
+const _1237 = R[19](c);
+if (c.track) c.ruleDepth = _1238;
+if (_1237 === F) { c.idx = _1230; _1228 = F; break L_1229; }
+let _1239;
+const _1240 = c.tokens[c.idx];
+if (_1240 !== undefined && (_1240.id === 81 || (_1240.id === undefined && _1240.type === "RParen"))) { c.idx++; _1239 = _1240; }
+else { if (c.track) { E(c, "RParen"); } _1239 = F; }
+if (_1239 === F) { c.idx = _1230; _1228 = F; break L_1229; }
+_1228 = _1237;
 }
-_1224 = _1228; break L_1225;
+if (_1228 === F) { c.idx = _1227; _1226 = null; } else _1226 = _1228;
+}
+if (_1226 !== F) _1182["filter"] = _1226;
+const _1225 = _1226;
+if (_1225 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+let _1242;
+const _1243 = c.idx;
+{
+
+let _1244;
+L_1245: {
+const _1246 = c.idx;
+let _1247;
+const _1248 = c.tokens[c.idx];
+if (_1248 !== undefined && (_1248.id === 53 || (_1248.id === undefined && _1248.type === "Over"))) { c.idx++; _1247 = _1248; }
+else { if (c.track) { E(c, "Over"); } _1247 = F; }
+if (_1247 === F) { c.idx = _1246; _1244 = F; break L_1245; }
+
+const _1250 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1250] = "WindowSpec"; c.ruleDepth = _1250 + 1; }
+const _1249 = R[58](c);
+if (c.track) c.ruleDepth = _1250;
+if (_1249 === F) { c.idx = _1246; _1244 = F; break L_1245; }
+_1244 = _1249;
+}
+if (_1244 === F) { c.idx = _1243; _1242 = null; } else _1242 = _1244;
+}
+if (_1242 !== F) _1182["over"] = _1242;
+const _1241 = _1242;
+if (_1241 === F) { c.idx = _1180; c.bindings = _1183; _1179 = F; break L_1181; }
+const _1251 = H[52](_1182, c);
+c.bindings = _1183;
+_1179 = _1251;
+}
+return _1179;
+}
+
+// ColumnRef
+R[53] = (c) => {
+
+const _1255 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1255] = "PathSegments"; c.ruleDepth = _1255 + 1; }
+const _1254 = R[8](c);
+if (c.track) c.ruleDepth = _1255;
+const _1253 = _1254 === F ? F : H[53](_1254, c);
+return _1253;
+}
+
+// Param
+R[54] = (c) => {
+
+let _1256;
+L_1257: {
+const _1258 = c.tokens[c.idx];
+if (_1258 === undefined) { if (c.track) { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1256 = F; break L_1257; }
+const _1259 = _1258.id !== undefined ? _1258.id : I[_1258.type];
+switch (_1259) {
+case 87: {
+
+let _1260;
+L_1262: {
+const _1261 = c.idx;
+const _1264 = c.bindings;
+const _1263 = {};
+c.bindings = _1263;
+let _1265;
+const _1266 = c.tokens[c.idx];
+if (_1266 !== undefined && (_1266.id === 87 || (_1266.id === undefined && _1266.type === "QMark"))) { c.idx++; _1265 = _1266; }
+else { if (c.track) { E(c, "QMark"); } _1265 = F; }
+if (_1265 === F) { c.idx = _1261; c.bindings = _1264; _1260 = F; break L_1262; }
+const _1267 = H[54](_1263, c);
+c.bindings = _1264;
+_1260 = _1267;
+}
+_1256 = _1260; break L_1257;
+}
+case 61: {
+let _1269;
+const _1270 = c.tokens[c.idx];
+if (_1270 !== undefined && (_1270.id === 61 || (_1270.id === undefined && _1270.type === "DollarParam"))) { c.idx++; _1269 = _1270; }
+else { if (c.track) { E(c, "DollarParam"); } _1269 = F; }
+const _1268 = _1269 === F ? F : H[55](_1269, c);
+_1256 = _1268; break L_1257;
+}
+case 65: {
+let _1272;
+const _1273 = c.tokens[c.idx];
+if (_1273 !== undefined && (_1273.id === 65 || (_1273.id === undefined && _1273.type === "NamedParam"))) { c.idx++; _1272 = _1273; }
+else { if (c.track) { E(c, "NamedParam"); } _1272 = F; }
+const _1271 = _1272 === F ? F : H[56](_1272, c);
+_1256 = _1271; break L_1257;
+}
+default: { if (c.track) { E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1256 = F; break L_1257; }
+}
+}
+return _1256;
+}
+
+// ConcatExpr
+R[55] = (c) => c.track ? R[59](c) : R[21](c, 0)
+
+// PredicateTail
+R[56] = (c) => {
+
+let _1274;
+L_1275: {
+const _1276 = c.tokens[c.idx];
+if (_1276 === undefined) { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); } _1274 = F; break L_1275; }
+const _1277 = _1276.id !== undefined ? _1276.id : I[_1276.type];
+switch (_1277) {
+case 74: case 71: case 67: case 70: case 68: case 69: case 72: case 73: {
+
+let _1278;
+L_1280: {
+const _1279 = c.idx;
+const _1282 = c.bindings;
+const _1281 = {};
+c.bindings = _1281;
+
+let _1284;
+L_1285: {
+const _1286 = c.tokens[c.idx];
+if (_1286 === undefined) { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); } _1284 = F; break L_1285; }
+const _1287 = _1286.id !== undefined ? _1286.id : I[_1286.type];
+switch (_1287) {
+case 74: {
+
+let _1288;
+L_1289: {
+const _1290 = c.idx;
+let _1291;
+const _1292 = c.tokens[c.idx];
+if (_1292 !== undefined && (_1292.id === 74 || (_1292.id === undefined && _1292.type === "Eq"))) { c.idx++; _1291 = _1292; }
+else { if (c.track) { E(c, "Eq"); } _1291 = F; }
+if (_1291 === F) { c.idx = _1290; _1288 = F; break L_1289; }
+_1288 = "EQ";
+}
+_1284 = _1288; break L_1285;
 }
 case 71: {
 
-let _1233;
-L_1234: {
-const _1235 = c.idx;
-let _1236;
-const _1237 = c.tokens[c.idx];
-if (_1237 !== undefined && (_1237.id === 71 || (_1237.id === undefined && _1237.type === "EqEq"))) { c.idx++; _1236 = _1237; }
-else { E(c, "EqEq"); _1236 = F; }
-if (_1236 === F) { c.idx = _1235; _1233 = F; break L_1234; }
-_1233 = "EQ";
+let _1293;
+L_1294: {
+const _1295 = c.idx;
+let _1296;
+const _1297 = c.tokens[c.idx];
+if (_1297 !== undefined && (_1297.id === 71 || (_1297.id === undefined && _1297.type === "EqEq"))) { c.idx++; _1296 = _1297; }
+else { if (c.track) { E(c, "EqEq"); } _1296 = F; }
+if (_1296 === F) { c.idx = _1295; _1293 = F; break L_1294; }
+_1293 = "EQ";
 }
-_1224 = _1233; break L_1225;
+_1284 = _1293; break L_1285;
 }
 case 67: {
 
-let _1238;
-L_1239: {
-const _1240 = c.idx;
-let _1241;
-const _1242 = c.tokens[c.idx];
-if (_1242 !== undefined && (_1242.id === 67 || (_1242.id === undefined && _1242.type === "NotEq"))) { c.idx++; _1241 = _1242; }
-else { E(c, "NotEq"); _1241 = F; }
-if (_1241 === F) { c.idx = _1240; _1238 = F; break L_1239; }
-_1238 = "NE";
+let _1298;
+L_1299: {
+const _1300 = c.idx;
+let _1301;
+const _1302 = c.tokens[c.idx];
+if (_1302 !== undefined && (_1302.id === 67 || (_1302.id === undefined && _1302.type === "NotEq"))) { c.idx++; _1301 = _1302; }
+else { if (c.track) { E(c, "NotEq"); } _1301 = F; }
+if (_1301 === F) { c.idx = _1300; _1298 = F; break L_1299; }
+_1298 = "NE";
 }
-_1224 = _1238; break L_1225;
+_1284 = _1298; break L_1285;
 }
 case 70: {
 
-let _1243;
-L_1244: {
-const _1245 = c.idx;
-let _1246;
-const _1247 = c.tokens[c.idx];
-if (_1247 !== undefined && (_1247.id === 70 || (_1247.id === undefined && _1247.type === "BangEq"))) { c.idx++; _1246 = _1247; }
-else { E(c, "BangEq"); _1246 = F; }
-if (_1246 === F) { c.idx = _1245; _1243 = F; break L_1244; }
-_1243 = "NE";
+let _1303;
+L_1304: {
+const _1305 = c.idx;
+let _1306;
+const _1307 = c.tokens[c.idx];
+if (_1307 !== undefined && (_1307.id === 70 || (_1307.id === undefined && _1307.type === "BangEq"))) { c.idx++; _1306 = _1307; }
+else { if (c.track) { E(c, "BangEq"); } _1306 = F; }
+if (_1306 === F) { c.idx = _1305; _1303 = F; break L_1304; }
+_1303 = "NE";
 }
-_1224 = _1243; break L_1225;
+_1284 = _1303; break L_1285;
 }
 case 68: {
 
-let _1248;
-L_1249: {
-const _1250 = c.idx;
-let _1251;
-const _1252 = c.tokens[c.idx];
-if (_1252 !== undefined && (_1252.id === 68 || (_1252.id === undefined && _1252.type === "LtEq"))) { c.idx++; _1251 = _1252; }
-else { E(c, "LtEq"); _1251 = F; }
-if (_1251 === F) { c.idx = _1250; _1248 = F; break L_1249; }
-_1248 = "LE";
+let _1308;
+L_1309: {
+const _1310 = c.idx;
+let _1311;
+const _1312 = c.tokens[c.idx];
+if (_1312 !== undefined && (_1312.id === 68 || (_1312.id === undefined && _1312.type === "LtEq"))) { c.idx++; _1311 = _1312; }
+else { if (c.track) { E(c, "LtEq"); } _1311 = F; }
+if (_1311 === F) { c.idx = _1310; _1308 = F; break L_1309; }
+_1308 = "LE";
 }
-_1224 = _1248; break L_1225;
+_1284 = _1308; break L_1285;
 }
 case 69: {
 
-let _1253;
-L_1254: {
-const _1255 = c.idx;
-let _1256;
-const _1257 = c.tokens[c.idx];
-if (_1257 !== undefined && (_1257.id === 69 || (_1257.id === undefined && _1257.type === "GtEq"))) { c.idx++; _1256 = _1257; }
-else { E(c, "GtEq"); _1256 = F; }
-if (_1256 === F) { c.idx = _1255; _1253 = F; break L_1254; }
-_1253 = "GE";
+let _1313;
+L_1314: {
+const _1315 = c.idx;
+let _1316;
+const _1317 = c.tokens[c.idx];
+if (_1317 !== undefined && (_1317.id === 69 || (_1317.id === undefined && _1317.type === "GtEq"))) { c.idx++; _1316 = _1317; }
+else { if (c.track) { E(c, "GtEq"); } _1316 = F; }
+if (_1316 === F) { c.idx = _1315; _1313 = F; break L_1314; }
+_1313 = "GE";
 }
-_1224 = _1253; break L_1225;
+_1284 = _1313; break L_1285;
 }
 case 72: {
 
-let _1258;
-L_1259: {
-const _1260 = c.idx;
-let _1261;
-const _1262 = c.tokens[c.idx];
-if (_1262 !== undefined && (_1262.id === 72 || (_1262.id === undefined && _1262.type === "Lt"))) { c.idx++; _1261 = _1262; }
-else { E(c, "Lt"); _1261 = F; }
-if (_1261 === F) { c.idx = _1260; _1258 = F; break L_1259; }
-_1258 = "LT";
+let _1318;
+L_1319: {
+const _1320 = c.idx;
+let _1321;
+const _1322 = c.tokens[c.idx];
+if (_1322 !== undefined && (_1322.id === 72 || (_1322.id === undefined && _1322.type === "Lt"))) { c.idx++; _1321 = _1322; }
+else { if (c.track) { E(c, "Lt"); } _1321 = F; }
+if (_1321 === F) { c.idx = _1320; _1318 = F; break L_1319; }
+_1318 = "LT";
 }
-_1224 = _1258; break L_1225;
+_1284 = _1318; break L_1285;
 }
 case 73: {
 
-let _1263;
-L_1264: {
-const _1265 = c.idx;
-let _1266;
-const _1267 = c.tokens[c.idx];
-if (_1267 !== undefined && (_1267.id === 73 || (_1267.id === undefined && _1267.type === "Gt"))) { c.idx++; _1266 = _1267; }
-else { E(c, "Gt"); _1266 = F; }
-if (_1266 === F) { c.idx = _1265; _1263 = F; break L_1264; }
-_1263 = "GT";
+let _1323;
+L_1324: {
+const _1325 = c.idx;
+let _1326;
+const _1327 = c.tokens[c.idx];
+if (_1327 !== undefined && (_1327.id === 73 || (_1327.id === undefined && _1327.type === "Gt"))) { c.idx++; _1326 = _1327; }
+else { if (c.track) { E(c, "Gt"); } _1326 = F; }
+if (_1326 === F) { c.idx = _1325; _1323 = F; break L_1324; }
+_1323 = "GT";
 }
-_1224 = _1263; break L_1225;
+_1284 = _1323; break L_1285;
 }
-default: { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); _1224 = F; break L_1225; }
+default: { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); } _1284 = F; break L_1285; }
 }
 }
-if (_1224 !== F) _1221["op"] = _1224;
-const _1223 = _1224;
-if (_1223 === F) { c.idx = _1219; c.bindings = _1222; _1218 = F; break L_1220; }
+if (_1284 !== F) _1281["op"] = _1284;
+const _1283 = _1284;
+if (_1283 === F) { c.idx = _1279; c.bindings = _1282; _1278 = F; break L_1280; }
 
-const _1270 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1270] = "ConcatExpr"; c.ruleDepth = _1270 + 1; }
-const _1269 = R[49](c);
-if (c.track) c.ruleDepth = _1270;
-if (_1269 !== F) _1221["right"] = _1269;
-const _1268 = _1269;
-if (_1268 === F) { c.idx = _1219; c.bindings = _1222; _1218 = F; break L_1220; }
-const _1271 = H[53](_1221, c);
-c.bindings = _1222;
-_1218 = _1271;
+const _1330 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1330] = "ConcatExpr"; c.ruleDepth = _1330 + 1; }
+const _1329 = R[55](c);
+if (c.track) c.ruleDepth = _1330;
+if (_1329 !== F) _1281["right"] = _1329;
+const _1328 = _1329;
+if (_1328 === F) { c.idx = _1279; c.bindings = _1282; _1278 = F; break L_1280; }
+const _1331 = H[57](_1281, c);
+c.bindings = _1282;
+_1278 = _1331;
 }
-_1214 = _1218; break L_1215;
+_1274 = _1278; break L_1275;
 }
 case 11: case 12: case 17: case 15: case 16: {
 
-let _1272;
-L_1274: {
-const _1273 = c.idx;
-const _1276 = c.bindings;
-const _1275 = {};
-c.bindings = _1275;
-let _1278;
-const _1279 = c.idx;
+let _1332;
+L_1334: {
+const _1333 = c.idx;
+const _1336 = c.bindings;
+const _1335 = {};
+c.bindings = _1335;
+let _1338;
+const _1339 = c.idx;
 {
-let _1280;
-const _1281 = c.tokens[c.idx];
-if (_1281 !== undefined && (_1281.id === 11 || (_1281.id === undefined && _1281.type === "Not"))) { c.idx++; _1280 = _1281; }
-else { E(c, "Not"); _1280 = F; }
-if (_1280 === F) { c.idx = _1279; _1278 = false; } else _1278 = true;
+let _1340;
+const _1341 = c.tokens[c.idx];
+if (_1341 !== undefined && (_1341.id === 11 || (_1341.id === undefined && _1341.type === "Not"))) { c.idx++; _1340 = _1341; }
+else { if (c.track) { E(c, "Not"); } _1340 = F; }
+if (_1340 === F) { c.idx = _1339; _1338 = false; } else _1338 = true;
 }
-if (_1278 !== F) _1275["negated"] = _1278;
-const _1277 = _1278;
-if (_1277 === F) { c.idx = _1273; c.bindings = _1276; _1272 = F; break L_1274; }
+if (_1338 !== F) _1335["negated"] = _1338;
+const _1337 = _1338;
+if (_1337 === F) { c.idx = _1333; c.bindings = _1336; _1332 = F; break L_1334; }
 
-let _1283;
-L_1284: {
-const _1285 = c.tokens[c.idx];
-if (_1285 === undefined) { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); _1283 = F; break L_1284; }
-const _1286 = _1285.id !== undefined ? _1285.id : I[_1285.type];
-switch (_1286) {
+let _1343;
+L_1344: {
+const _1345 = c.tokens[c.idx];
+if (_1345 === undefined) { if (c.track) { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); } _1343 = F; break L_1344; }
+const _1346 = _1345.id !== undefined ? _1345.id : I[_1345.type];
+switch (_1346) {
 case 12: {
 
-const _1288 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1288] = "InTail"; c.ruleDepth = _1288 + 1; }
-const _1287 = R[53](c);
-if (c.track) c.ruleDepth = _1288;
-_1283 = _1287; break L_1284;
+const _1348 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1348] = "InTail"; c.ruleDepth = _1348 + 1; }
+const _1347 = R[60](c);
+if (c.track) c.ruleDepth = _1348;
+_1343 = _1347; break L_1344;
 }
 case 17: {
 
-const _1290 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1290] = "BetweenTail"; c.ruleDepth = _1290 + 1; }
-const _1289 = R[54](c);
-if (c.track) c.ruleDepth = _1290;
-_1283 = _1289; break L_1284;
+const _1350 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1350] = "BetweenTail"; c.ruleDepth = _1350 + 1; }
+const _1349 = R[61](c);
+if (c.track) c.ruleDepth = _1350;
+_1343 = _1349; break L_1344;
 }
 case 15: case 16: {
 
-const _1292 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1292] = "LikeTail"; c.ruleDepth = _1292 + 1; }
-const _1291 = R[55](c);
-if (c.track) c.ruleDepth = _1292;
-_1283 = _1291; break L_1284;
+const _1352 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1352] = "LikeTail"; c.ruleDepth = _1352 + 1; }
+const _1351 = R[62](c);
+if (c.track) c.ruleDepth = _1352;
+_1343 = _1351; break L_1344;
 }
-default: { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); _1283 = F; break L_1284; }
+default: { if (c.track) { E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); } _1343 = F; break L_1344; }
 }
 }
-if (_1283 !== F) _1275["t"] = _1283;
-const _1282 = _1283;
-if (_1282 === F) { c.idx = _1273; c.bindings = _1276; _1272 = F; break L_1274; }
-const _1293 = H[54](_1275, c);
-c.bindings = _1276;
-_1272 = _1293;
+if (_1343 !== F) _1335["t"] = _1343;
+const _1342 = _1343;
+if (_1342 === F) { c.idx = _1333; c.bindings = _1336; _1332 = F; break L_1334; }
+const _1353 = H[58](_1335, c);
+c.bindings = _1336;
+_1332 = _1353;
 }
-_1214 = _1272; break L_1215;
+_1274 = _1332; break L_1275;
 }
 case 13: {
 
-let _1294;
-L_1296: {
-const _1295 = c.idx;
-const _1298 = c.bindings;
-const _1297 = {};
-c.bindings = _1297;
-let _1299;
-const _1300 = c.tokens[c.idx];
-if (_1300 !== undefined && (_1300.id === 13 || (_1300.id === undefined && _1300.type === "Is"))) { c.idx++; _1299 = _1300; }
-else { E(c, "Is"); _1299 = F; }
-if (_1299 === F) { c.idx = _1295; c.bindings = _1298; _1294 = F; break L_1296; }
-let _1302;
-const _1303 = c.idx;
+let _1354;
+L_1356: {
+const _1355 = c.idx;
+const _1358 = c.bindings;
+const _1357 = {};
+c.bindings = _1357;
+let _1359;
+const _1360 = c.tokens[c.idx];
+if (_1360 !== undefined && (_1360.id === 13 || (_1360.id === undefined && _1360.type === "Is"))) { c.idx++; _1359 = _1360; }
+else { if (c.track) { E(c, "Is"); } _1359 = F; }
+if (_1359 === F) { c.idx = _1355; c.bindings = _1358; _1354 = F; break L_1356; }
+let _1362;
+const _1363 = c.idx;
 {
-let _1304;
-const _1305 = c.tokens[c.idx];
-if (_1305 !== undefined && (_1305.id === 11 || (_1305.id === undefined && _1305.type === "Not"))) { c.idx++; _1304 = _1305; }
-else { E(c, "Not"); _1304 = F; }
-if (_1304 === F) { c.idx = _1303; _1302 = false; } else _1302 = true;
+let _1364;
+const _1365 = c.tokens[c.idx];
+if (_1365 !== undefined && (_1365.id === 11 || (_1365.id === undefined && _1365.type === "Not"))) { c.idx++; _1364 = _1365; }
+else { if (c.track) { E(c, "Not"); } _1364 = F; }
+if (_1364 === F) { c.idx = _1363; _1362 = false; } else _1362 = true;
 }
-if (_1302 !== F) _1297["negated"] = _1302;
-const _1301 = _1302;
-if (_1301 === F) { c.idx = _1295; c.bindings = _1298; _1294 = F; break L_1296; }
+if (_1362 !== F) _1357["negated"] = _1362;
+const _1361 = _1362;
+if (_1361 === F) { c.idx = _1355; c.bindings = _1358; _1354 = F; break L_1356; }
 
-let _1307;
-L_1308: {
-const _1309 = c.tokens[c.idx];
-if (_1309 === undefined) { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); _1307 = F; break L_1308; }
-const _1310 = _1309.id !== undefined ? _1309.id : I[_1309.type];
-switch (_1310) {
+let _1367;
+L_1368: {
+const _1369 = c.tokens[c.idx];
+if (_1369 === undefined) { if (c.track) { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); } _1367 = F; break L_1368; }
+const _1370 = _1369.id !== undefined ? _1369.id : I[_1369.type];
+switch (_1370) {
 case 14: {
 
-let _1311;
-L_1313: {
-const _1312 = c.idx;
-const _1315 = c.bindings;
-const _1314 = {};
-c.bindings = _1314;
-let _1316;
-const _1317 = c.tokens[c.idx];
-if (_1317 !== undefined && (_1317.id === 14 || (_1317.id === undefined && _1317.type === "Null"))) { c.idx++; _1316 = _1317; }
-else { E(c, "Null"); _1316 = F; }
-if (_1316 === F) { c.idx = _1312; c.bindings = _1315; _1311 = F; break L_1313; }
-const _1318 = H[55](_1314, c);
-c.bindings = _1315;
-_1311 = _1318;
+let _1371;
+L_1373: {
+const _1372 = c.idx;
+const _1375 = c.bindings;
+const _1374 = {};
+c.bindings = _1374;
+let _1376;
+const _1377 = c.tokens[c.idx];
+if (_1377 !== undefined && (_1377.id === 14 || (_1377.id === undefined && _1377.type === "Null"))) { c.idx++; _1376 = _1377; }
+else { if (c.track) { E(c, "Null"); } _1376 = F; }
+if (_1376 === F) { c.idx = _1372; c.bindings = _1375; _1371 = F; break L_1373; }
+const _1378 = H[59](_1374, c);
+c.bindings = _1375;
+_1371 = _1378;
 }
-_1307 = _1311; break L_1308;
+_1367 = _1371; break L_1368;
 }
 case 39: {
 
-let _1319;
-L_1321: {
-const _1320 = c.idx;
-const _1323 = c.bindings;
-const _1322 = {};
-c.bindings = _1322;
-let _1324;
-const _1325 = c.tokens[c.idx];
-if (_1325 !== undefined && (_1325.id === 39 || (_1325.id === undefined && _1325.type === "True"))) { c.idx++; _1324 = _1325; }
-else { E(c, "True"); _1324 = F; }
-if (_1324 === F) { c.idx = _1320; c.bindings = _1323; _1319 = F; break L_1321; }
-const _1326 = H[56](_1322, c);
-c.bindings = _1323;
-_1319 = _1326;
+let _1379;
+L_1381: {
+const _1380 = c.idx;
+const _1383 = c.bindings;
+const _1382 = {};
+c.bindings = _1382;
+let _1384;
+const _1385 = c.tokens[c.idx];
+if (_1385 !== undefined && (_1385.id === 39 || (_1385.id === undefined && _1385.type === "True"))) { c.idx++; _1384 = _1385; }
+else { if (c.track) { E(c, "True"); } _1384 = F; }
+if (_1384 === F) { c.idx = _1380; c.bindings = _1383; _1379 = F; break L_1381; }
+const _1386 = H[60](_1382, c);
+c.bindings = _1383;
+_1379 = _1386;
 }
-_1307 = _1319; break L_1308;
+_1367 = _1379; break L_1368;
 }
 case 40: {
 
-let _1327;
-L_1329: {
-const _1328 = c.idx;
-const _1331 = c.bindings;
-const _1330 = {};
-c.bindings = _1330;
-let _1332;
-const _1333 = c.tokens[c.idx];
-if (_1333 !== undefined && (_1333.id === 40 || (_1333.id === undefined && _1333.type === "False"))) { c.idx++; _1332 = _1333; }
-else { E(c, "False"); _1332 = F; }
-if (_1332 === F) { c.idx = _1328; c.bindings = _1331; _1327 = F; break L_1329; }
-const _1334 = H[57](_1330, c);
-c.bindings = _1331;
-_1327 = _1334;
+let _1387;
+L_1389: {
+const _1388 = c.idx;
+const _1391 = c.bindings;
+const _1390 = {};
+c.bindings = _1390;
+let _1392;
+const _1393 = c.tokens[c.idx];
+if (_1393 !== undefined && (_1393.id === 40 || (_1393.id === undefined && _1393.type === "False"))) { c.idx++; _1392 = _1393; }
+else { if (c.track) { E(c, "False"); } _1392 = F; }
+if (_1392 === F) { c.idx = _1388; c.bindings = _1391; _1387 = F; break L_1389; }
+const _1394 = H[61](_1390, c);
+c.bindings = _1391;
+_1387 = _1394;
 }
-_1307 = _1327; break L_1308;
+_1367 = _1387; break L_1368;
 }
 case 7: {
 
-let _1335;
-L_1337: {
-const _1336 = c.idx;
-const _1339 = c.bindings;
-const _1338 = {};
-c.bindings = _1338;
-let _1340;
-const _1341 = c.tokens[c.idx];
-if (_1341 !== undefined && (_1341.id === 7 || (_1341.id === undefined && _1341.type === "Distinct"))) { c.idx++; _1340 = _1341; }
-else { E(c, "Distinct"); _1340 = F; }
-if (_1340 === F) { c.idx = _1336; c.bindings = _1339; _1335 = F; break L_1337; }
-let _1342;
-const _1343 = c.tokens[c.idx];
-if (_1343 !== undefined && (_1343.id === 4 || (_1343.id === undefined && _1343.type === "From"))) { c.idx++; _1342 = _1343; }
-else { E(c, "From"); _1342 = F; }
-if (_1342 === F) { c.idx = _1336; c.bindings = _1339; _1335 = F; break L_1337; }
+let _1395;
+L_1397: {
+const _1396 = c.idx;
+const _1399 = c.bindings;
+const _1398 = {};
+c.bindings = _1398;
+let _1400;
+const _1401 = c.tokens[c.idx];
+if (_1401 !== undefined && (_1401.id === 7 || (_1401.id === undefined && _1401.type === "Distinct"))) { c.idx++; _1400 = _1401; }
+else { if (c.track) { E(c, "Distinct"); } _1400 = F; }
+if (_1400 === F) { c.idx = _1396; c.bindings = _1399; _1395 = F; break L_1397; }
+let _1402;
+const _1403 = c.tokens[c.idx];
+if (_1403 !== undefined && (_1403.id === 4 || (_1403.id === undefined && _1403.type === "From"))) { c.idx++; _1402 = _1403; }
+else { if (c.track) { E(c, "From"); } _1402 = F; }
+if (_1402 === F) { c.idx = _1396; c.bindings = _1399; _1395 = F; break L_1397; }
 
-const _1346 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1346] = "ConcatExpr"; c.ruleDepth = _1346 + 1; }
-const _1345 = R[49](c);
-if (c.track) c.ruleDepth = _1346;
-if (_1345 !== F) _1338["e"] = _1345;
-const _1344 = _1345;
-if (_1344 === F) { c.idx = _1336; c.bindings = _1339; _1335 = F; break L_1337; }
-const _1347 = H[58](_1338, c);
-c.bindings = _1339;
-_1335 = _1347;
+const _1406 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1406] = "ConcatExpr"; c.ruleDepth = _1406 + 1; }
+const _1405 = R[55](c);
+if (c.track) c.ruleDepth = _1406;
+if (_1405 !== F) _1398["e"] = _1405;
+const _1404 = _1405;
+if (_1404 === F) { c.idx = _1396; c.bindings = _1399; _1395 = F; break L_1397; }
+const _1407 = H[62](_1398, c);
+c.bindings = _1399;
+_1395 = _1407;
 }
-_1307 = _1335; break L_1308;
+_1367 = _1395; break L_1368;
 }
-default: { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); _1307 = F; break L_1308; }
-}
-}
-if (_1307 !== F) _1297["t"] = _1307;
-const _1306 = _1307;
-if (_1306 === F) { c.idx = _1295; c.bindings = _1298; _1294 = F; break L_1296; }
-const _1348 = H[59](_1297, c);
-c.bindings = _1298;
-_1294 = _1348;
-}
-_1214 = _1294; break L_1215;
-}
-default: { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); _1214 = F; break L_1215; }
+default: { if (c.track) { E(c, "Null"); E(c, "True"); E(c, "False"); E(c, "Distinct"); } _1367 = F; break L_1368; }
 }
 }
-return _1214;
+if (_1367 !== F) _1357["t"] = _1367;
+const _1366 = _1367;
+if (_1366 === F) { c.idx = _1355; c.bindings = _1358; _1354 = F; break L_1356; }
+const _1408 = H[63](_1357, c);
+c.bindings = _1358;
+_1354 = _1408;
+}
+_1274 = _1354; break L_1275;
+}
+default: { if (c.track) { E(c, "Eq"); E(c, "EqEq"); E(c, "NotEq"); E(c, "BangEq"); E(c, "LtEq"); E(c, "GtEq"); E(c, "Lt"); E(c, "Gt"); E(c, "Not"); E(c, "In"); E(c, "Between"); E(c, "Like"); E(c, "Ilike"); E(c, "Is"); } _1274 = F; break L_1275; }
+}
+}
+return _1274;
 }
 
 // WhenClause
-R[51] = (c) => {
+R[57] = (c) => {
 
-let _1349;
-L_1351: {
-const _1350 = c.idx;
-const _1353 = c.bindings;
-const _1352 = {};
-c.bindings = _1352;
-let _1354;
-const _1355 = c.tokens[c.idx];
-if (_1355 !== undefined && (_1355.id === 42 || (_1355.id === undefined && _1355.type === "When"))) { c.idx++; _1354 = _1355; }
-else { E(c, "When"); _1354 = F; }
-if (_1354 === F) { c.idx = _1350; c.bindings = _1353; _1349 = F; break L_1351; }
+let _1409;
+L_1411: {
+const _1410 = c.idx;
+const _1413 = c.bindings;
+const _1412 = {};
+c.bindings = _1412;
+let _1414;
+const _1415 = c.tokens[c.idx];
+if (_1415 !== undefined && (_1415.id === 42 || (_1415.id === undefined && _1415.type === "When"))) { c.idx++; _1414 = _1415; }
+else { if (c.track) { E(c, "When"); } _1414 = F; }
+if (_1414 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
 
-const _1358 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1358] = "Expression"; c.ruleDepth = _1358 + 1; }
-const _1357 = R[19](c);
-if (c.track) c.ruleDepth = _1358;
-if (_1357 !== F) _1352["cond"] = _1357;
-const _1356 = _1357;
-if (_1356 === F) { c.idx = _1350; c.bindings = _1353; _1349 = F; break L_1351; }
-let _1359;
-const _1360 = c.tokens[c.idx];
-if (_1360 !== undefined && (_1360.id === 43 || (_1360.id === undefined && _1360.type === "Then"))) { c.idx++; _1359 = _1360; }
-else { E(c, "Then"); _1359 = F; }
-if (_1359 === F) { c.idx = _1350; c.bindings = _1353; _1349 = F; break L_1351; }
+const _1418 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1418] = "Expression"; c.ruleDepth = _1418 + 1; }
+const _1417 = R[19](c);
+if (c.track) c.ruleDepth = _1418;
+if (_1417 !== F) _1412["cond"] = _1417;
+const _1416 = _1417;
+if (_1416 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
+let _1419;
+const _1420 = c.tokens[c.idx];
+if (_1420 !== undefined && (_1420.id === 43 || (_1420.id === undefined && _1420.type === "Then"))) { c.idx++; _1419 = _1420; }
+else { if (c.track) { E(c, "Then"); } _1419 = F; }
+if (_1419 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
 
-const _1363 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1363] = "Expression"; c.ruleDepth = _1363 + 1; }
-const _1362 = R[19](c);
-if (c.track) c.ruleDepth = _1363;
-if (_1362 !== F) _1352["result"] = _1362;
-const _1361 = _1362;
-if (_1361 === F) { c.idx = _1350; c.bindings = _1353; _1349 = F; break L_1351; }
-const _1364 = H[60](_1352, c);
-c.bindings = _1353;
-_1349 = _1364;
+const _1423 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1423] = "Expression"; c.ruleDepth = _1423 + 1; }
+const _1422 = R[19](c);
+if (c.track) c.ruleDepth = _1423;
+if (_1422 !== F) _1412["result"] = _1422;
+const _1421 = _1422;
+if (_1421 === F) { c.idx = _1410; c.bindings = _1413; _1409 = F; break L_1411; }
+const _1424 = H[64](_1412, c);
+c.bindings = _1413;
+_1409 = _1424;
 }
-return _1349;
+return _1409;
 }
 
 // WindowSpec
-R[52] = (c) => {
+R[58] = (c) => {
 
-let _1365;
-L_1367: {
-const _1366 = c.idx;
-const _1369 = c.bindings;
-const _1368 = {};
-c.bindings = _1368;
-let _1370;
-const _1371 = c.tokens[c.idx];
-if (_1371 !== undefined && (_1371.id === 80 || (_1371.id === undefined && _1371.type === "LParen"))) { c.idx++; _1370 = _1371; }
-else { E(c, "LParen"); _1370 = F; }
-if (_1370 === F) { c.idx = _1366; c.bindings = _1369; _1365 = F; break L_1367; }
-let _1373;
-const _1374 = c.idx;
+let _1425;
+L_1427: {
+const _1426 = c.idx;
+const _1429 = c.bindings;
+const _1428 = {};
+c.bindings = _1428;
+let _1430;
+const _1431 = c.tokens[c.idx];
+if (_1431 !== undefined && (_1431.id === 80 || (_1431.id === undefined && _1431.type === "LParen"))) { c.idx++; _1430 = _1431; }
+else { if (c.track) { E(c, "LParen"); } _1430 = F; }
+if (_1430 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
+let _1433;
+const _1434 = c.idx;
 {
 
-let _1375;
-L_1376: {
-const _1377 = c.idx;
-let _1378;
-const _1379 = c.tokens[c.idx];
-if (_1379 !== undefined && (_1379.id === 54 || (_1379.id === undefined && _1379.type === "Partition"))) { c.idx++; _1378 = _1379; }
-else { E(c, "Partition"); _1378 = F; }
-if (_1378 === F) { c.idx = _1377; _1375 = F; break L_1376; }
-let _1380;
-const _1381 = c.tokens[c.idx];
-if (_1381 !== undefined && (_1381.id === 28 || (_1381.id === undefined && _1381.type === "By"))) { c.idx++; _1380 = _1381; }
-else { E(c, "By"); _1380 = F; }
-if (_1380 === F) { c.idx = _1377; _1375 = F; break L_1376; }
+let _1435;
+L_1436: {
+const _1437 = c.idx;
+let _1438;
+const _1439 = c.tokens[c.idx];
+if (_1439 !== undefined && (_1439.id === 54 || (_1439.id === undefined && _1439.type === "Partition"))) { c.idx++; _1438 = _1439; }
+else { if (c.track) { E(c, "Partition"); } _1438 = F; }
+if (_1438 === F) { c.idx = _1437; _1435 = F; break L_1436; }
+let _1440;
+const _1441 = c.tokens[c.idx];
+if (_1441 !== undefined && (_1441.id === 28 || (_1441.id === undefined && _1441.type === "By"))) { c.idx++; _1440 = _1441; }
+else { if (c.track) { E(c, "By"); } _1440 = F; }
+if (_1440 === F) { c.idx = _1437; _1435 = F; break L_1436; }
 
-let _1382 = [];
-L_1386: {
-const _1383 = c.idx;
+let _1442 = [];
+L_1446: {
+const _1443 = c.idx;
 
-const _1388 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1388] = "Expression"; c.ruleDepth = _1388 + 1; }
-const _1387 = R[19](c);
-if (c.track) c.ruleDepth = _1388;
-if (_1387 === F) { c.idx = _1383; _1382 = F; break L_1386; }
-_1382.push(_1387);
+const _1448 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1448] = "Expression"; c.ruleDepth = _1448 + 1; }
+const _1447 = R[19](c);
+if (c.track) c.ruleDepth = _1448;
+if (_1447 === F) { c.idx = _1443; _1442 = F; break L_1446; }
+_1442.push(_1447);
 for (;;) {
-const _1384 = c.idx;
-let _1389;
-const _1390 = c.tokens[c.idx];
-if (_1390 !== undefined && (_1390.id === 84 || (_1390.id === undefined && _1390.type === "Comma"))) { c.idx++; _1389 = _1390; }
-else { E(c, "Comma"); _1389 = F; }
-if (_1389 === F) { c.idx = _1384; break; }
-const _1385 = c.idx;
+const _1444 = c.idx;
+let _1449;
+const _1450 = c.tokens[c.idx];
+if (_1450 !== undefined && (_1450.id === 84 || (_1450.id === undefined && _1450.type === "Comma"))) { c.idx++; _1449 = _1450; }
+else { if (c.track) { E(c, "Comma"); } _1449 = F; }
+if (_1449 === F) { c.idx = _1444; break; }
+const _1445 = c.idx;
 
-const _1392 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1392] = "Expression"; c.ruleDepth = _1392 + 1; }
-const _1391 = R[19](c);
-if (c.track) c.ruleDepth = _1392;
-if (_1391 === F) { c.idx = _1384; break; }
-_1382.push(_1391);
+const _1452 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1452] = "Expression"; c.ruleDepth = _1452 + 1; }
+const _1451 = R[19](c);
+if (c.track) c.ruleDepth = _1452;
+if (_1451 === F) { c.idx = _1444; break; }
+_1442.push(_1451);
 }
 }
-if (_1382 === F) { c.idx = _1377; _1375 = F; break L_1376; }
-_1375 = _1382;
+if (_1442 === F) { c.idx = _1437; _1435 = F; break L_1436; }
+_1435 = _1442;
 }
-if (_1375 === F) { c.idx = _1374; _1373 = null; } else _1373 = _1375;
+if (_1435 === F) { c.idx = _1434; _1433 = null; } else _1433 = _1435;
 }
-if (_1373 !== F) _1368["partitionBy"] = _1373;
-const _1372 = _1373;
-if (_1372 === F) { c.idx = _1366; c.bindings = _1369; _1365 = F; break L_1367; }
-let _1394;
-const _1395 = c.idx;
+if (_1433 !== F) _1428["partitionBy"] = _1433;
+const _1432 = _1433;
+if (_1432 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
+let _1454;
+const _1455 = c.idx;
 {
 
-const _1397 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1397] = "OrderByClause"; c.ruleDepth = _1397 + 1; }
-const _1396 = R[6](c);
-if (c.track) c.ruleDepth = _1397;
-if (_1396 === F) { c.idx = _1395; _1394 = null; } else _1394 = _1396;
+const _1457 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1457] = "OrderByClause"; c.ruleDepth = _1457 + 1; }
+const _1456 = R[6](c);
+if (c.track) c.ruleDepth = _1457;
+if (_1456 === F) { c.idx = _1455; _1454 = null; } else _1454 = _1456;
 }
-if (_1394 !== F) _1368["orderBy"] = _1394;
-const _1393 = _1394;
-if (_1393 === F) { c.idx = _1366; c.bindings = _1369; _1365 = F; break L_1367; }
-let _1398;
-const _1399 = c.tokens[c.idx];
-if (_1399 !== undefined && (_1399.id === 81 || (_1399.id === undefined && _1399.type === "RParen"))) { c.idx++; _1398 = _1399; }
-else { E(c, "RParen"); _1398 = F; }
-if (_1398 === F) { c.idx = _1366; c.bindings = _1369; _1365 = F; break L_1367; }
-const _1400 = H[61](_1368, c);
-c.bindings = _1369;
-_1365 = _1400;
+if (_1454 !== F) _1428["orderBy"] = _1454;
+const _1453 = _1454;
+if (_1453 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
+let _1458;
+const _1459 = c.tokens[c.idx];
+if (_1459 !== undefined && (_1459.id === 81 || (_1459.id === undefined && _1459.type === "RParen"))) { c.idx++; _1458 = _1459; }
+else { if (c.track) { E(c, "RParen"); } _1458 = F; }
+if (_1458 === F) { c.idx = _1426; c.bindings = _1429; _1425 = F; break L_1427; }
+const _1460 = H[65](_1428, c);
+c.bindings = _1429;
+_1425 = _1460;
 }
-return _1365;
+return _1425;
+}
+
+// ConcatExpr$tower
+R[59] = (c) => {
+
+let _1461;
+L_1462: {
+
+const _1467 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1467] = "Additive"; c.ruleDepth = _1467 + 1; }
+const _1466 = R[14](c);
+if (c.track) c.ruleDepth = _1467;
+if (_1466 === F) { _1461 = F; break L_1462; }
+let _1463 = _1466;
+let _1464 = null;
+for (;;) {
+const _1465 = c.idx;
+let _1468;
+const _1469 = c.tokens[c.idx];
+if (_1469 !== undefined && (_1469.id === 66 || (_1469.id === undefined && _1469.type === "Concat"))) { c.idx++; _1468 = _1469; }
+else { if (c.track) { E(c, "Concat"); } _1468 = F; }
+if (_1468 === F) { c.idx = _1465; break; }
+
+const _1471 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1471] = "Additive"; c.ruleDepth = _1471 + 1; }
+const _1470 = R[14](c);
+if (c.track) c.ruleDepth = _1471;
+if (_1470 === F) { c.idx = _1465; break; }
+if (_1464 === null) _1464 = { left: null, op: null, right: null };
+_1464.left = _1463; _1464.op = _1468; _1464.right = _1470;
+_1463 = H[66](_1464, c);
+}
+_1461 = _1463;
+}
+return _1461;
 }
 
 // InTail
-R[53] = (c) => {
+R[60] = (c) => {
 
-let _1402;
-L_1403: {
-const _1404 = c.idx;
-let _1405;
-const _1406 = c.tokens[c.idx];
-if (_1406 !== undefined && (_1406.id === 12 || (_1406.id === undefined && _1406.type === "In"))) { c.idx++; _1405 = _1406; }
-else { E(c, "In"); _1405 = F; }
-if (_1405 === F) { c.idx = _1404; _1402 = F; break L_1403; }
-let _1407;
-const _1408 = c.tokens[c.idx];
-if (_1408 !== undefined && (_1408.id === 80 || (_1408.id === undefined && _1408.type === "LParen"))) { c.idx++; _1407 = _1408; }
-else { E(c, "LParen"); _1407 = F; }
-if (_1407 === F) { c.idx = _1404; _1402 = F; break L_1403; }
+let _1473;
+L_1474: {
+const _1475 = c.idx;
+let _1476;
+const _1477 = c.tokens[c.idx];
+if (_1477 !== undefined && (_1477.id === 12 || (_1477.id === undefined && _1477.type === "In"))) { c.idx++; _1476 = _1477; }
+else { if (c.track) { E(c, "In"); } _1476 = F; }
+if (_1476 === F) { c.idx = _1475; _1473 = F; break L_1474; }
+let _1478;
+const _1479 = c.tokens[c.idx];
+if (_1479 !== undefined && (_1479.id === 80 || (_1479.id === undefined && _1479.type === "LParen"))) { c.idx++; _1478 = _1479; }
+else { if (c.track) { E(c, "LParen"); } _1478 = F; }
+if (_1478 === F) { c.idx = _1475; _1473 = F; break L_1474; }
 
-let _1409;
-L_1410: {
-const _1411 = c.tokens[c.idx];
-if (_1411 === undefined) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _1409 = F; break L_1410; }
-const _1412 = _1411.id !== undefined ? _1411.id : I[_1411.type];
-switch (_1412) {
+let _1480;
+L_1481: {
+const _1482 = c.tokens[c.idx];
+if (_1482 === undefined) { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1480 = F; break L_1481; }
+const _1483 = _1482.id !== undefined ? _1482.id : I[_1482.type];
+switch (_1483) {
 case 46: case 3: case 38: {
 
-const _1416 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1416] = "Query"; c.ruleDepth = _1416 + 1; }
-const _1415 = R[2](c);
-if (c.track) c.ruleDepth = _1416;
-const _1414 = _1415 === F ? F : H[62](_1415, c);
-_1409 = _1414; break L_1410;
+const _1487 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1487] = "Query"; c.ruleDepth = _1487 + 1; }
+const _1486 = R[2](c);
+if (c.track) c.ruleDepth = _1487;
+const _1485 = _1486 === F ? F : H[67](_1486, c);
+_1480 = _1485; break L_1481;
 }
 case 80: {
-let _1417;
-L_1418: {
-const _1419 = c.idx;
-{
-
-const _1423 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1423] = "Query"; c.ruleDepth = _1423 + 1; }
-const _1422 = R[2](c);
-if (c.track) c.ruleDepth = _1423;
-const _1421 = _1422 === F ? F : H[63](_1422, c);
-if (_1421 !== F) { _1417 = _1421; break L_1418; }
-c.idx = _1419;
+let _1488;
+L_1489: {
+const _1490 = c.idx;
+let _1491 = 3;
+if (!c.track) {
+const _1492 = c.tokens[_1490 + 1];
+switch (_1492 === undefined ? -1 : (_1492.id !== undefined ? _1492.id : I[_1492.type])) {
+case 46: case 3: case 80: case 38: _1491 = 3; break;
+case 11: case 76: case 75: case 39: case 40: case 14: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: case 50: case 41: _1491 = 2; break;
+default: _1491 = 0; break;
 }
-{
+}
+if (_1491 & 1) {
 
-let _1426 = [];
-L_1430: {
-const _1427 = c.idx;
+const _1496 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1496] = "Query"; c.ruleDepth = _1496 + 1; }
+const _1495 = R[2](c);
+if (c.track) c.ruleDepth = _1496;
+const _1494 = _1495 === F ? F : H[68](_1495, c);
+if (_1494 !== F) { _1488 = _1494; break L_1489; }
+c.idx = _1490;
+}
+if (_1491 & 2) {
 
-const _1432 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1432] = "Expression"; c.ruleDepth = _1432 + 1; }
-const _1431 = R[19](c);
-if (c.track) c.ruleDepth = _1432;
-if (_1431 === F) { c.idx = _1427; _1426 = F; break L_1430; }
-_1426.push(_1431);
+let _1499 = [];
+L_1503: {
+const _1500 = c.idx;
+
+const _1505 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1505] = "Expression"; c.ruleDepth = _1505 + 1; }
+const _1504 = R[19](c);
+if (c.track) c.ruleDepth = _1505;
+if (_1504 === F) { c.idx = _1500; _1499 = F; break L_1503; }
+_1499.push(_1504);
 for (;;) {
-const _1428 = c.idx;
-let _1433;
-const _1434 = c.tokens[c.idx];
-if (_1434 !== undefined && (_1434.id === 84 || (_1434.id === undefined && _1434.type === "Comma"))) { c.idx++; _1433 = _1434; }
-else { E(c, "Comma"); _1433 = F; }
-if (_1433 === F) { c.idx = _1428; break; }
-const _1429 = c.idx;
+const _1501 = c.idx;
+let _1506;
+const _1507 = c.tokens[c.idx];
+if (_1507 !== undefined && (_1507.id === 84 || (_1507.id === undefined && _1507.type === "Comma"))) { c.idx++; _1506 = _1507; }
+else { if (c.track) { E(c, "Comma"); } _1506 = F; }
+if (_1506 === F) { c.idx = _1501; break; }
+const _1502 = c.idx;
 
-const _1436 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1436] = "Expression"; c.ruleDepth = _1436 + 1; }
-const _1435 = R[19](c);
-if (c.track) c.ruleDepth = _1436;
-if (_1435 === F) { c.idx = _1428; break; }
-_1426.push(_1435);
+const _1509 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1509] = "Expression"; c.ruleDepth = _1509 + 1; }
+const _1508 = R[19](c);
+if (c.track) c.ruleDepth = _1509;
+if (_1508 === F) { c.idx = _1501; break; }
+_1499.push(_1508);
 }
 }
-const _1425 = _1426 === F ? F : H[64](_1426, c);
-if (_1425 !== F) { _1417 = _1425; break L_1418; }
-c.idx = _1419;
+const _1498 = _1499 === F ? F : H[69](_1499, c);
+if (_1498 !== F) { _1488 = _1498; break L_1489; }
+c.idx = _1490;
 }
-_1417 = F;
+_1488 = F;
 }
-_1409 = _1417; break L_1410;
+_1480 = _1488; break L_1481;
 }
 case 11: case 76: case 75: case 39: case 40: case 14: case 50: case 41: case 51: case 52: case 60: case 58: case 59: case 19: case 20: case 56: case 57: case 87: case 61: case 65: {
 
-let _1439 = [];
-L_1443: {
-const _1440 = c.idx;
+let _1512 = [];
+L_1516: {
+const _1513 = c.idx;
 
-const _1445 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1445] = "Expression"; c.ruleDepth = _1445 + 1; }
-const _1444 = R[19](c);
-if (c.track) c.ruleDepth = _1445;
-if (_1444 === F) { c.idx = _1440; _1439 = F; break L_1443; }
-_1439.push(_1444);
+const _1518 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1518] = "Expression"; c.ruleDepth = _1518 + 1; }
+const _1517 = R[19](c);
+if (c.track) c.ruleDepth = _1518;
+if (_1517 === F) { c.idx = _1513; _1512 = F; break L_1516; }
+_1512.push(_1517);
 for (;;) {
-const _1441 = c.idx;
-let _1446;
-const _1447 = c.tokens[c.idx];
-if (_1447 !== undefined && (_1447.id === 84 || (_1447.id === undefined && _1447.type === "Comma"))) { c.idx++; _1446 = _1447; }
-else { E(c, "Comma"); _1446 = F; }
-if (_1446 === F) { c.idx = _1441; break; }
-const _1442 = c.idx;
+const _1514 = c.idx;
+let _1519;
+const _1520 = c.tokens[c.idx];
+if (_1520 !== undefined && (_1520.id === 84 || (_1520.id === undefined && _1520.type === "Comma"))) { c.idx++; _1519 = _1520; }
+else { if (c.track) { E(c, "Comma"); } _1519 = F; }
+if (_1519 === F) { c.idx = _1514; break; }
+const _1515 = c.idx;
 
-const _1449 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1449] = "Expression"; c.ruleDepth = _1449 + 1; }
-const _1448 = R[19](c);
-if (c.track) c.ruleDepth = _1449;
-if (_1448 === F) { c.idx = _1441; break; }
-_1439.push(_1448);
+const _1522 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1522] = "Expression"; c.ruleDepth = _1522 + 1; }
+const _1521 = R[19](c);
+if (c.track) c.ruleDepth = _1522;
+if (_1521 === F) { c.idx = _1514; break; }
+_1512.push(_1521);
 }
 }
-const _1438 = _1439 === F ? F : H[65](_1439, c);
-_1409 = _1438; break L_1410;
+const _1511 = _1512 === F ? F : H[70](_1512, c);
+_1480 = _1511; break L_1481;
 }
-default: { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); _1409 = F; break L_1410; }
+default: { if (c.track) { E(c, "With"); E(c, "LParen"); E(c, "Select"); E(c, "Values"); E(c, "Not"); E(c, "Minus"); E(c, "Plus"); E(c, "True"); E(c, "False"); E(c, "Null"); E(c, "Exists"); E(c, "Case"); E(c, "Cast"); E(c, "Extract"); E(c, "Identifier"); E(c, "QuotedIdent"); E(c, "BacktickIdent"); E(c, "Left"); E(c, "Right"); E(c, "Number"); E(c, "String"); E(c, "QMark"); E(c, "DollarParam"); E(c, "NamedParam"); } _1480 = F; break L_1481; }
 }
 }
-if (_1409 === F) { c.idx = _1404; _1402 = F; break L_1403; }
-let _1450;
-const _1451 = c.tokens[c.idx];
-if (_1451 !== undefined && (_1451.id === 81 || (_1451.id === undefined && _1451.type === "RParen"))) { c.idx++; _1450 = _1451; }
-else { E(c, "RParen"); _1450 = F; }
-if (_1450 === F) { c.idx = _1404; _1402 = F; break L_1403; }
-_1402 = _1409;
+if (_1480 === F) { c.idx = _1475; _1473 = F; break L_1474; }
+let _1523;
+const _1524 = c.tokens[c.idx];
+if (_1524 !== undefined && (_1524.id === 81 || (_1524.id === undefined && _1524.type === "RParen"))) { c.idx++; _1523 = _1524; }
+else { if (c.track) { E(c, "RParen"); } _1523 = F; }
+if (_1523 === F) { c.idx = _1475; _1473 = F; break L_1474; }
+_1473 = _1480;
 }
-return _1402;
+return _1473;
 }
 
 // BetweenTail
-R[54] = (c) => {
+R[61] = (c) => {
 
-let _1452;
-L_1454: {
-const _1453 = c.idx;
-const _1456 = c.bindings;
-const _1455 = {};
-c.bindings = _1455;
-let _1457;
-const _1458 = c.tokens[c.idx];
-if (_1458 !== undefined && (_1458.id === 17 || (_1458.id === undefined && _1458.type === "Between"))) { c.idx++; _1457 = _1458; }
-else { E(c, "Between"); _1457 = F; }
-if (_1457 === F) { c.idx = _1453; c.bindings = _1456; _1452 = F; break L_1454; }
+let _1525;
+L_1527: {
+const _1526 = c.idx;
+const _1529 = c.bindings;
+const _1528 = {};
+c.bindings = _1528;
+let _1530;
+const _1531 = c.tokens[c.idx];
+if (_1531 !== undefined && (_1531.id === 17 || (_1531.id === undefined && _1531.type === "Between"))) { c.idx++; _1530 = _1531; }
+else { if (c.track) { E(c, "Between"); } _1530 = F; }
+if (_1530 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
 
-const _1461 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1461] = "ConcatExpr"; c.ruleDepth = _1461 + 1; }
-const _1460 = R[49](c);
-if (c.track) c.ruleDepth = _1461;
-if (_1460 !== F) _1455["low"] = _1460;
-const _1459 = _1460;
-if (_1459 === F) { c.idx = _1453; c.bindings = _1456; _1452 = F; break L_1454; }
-let _1462;
-const _1463 = c.tokens[c.idx];
-if (_1463 !== undefined && (_1463.id === 9 || (_1463.id === undefined && _1463.type === "And"))) { c.idx++; _1462 = _1463; }
-else { E(c, "And"); _1462 = F; }
-if (_1462 === F) { c.idx = _1453; c.bindings = _1456; _1452 = F; break L_1454; }
+const _1534 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1534] = "ConcatExpr"; c.ruleDepth = _1534 + 1; }
+const _1533 = R[55](c);
+if (c.track) c.ruleDepth = _1534;
+if (_1533 !== F) _1528["low"] = _1533;
+const _1532 = _1533;
+if (_1532 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
+let _1535;
+const _1536 = c.tokens[c.idx];
+if (_1536 !== undefined && (_1536.id === 9 || (_1536.id === undefined && _1536.type === "And"))) { c.idx++; _1535 = _1536; }
+else { if (c.track) { E(c, "And"); } _1535 = F; }
+if (_1535 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
 
-const _1466 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1466] = "ConcatExpr"; c.ruleDepth = _1466 + 1; }
-const _1465 = R[49](c);
-if (c.track) c.ruleDepth = _1466;
-if (_1465 !== F) _1455["high"] = _1465;
-const _1464 = _1465;
-if (_1464 === F) { c.idx = _1453; c.bindings = _1456; _1452 = F; break L_1454; }
-const _1467 = H[66](_1455, c);
-c.bindings = _1456;
-_1452 = _1467;
+const _1539 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1539] = "ConcatExpr"; c.ruleDepth = _1539 + 1; }
+const _1538 = R[55](c);
+if (c.track) c.ruleDepth = _1539;
+if (_1538 !== F) _1528["high"] = _1538;
+const _1537 = _1538;
+if (_1537 === F) { c.idx = _1526; c.bindings = _1529; _1525 = F; break L_1527; }
+const _1540 = H[71](_1528, c);
+c.bindings = _1529;
+_1525 = _1540;
 }
-return _1452;
+return _1525;
 }
 
 // LikeTail
-R[55] = (c) => {
+R[62] = (c) => {
 
-let _1468;
-L_1470: {
-const _1469 = c.idx;
-const _1472 = c.bindings;
-const _1471 = {};
-c.bindings = _1471;
+let _1541;
+L_1543: {
+const _1542 = c.idx;
+const _1545 = c.bindings;
+const _1544 = {};
+c.bindings = _1544;
 
-let _1474;
-L_1475: {
-const _1476 = c.tokens[c.idx];
-if (_1476 === undefined) { E(c, "Like"); E(c, "Ilike"); _1474 = F; break L_1475; }
-const _1477 = _1476.id !== undefined ? _1476.id : I[_1476.type];
-switch (_1477) {
+let _1547;
+L_1548: {
+const _1549 = c.tokens[c.idx];
+if (_1549 === undefined) { if (c.track) { E(c, "Like"); E(c, "Ilike"); } _1547 = F; break L_1548; }
+const _1550 = _1549.id !== undefined ? _1549.id : I[_1549.type];
+switch (_1550) {
 case 15: {
 
-let _1478;
-L_1479: {
-const _1480 = c.idx;
-let _1481;
-const _1482 = c.tokens[c.idx];
-if (_1482 !== undefined && (_1482.id === 15 || (_1482.id === undefined && _1482.type === "Like"))) { c.idx++; _1481 = _1482; }
-else { E(c, "Like"); _1481 = F; }
-if (_1481 === F) { c.idx = _1480; _1478 = F; break L_1479; }
-_1478 = "LIKE";
+let _1551;
+L_1552: {
+const _1553 = c.idx;
+let _1554;
+const _1555 = c.tokens[c.idx];
+if (_1555 !== undefined && (_1555.id === 15 || (_1555.id === undefined && _1555.type === "Like"))) { c.idx++; _1554 = _1555; }
+else { if (c.track) { E(c, "Like"); } _1554 = F; }
+if (_1554 === F) { c.idx = _1553; _1551 = F; break L_1552; }
+_1551 = "LIKE";
 }
-_1474 = _1478; break L_1475;
+_1547 = _1551; break L_1548;
 }
 case 16: {
 
-let _1483;
-L_1484: {
-const _1485 = c.idx;
-let _1486;
-const _1487 = c.tokens[c.idx];
-if (_1487 !== undefined && (_1487.id === 16 || (_1487.id === undefined && _1487.type === "Ilike"))) { c.idx++; _1486 = _1487; }
-else { E(c, "Ilike"); _1486 = F; }
-if (_1486 === F) { c.idx = _1485; _1483 = F; break L_1484; }
-_1483 = "ILIKE";
+let _1556;
+L_1557: {
+const _1558 = c.idx;
+let _1559;
+const _1560 = c.tokens[c.idx];
+if (_1560 !== undefined && (_1560.id === 16 || (_1560.id === undefined && _1560.type === "Ilike"))) { c.idx++; _1559 = _1560; }
+else { if (c.track) { E(c, "Ilike"); } _1559 = F; }
+if (_1559 === F) { c.idx = _1558; _1556 = F; break L_1557; }
+_1556 = "ILIKE";
 }
-_1474 = _1483; break L_1475;
+_1547 = _1556; break L_1548;
 }
-default: { E(c, "Like"); E(c, "Ilike"); _1474 = F; break L_1475; }
+default: { if (c.track) { E(c, "Like"); E(c, "Ilike"); } _1547 = F; break L_1548; }
 }
 }
-if (_1474 !== F) _1471["op"] = _1474;
-const _1473 = _1474;
-if (_1473 === F) { c.idx = _1469; c.bindings = _1472; _1468 = F; break L_1470; }
+if (_1547 !== F) _1544["op"] = _1547;
+const _1546 = _1547;
+if (_1546 === F) { c.idx = _1542; c.bindings = _1545; _1541 = F; break L_1543; }
 
-const _1490 = c.ruleDepth;
-if (c.track) { c.ruleNames[_1490] = "ConcatExpr"; c.ruleDepth = _1490 + 1; }
-const _1489 = R[49](c);
-if (c.track) c.ruleDepth = _1490;
-if (_1489 !== F) _1471["p"] = _1489;
-const _1488 = _1489;
-if (_1488 === F) { c.idx = _1469; c.bindings = _1472; _1468 = F; break L_1470; }
-const _1491 = H[67](_1471, c);
-c.bindings = _1472;
-_1468 = _1491;
+const _1563 = c.ruleDepth;
+if (c.track) { c.ruleNames[_1563] = "ConcatExpr"; c.ruleDepth = _1563 + 1; }
+const _1562 = R[55](c);
+if (c.track) c.ruleDepth = _1563;
+if (_1562 !== F) _1544["p"] = _1562;
+const _1561 = _1562;
+if (_1561 === F) { c.idx = _1542; c.bindings = _1545; _1541 = F; break L_1543; }
+const _1564 = H[72](_1544, c);
+c.bindings = _1545;
+_1541 = _1564;
 }
-return _1468;
+return _1541;
 }
 
 const RULES = {
@@ -5132,42 +5402,49 @@ const RULES = {
   "SelectCore": 17,
   "ValuesCore": 18,
   "Expression": 19,
-  "Multiplicative": 20,
-  "NumberLiteral": 21,
-  "StringLiteral": 22,
-  "ResultColumn": 23,
-  "FromTerm": 24,
-  "ValueRow": 25,
-  "OrExpr": 26,
-  "Unary": 27,
-  "AliasClause": 28,
-  "FromItem": 29,
-  "JoinClause": 30,
-  "AndExpr": 31,
-  "PostfixExpr": 32,
-  "SubquerySource": 33,
-  "FunctionSource": 34,
-  "PathSource": 35,
-  "JoinType": 36,
-  "NotExpr": 37,
-  "Primary": 38,
-  "TypeName": 39,
-  "Predicate": 40,
-  "ParenExpr": 41,
-  "ExistsExpr": 42,
-  "CaseExpr": 43,
-  "CastExpr": 44,
-  "ExtractExpr": 45,
-  "FunctionCall": 46,
-  "ColumnRef": 47,
-  "Param": 48,
-  "ConcatExpr": 49,
-  "PredicateTail": 50,
-  "WhenClause": 51,
-  "WindowSpec": 52,
-  "InTail": 53,
-  "BetweenTail": 54,
-  "LikeTail": 55
+  "Additive$tower": 20,
+  "ConcatExpr$climb": 21,
+  "NumberLiteral": 22,
+  "StringLiteral": 23,
+  "ResultColumn": 24,
+  "FromTerm": 25,
+  "ValueRow": 26,
+  "OrExpr": 27,
+  "Multiplicative": 28,
+  "Unary": 29,
+  "AliasClause": 30,
+  "FromItem": 31,
+  "JoinClause": 32,
+  "OrExpr$tower": 33,
+  "OrExpr$climb": 34,
+  "Multiplicative$tower": 35,
+  "PostfixExpr": 36,
+  "SubquerySource": 37,
+  "FunctionSource": 38,
+  "PathSource": 39,
+  "JoinType": 40,
+  "AndExpr": 41,
+  "NotExpr": 42,
+  "Primary": 43,
+  "TypeName": 44,
+  "AndExpr$tower": 45,
+  "Predicate": 46,
+  "ParenExpr": 47,
+  "ExistsExpr": 48,
+  "CaseExpr": 49,
+  "CastExpr": 50,
+  "ExtractExpr": 51,
+  "FunctionCall": 52,
+  "ColumnRef": 53,
+  "Param": 54,
+  "ConcatExpr": 55,
+  "PredicateTail": 56,
+  "WhenClause": 57,
+  "WindowSpec": 58,
+  "ConcatExpr$tower": 59,
+  "InTail": 60,
+  "BetweenTail": 61,
+  "LikeTail": 62
 }
 
 /**
