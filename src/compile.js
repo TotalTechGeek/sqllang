@@ -216,7 +216,27 @@ function planSelect (sel, outer, cteNames, cx, orderBy) {
     for (const j of term.joins) addItem(j.item, j.joinType, j.on, j.using)
   })
 
-  const where = sel.where == null ? null : expr(sel.where, scope, cx, {})
+  // WHERE conjuncts that read a single table are applied to that table's rows
+  // before any join. Only where the table is never the nullable side of an
+  // outer join (a later RIGHT/FULL, or its own LEFT), so the answer is unchanged.
+  let where = null
+  if (sel.where != null) {
+    const parts = steps.length > 1 ? splitAnd(sel.where) : [sel.where]
+    const residual = []
+    for (const part of parts) {
+      const deps = new Set()
+      const logic = expr(part, scope, cx, { deps })
+      const alias = deps.size === 1 ? [...deps][0] : null
+      const i = alias === null ? -1 : steps.findIndex((s) => s.alias === alias)
+      const step = steps[i]
+      const pushable = steps.length > 1 && step && step.source.kind !== 'expr' &&
+        (step.join === 'FROM' || step.join === 'CROSS' || step.join === 'INNER') &&
+        !steps.slice(i + 1).some((s) => s.join === 'RIGHT' || s.join === 'FULL')
+      if (pushable) step.filter = step.filter ? { AND: [step.filter, logic] } : logic
+      else residual.push(logic)
+    }
+    where = residual.length === 0 ? null : residual.length === 1 ? residual[0] : { AND: residual }
+  }
 
   // Select list. Expression columns are compiled first so GROUP BY and ORDER BY
   // can refer to them by alias or position.
@@ -281,6 +301,10 @@ function planSelect (sel, outer, cteNames, cx, orderBy) {
     having,
     windows: scope.windows,
     columns,
+    // The select list as one expression, when it is all expressions with safe names.
+    row: columns.length && columns.every((c) => c.kind === 'expr' && c.name !== '__proto__')
+      ? { ROW: columns.flatMap((c) => [c.name, c.expr]) }
+      : null,
     orderBy: order,
     needsOutv
   }

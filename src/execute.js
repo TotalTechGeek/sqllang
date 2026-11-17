@@ -20,6 +20,24 @@ import {
 let active = null
 
 const internal = {
+  // One output row from `[name, value, name, value, ...]`. Compiled, it is a single
+  // object literal, so a whole select list costs one call per row. Not
+  // deterministic: each row needs its own object, never a folded shared one.
+  ROW: {
+    method: (args) => {
+      const out = {}
+      for (let i = 0; i < args.length; i += 2) setKey(out, args[i], args[i + 1] === undefined ? null : args[i + 1])
+      return out
+    },
+    compile: (args, bs) => {
+      let res = bs.compile`({`
+      for (let i = 0; i < args.length; i += 2) {
+        res = bs.compile`${res}${i ? bs.compile`,` : bs.compile``}${args[i]}: (${args[i + 1]}) ?? null`
+      }
+      return bs.compile`${res}})`
+    },
+    deterministic: false
+  },
   PARAM: {
     method: ([key]) => {
       const params = active?.params
@@ -458,6 +476,7 @@ function runSelect (p, state, outer, keep = null) {
     // With `*` over rows of differing shape, give every row every column.
     for (let i = 0; i < items.length; i++) {
       const o = items[i].row
+      if (sameKeys(o, columns)) continue
       const r = {}
       for (let j = 0; j < columns.length; j++) {
         const c = columns[j]
@@ -521,7 +540,10 @@ function makeProjector (p, state) {
   // Names are fixed per query; only `__proto__` needs the careful path.
   const plain = cols.map((c) => c.kind === 'expr' && c.name !== '__proto__')
 
-  const project = (env) => {
+  // No `*` and no `__proto__`: the whole select list is one compiled object literal.
+  const rowFn = !hasStar && p.row ? fnOf(state, p.row) : null
+
+  const project = rowFn ?? ((env) => {
     const out = {}
     for (let j = 0; j < cols.length; j++) {
       const c = cols[j]
@@ -536,6 +558,16 @@ function makeProjector (p, state) {
         const row = env[alias]
         if (row !== null && typeof row === 'object' && !Array.isArray(row)) {
           const keys = Object.keys(row)
+          if (c.aliases.length === 1) {
+            // One table: its keys cannot collide with each other.
+            for (let k = 0; k < keys.length; k++) {
+              const key = keys[k]
+              const v = row[key]
+              if (key === '__proto__') setKey(out, key, nullish(v))
+              else out[key] = v === undefined ? null : v
+            }
+            continue
+          }
           for (let k = 0; k < keys.length; k++) {
             const key = keys[k]
             const name = Object.prototype.hasOwnProperty.call(out, key) ? `${alias}.${key}` : key
@@ -550,7 +582,7 @@ function makeProjector (p, state) {
     }
     if (hasStar) for (const k in out) if (!columnSet.has(k)) addColumn(k)
     return out
-  }
+  })
   return { project, columns, hasStar }
 }
 
@@ -669,6 +701,13 @@ function readsOutput (orderBy) {
 }
 
 const nullish = (v) => (v === undefined ? null : v)
+/** Whether `o` has exactly `columns`, in that order: it needs no padding. */
+function sameKeys (o, columns) {
+  const keys = Object.keys(o)
+  if (keys.length !== columns.length) return false
+  for (let i = 0; i < keys.length; i++) if (keys[i] !== columns[i]) return false
+  return true
+}
 
 // -- FROM and JOIN --------------------------------------------------------------------
 
@@ -676,7 +715,18 @@ function joinStep (step, envs, base, state) {
   const { alias, source, join, leftAliases } = step
   const lateral = source.kind === 'expr'
   const sourceFn = lateral ? fnOf(state, source.expr) : null
-  const right = lateral ? null : materialize(source, state)
+  let right = lateral ? null : materialize(source, state)
+  if (step.filter) {
+    const keep = fnOf(state, step.filter)
+    const e = snapshot(base)
+    const kept = []
+    for (let j = 0; j < right.length; j++) {
+      tick()
+      e[alias] = right[j]
+      if (isTrue(keep(e))) kept.push(right[j])
+    }
+    right = kept
+  }
   const on = step.on === null ? null : fnOf(state, step.on)
   const out = []
 
