@@ -440,11 +440,11 @@ const lexer = (() => {
   const DISPATCH = "ĀĀĀĀĀĀĀĀĀāāāāāĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀĀāĂăĀĄąĀĆćĈĉĊċČčĎďďďďďďďďďďĐđĒēĔĕĀĖėĘęĚěĜĝĞğĠġĠĢģĤĠĥĦħĨĩĪĠĠĠīĀĬĀĠĭĖėĘęĚěĜĝĞğĠġĠĢģĤĠĥĦħĨĩĪĠĠĠĀĮĀĀĀā"
   
   // Patterns are read from the token table above rather than repeated here.
-  const RX = [[0,"y"],[63,"y"],[58,"y"],[2,"y"],[67,"y"],[57,"iy"],[61,"y"]].map(([i, flags]) => new RegExp(tokens[i].pattern, flags))
+  const RX = [[0,"y"],[58,"y"],[2,"y"],[57,"iy"]].map(([i, flags]) => new RegExp(tokens[i].pattern, flags))
   
   
   
-  const KW = [[[97,115],[65,83]],[[97,108,108],[65,76,76]],[[97,110,100],[65,78,68]],[[97,115,99],[65,83,67]],[[98,101,116,119,101,101,110],[66,69,84,87,69,69,78]],[[98,121],[66,89]],[[99,114,111,115,115],[67,82,79,83,83]],[[99,97,115,101],[67,65,83,69]],[[99,97,115,116],[67,65,83,84]],[[100,105,115,116,105,110,99,116],[68,73,83,84,73,78,67,84]],[[100,101,115,99],[68,69,83,67]],[[101,108,115,101],[69,76,83,69]],[[101,110,100],[69,78,68]],[[101,120,99,101,112,116],[69,88,67,69,80,84]],[[101,120,105,115,116,115],[69,88,73,83,84,83]],[[101,120,116,114,97,99,116],[69,88,84,82,65,67,84]],[[102,114,111,109],[70,82,79,77]],[[102,117,108,108],[70,85,76,76]],[[102,97,108,115,101],[70,65,76,83,69]],[[102,105,108,116,101,114],[70,73,76,84,69,82]],[[102,111,114],[70,79,82]],[[103,114,111,117,112],[71,82,79,85,80]],[[104,97,118,105,110,103],[72,65,86,73,78,71]],[[105,110],[73,78]],[[105,115],[73,83]],[[105,108,105,107,101],[73,76,73,75,69]],[[105,110,110,101,114],[73,78,78,69,82]],[[105,110,115,101,114,116],[73,78,83,69,82,84]],[[105,110,116,111],[73,78,84,79]],[[105,110,116,101,114,115,101,99,116],[73,78,84,69,82,83,69,67,84]],[[106,111,105,110],[74,79,73,78]],[[108,105,107,101],[76,73,75,69]],[[108,101,102,116],[76,69,70,84]],[[108,105,109,105,116],[76,73,77,73,84]],[[110,111,116],[78,79,84]],[[110,117,108,108],[78,85,76,76]],[[110,117,108,108,115],[78,85,76,76,83]],[[111,114],[79,82]],[[111,117,116,101,114],[79,85,84,69,82]],[[111,110],[79,78]],[[111,114,100,101,114],[79,82,68,69,82]],[[111,102,102,115,101,116],[79,70,70,83,69,84]],[[111,118,101,114],[79,86,69,82]],[[112,97,114,116,105,116,105,111,110],[80,65,82,84,73,84,73,79,78]],[[114,105,103,104,116],[82,73,71,72,84]],[[115,101,108,101,99,116],[83,69,76,69,67,84]],[[116,114,117,101],[84,82,85,69]],[[116,104,101,110],[84,72,69,78]],[[117,115,105,110,103],[85,83,73,78,71]],[[117,110,105,111,110],[85,78,73,79,78]],[[118,97,108,117,101,115],[86,65,76,85,69,83]],[[119,104,101,114,101],[87,72,69,82,69]],[[119,104,101,110],[87,72,69,78]],[[119,105,116,104],[87,73,84,72]]]
+  const KW = [[[112,97,114,116,105,116,105,111,110],[80,65,82,84,73,84,73,79,78]]]
   const look0 = (c) => (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122)
   function scanKeyword (text, offset, length, lower, upper, look) {
     const n = lower.length
@@ -494,6 +494,720 @@ function scan59 (text, offset) {
       j += 2
     }
   }
+  let dfaId = 0
+  
+  const isNaWs = (c) => c === 0xa0 || c === 0x1680 || (c >= 0x2000 && c <= 0x200a) || c === 0x2028 || c === 0x2029 || c === 0x202f || c === 0x205f || c === 0x3000 || c === 0xfeff
+  const symOf = (c) => (c < 128 ? c : isNaWs(c) ? 129 : 128)
+  const is0 = (c) => c === 36
+  const is1 = (c) => (c >= 48 && c <= 57)
+  const is2 = (c) => c === 58
+  const is3 = (c) => (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122)
+  const is4 = (c) => (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122)
+  const is5 = (c) => c === 96
+  const is6 = (c) => (c >= 0 && c <= 95) || (c >= 97 && c <= 127) || c >= 128
+  const is7 = (c) => c === 80 || c === 112
+  const is8 = (c) => c === 73 || c === 105
+  const is9 = (c) => c === 86 || c === 118
+  const is10 = (c) => c === 79 || c === 111
+  const is11 = (c) => c === 84 || c === 116
+  const skip1 = (text, i, length) => { while (i + 1 < length && is1(text.charCodeAt(i + 1))) i++; return i }
+  const skip4 = (text, i, length) => { while (i + 1 < length && is4(text.charCodeAt(i + 1))) i++; return i }
+  const skip6 = (text, i, length) => { while (i + 1 < length && is6(text.charCodeAt(i + 1))) i++; return i }
+  const G0 = [63]
+  function dfa0 (text, offset, length) {
+    let state = 1
+    let winner = -1
+    let end = -1
+    let i = offset
+    loop: for (; i < length;) {
+      const c = text.charCodeAt(i)
+      switch (state) {
+        case 1: if (is0(c)) { state = 2 } else break loop; break
+        case 2: if (is1(c)) { state = 3 } else break loop; break
+        case 3: if (is1(c)) { i = skip1(text, i, length) } else break loop; break
+      }
+      i++
+      switch (state) {
+        case 3: if (winner === -1 || 0 < winner) { winner = 0; end = i } else if (winner === 0 && i > end) end = i; break
+      }
+    }
+    
+    if (winner === -1) return -1
+    dfaId = G0[winner]
+    return end
+  }
+  const G1 = [67]
+  function dfa1 (text, offset, length) {
+    let state = 1
+    let winner = -1
+    let end = -1
+    let i = offset
+    loop: for (; i < length;) {
+      const c = text.charCodeAt(i)
+      switch (state) {
+        case 1: if (is2(c)) { state = 2 } else break loop; break
+        case 2: if (is3(c)) { state = 3 } else break loop; break
+        case 3: if (is4(c)) { i = skip4(text, i, length) } else break loop; break
+      }
+      i++
+      switch (state) {
+        case 3: if (winner === -1 || 0 < winner) { winner = 0; end = i } else if (winner === 0 && i > end) end = i; break
+      }
+    }
+    
+    if (winner === -1) return -1
+    dfaId = G1[winner]
+    return end
+  }
+  const G2 = [61]
+  function dfa2 (text, offset, length) {
+    let state = 1
+    let winner = -1
+    let end = -1
+    let i = offset
+    loop: for (; i < length;) {
+      const c = text.charCodeAt(i)
+      switch (state) {
+        case 1: if (is5(c)) { state = 2 } else break loop; break
+        case 2: if (is6(c)) { i = skip6(text, i, length) } else if (is5(c)) { state = 3 } else break loop; break
+        case 3: break loop
+      }
+      i++
+      switch (state) {
+        case 3: if (winner === -1 || 0 < winner) { winner = 0; end = i } else if (winner === 0 && i > end) end = i; break
+      }
+    }
+    
+    if (winner === -1) return -1
+    dfaId = G2[winner]
+    return end
+  }
+  let calls3 = 0
+  let passes3 = 0
+  let off3 = false
+  function dfa3 (text, offset, length) {
+    let state = 1
+    let mask = 0
+    let i = offset
+    loop: for (; i < length;) {
+      const c = text.charCodeAt(i)
+      switch (state) {
+        case 1: if (is7(c)) { state = 2 } else break loop; break
+        case 2: if (is8(c)) { state = 3 } else break loop; break
+        case 3: if (is9(c)) { state = 4 } else break loop; break
+        case 4: if (is10(c)) { state = 5 } else break loop; break
+        case 5: if (is11(c)) { state = 6 } else break loop; break
+        case 6: break loop
+      }
+      i++
+      switch (state) {
+        case 6: mask |= 1; break
+      }
+    }
+    
+    return mask
+  }
+  let wordId = 0
+  function word0 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3122: if (len === 2 && ((c = text.charCodeAt(offset + 0)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 1)) === 115 || c === 83)) { wordId = 6; return j }
+        break
+        case 96673: if (len === 3 && ((c = text.charCodeAt(offset + 0)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 1)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76)) { wordId = 8; return j }
+        break
+        case 96727: if (len === 3 && ((c = text.charCodeAt(offset + 0)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 2)) === 100 || c === 68)) { wordId = 9; return j }
+        break
+        case 96881: if (len === 3 && ((c = text.charCodeAt(offset + 0)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 1)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 2)) === 99 || c === 67)) { wordId = 30; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word1 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case -216634360: if (len === 7 && ((c = text.charCodeAt(offset + 0)) === 98 || c === 66) && ((c = text.charCodeAt(offset + 1)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 2)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 3)) === 119 || c === 87) && ((c = text.charCodeAt(offset + 4)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 5)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 6)) === 110 || c === 78)) { wordId = 17; return j }
+        break
+        case 3159: if (len === 2 && ((c = text.charCodeAt(offset + 0)) === 98 || c === 66) && ((c = text.charCodeAt(offset + 1)) === 121 || c === 89)) { wordId = 28; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word2 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 94935104: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 1)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 2)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 3)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 4)) === 115 || c === 83)) { wordId = 23; return j }
+        break
+        case 3046192: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 1)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 2)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69)) { wordId = 41; return j }
+        break
+        case 3046207: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 1)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 2)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 3)) === 116 || c === 84)) { wordId = 51; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word3 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 288698108: if (len === 8 && ((c = text.charCodeAt(offset + 0)) === 100 || c === 68) && ((c = text.charCodeAt(offset + 1)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 2)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 3)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 4)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 5)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 6)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 7)) === 116 || c === 84)) { wordId = 7; return j }
+        break
+        case 3079825: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 100 || c === 68) && ((c = text.charCodeAt(offset + 1)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 2)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 3)) === 99 || c === 67)) { wordId = 31; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word4 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3116345: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 1)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 2)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69)) { wordId = 44; return j }
+        break
+        case 100571: if (len === 3 && ((c = text.charCodeAt(offset + 0)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 2)) === 100 || c === 68)) { wordId = 45; return j }
+        break
+        case -1289550567: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 1)) === 120 || c === 88) && ((c = text.charCodeAt(offset + 2)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 4)) === 112 || c === 80) && ((c = text.charCodeAt(offset + 5)) === 116 || c === 84)) { wordId = 48; return j }
+        break
+        case -1289358244: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 1)) === 120 || c === 88) && ((c = text.charCodeAt(offset + 2)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 3)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 4)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 5)) === 115 || c === 83)) { wordId = 50; return j }
+        break
+        case -1305289599: if (len === 7 && ((c = text.charCodeAt(offset + 0)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 1)) === 120 || c === 88) && ((c = text.charCodeAt(offset + 2)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 3)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 4)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 5)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 6)) === 116 || c === 84)) { wordId = 52; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word5 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3151786: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 1)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 2)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 3)) === 109 || c === 77)) { wordId = 4; return j }
+        break
+        case 3154575: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 1)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 3)) === 108 || c === 76)) { wordId = 21; return j }
+        break
+        case 97196323: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 1)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 3)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 4)) === 101 || c === 69)) { wordId = 40; return j }
+        break
+        case -1274492040: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 1)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 3)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 4)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 5)) === 114 || c === 82)) { wordId = 55; return j }
+        break
+        case 101577: if (len === 3 && ((c = text.charCodeAt(offset + 0)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 1)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 2)) === 114 || c === 82)) { wordId = 56; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word6 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 98629247: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 103 || c === 71) && ((c = text.charCodeAt(offset + 1)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 2)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 3)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 4)) === 112 || c === 80)) { wordId = 27; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word7 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case -1224334299: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 104 || c === 72) && ((c = text.charCodeAt(offset + 1)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 2)) === 118 || c === 86) && ((c = text.charCodeAt(offset + 3)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 4)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 5)) === 103 || c === 71)) { wordId = 33; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word8 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3365: if (len === 2 && ((c = text.charCodeAt(offset + 0)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78)) { wordId = 12; return j }
+        break
+        case 3370: if (len === 2 && ((c = text.charCodeAt(offset + 0)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 1)) === 115 || c === 83)) { wordId = 13; return j }
+        break
+        case 100291456: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 1)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 2)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 3)) === 107 || c === 75) && ((c = text.charCodeAt(offset + 4)) === 101 || c === 69)) { wordId = 16; return j }
+        break
+        case 100355670: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 2)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 4)) === 114 || c === 82)) { wordId = 18; return j }
+        break
+        case -1183792455: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 2)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 4)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 5)) === 116 || c === 84)) { wordId = 36; return j }
+        break
+        case 3237472: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 2)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 3)) === 111 || c === 79)) { wordId = 37; return j }
+        break
+        case 503014687: if (len === 9 && ((c = text.charCodeAt(offset + 0)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 2)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 4)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 5)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 6)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 7)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 8)) === 116 || c === 84)) { wordId = 49; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word9 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3267882: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 106 || c === 74) && ((c = text.charCodeAt(offset + 1)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 2)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 3)) === 110 || c === 78)) { wordId = 24; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word10 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3321751: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 1)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 2)) === 107 || c === 75) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69)) { wordId = 15; return j }
+        break
+        case 3317767: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 1)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 2)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 3)) === 116 || c === 84)) { wordId = 19; return j }
+        break
+        case 102976443: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 1)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 2)) === 109 || c === 77) && ((c = text.charCodeAt(offset + 3)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 4)) === 116 || c === 84)) { wordId = 34; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word11 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 109267: if (len === 3 && ((c = text.charCodeAt(offset + 0)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 1)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 2)) === 116 || c === 84)) { wordId = 11; return j }
+        break
+        case 3392903: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 1)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 3)) === 108 || c === 76)) { wordId = 14; return j }
+        break
+        case 105180108: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 1)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 3)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 4)) === 115 || c === 83)) { wordId = 32; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word12 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3555: if (len === 2 && ((c = text.charCodeAt(offset + 0)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 1)) === 114 || c === 82)) { wordId = 10; return j }
+        break
+        case 106111099: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 1)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 2)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 4)) === 114 || c === 82)) { wordId = 22; return j }
+        break
+        case 3551: if (len === 2 && ((c = text.charCodeAt(offset + 0)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78)) { wordId = 25; return j }
+        break
+        case 106006350: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 1)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 2)) === 100 || c === 68) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 4)) === 114 || c === 82)) { wordId = 29; return j }
+        break
+        case -1019779949: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 1)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 2)) === 102 || c === 70) && ((c = text.charCodeAt(offset + 3)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 4)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 5)) === 116 || c === 84)) { wordId = 35; return j }
+        break
+        case 3423444: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 1)) === 118 || c === 86) && ((c = text.charCodeAt(offset + 2)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 3)) === 114 || c === 82)) { wordId = 53; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word13 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 108511772: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 1)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 2)) === 103 || c === 71) && ((c = text.charCodeAt(offset + 3)) === 104 || c === 72) && ((c = text.charCodeAt(offset + 4)) === 116 || c === 84)) { wordId = 20; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word14 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case -906021636: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 1)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 4)) === 99 || c === 67) && ((c = text.charCodeAt(offset + 5)) === 116 || c === 84)) { wordId = 3; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word15 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 3569038: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 1)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 2)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 3)) === 101 || c === 69)) { wordId = 39; return j }
+        break
+        case 3558941: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 1)) === 104 || c === 72) && ((c = text.charCodeAt(offset + 2)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 3)) === 110 || c === 78)) { wordId = 43; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word16 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 111582340: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 1)) === 115 || c === 83) && ((c = text.charCodeAt(offset + 2)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 3)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 4)) === 103 || c === 71)) { wordId = 26; return j }
+        break
+        case 111433423: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 1)) === 110 || c === 78) && ((c = text.charCodeAt(offset + 2)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 3)) === 111 || c === 79) && ((c = text.charCodeAt(offset + 4)) === 110 || c === 78)) { wordId = 47; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word17 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case -823812830: if (len === 6 && ((c = text.charCodeAt(offset + 0)) === 118 || c === 86) && ((c = text.charCodeAt(offset + 1)) === 97 || c === 65) && ((c = text.charCodeAt(offset + 2)) === 108 || c === 76) && ((c = text.charCodeAt(offset + 3)) === 117 || c === 85) && ((c = text.charCodeAt(offset + 4)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 5)) === 115 || c === 83)) { wordId = 38; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
+  function word18 (text, offset, length) {
+    let c = text.charCodeAt(offset)
+    if (!((c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) return -1
+    let h = 0
+    let j = offset
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      if (c >= 65 && c <= 90) c += 32
+      h = (Math.imul(h, 31) + c) | 0
+      j++
+    }
+    const len = j - offset
+    if (len > 0) {
+      switch (h) {
+        case 113097959: if (len === 5 && ((c = text.charCodeAt(offset + 0)) === 119 || c === 87) && ((c = text.charCodeAt(offset + 1)) === 104 || c === 72) && ((c = text.charCodeAt(offset + 2)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 3)) === 114 || c === 82) && ((c = text.charCodeAt(offset + 4)) === 101 || c === 69)) { wordId = 5; return j }
+        break
+        case 3648314: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 119 || c === 87) && ((c = text.charCodeAt(offset + 1)) === 104 || c === 72) && ((c = text.charCodeAt(offset + 2)) === 101 || c === 69) && ((c = text.charCodeAt(offset + 3)) === 110 || c === 78)) { wordId = 42; return j }
+        break
+        case 3649734: if (len === 4 && ((c = text.charCodeAt(offset + 0)) === 119 || c === 87) && ((c = text.charCodeAt(offset + 1)) === 105 || c === 73) && ((c = text.charCodeAt(offset + 2)) === 116 || c === 84) && ((c = text.charCodeAt(offset + 3)) === 104 || c === 72)) { wordId = 46; return j }
+        break
+      }
+    }
+    if (j === offset) j++
+    while (j < length) {
+      c = text.charCodeAt(j)
+      if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break
+      j++
+    }
+    wordId = 62
+    return j
+  }
 
   function tokenize (text) {
     if (typeof text !== 'string') throw new TypeError('tokenize: expected a string')
@@ -524,7 +1238,7 @@ function scan59 (text, offset) {
           break
         }
         case 4: {
-          RX[1].lastIndex = offset; m = RX[1].exec(text); if (m !== null && m[0].length > 0) { id = 63; matched = m[0]; end = offset + matched.length; break found }
+          { const e = dfa0(text, offset, length); if (e !== -1) { id = dfaId; end = e; matched = null; break found } }
           break
         }
         case 5: {
@@ -563,22 +1277,22 @@ function scan59 (text, offset) {
           break
         }
         case 13: {
-          RX[2].lastIndex = offset; m = RX[2].exec(text); if (m !== null && m[0].length > 0) { id = 58; matched = m[0]; end = offset + matched.length; break found }
+          RX[1].lastIndex = offset; m = RX[1].exec(text); if (m !== null && m[0].length > 0) { id = 58; matched = m[0]; end = offset + matched.length; break found }
           if (code === 46) { id = 87; end = offset + 1; matched = "."; break found }
           break
         }
         case 14: {
-          RX[3].lastIndex = offset; if (RX[3].test(text) && RX[3].lastIndex > offset) { id = 2; end = RX[3].lastIndex; matched = null; break found }
+          RX[2].lastIndex = offset; if (RX[2].test(text) && RX[2].lastIndex > offset) { id = 2; end = RX[2].lastIndex; matched = null; break found }
           if (code === 47) { id = 80; end = offset + 1; matched = "/"; break found }
           break
         }
         case 15: {
-          RX[2].lastIndex = offset; m = RX[2].exec(text); if (m !== null && m[0].length > 0) { id = 58; matched = m[0]; end = offset + matched.length; break found }
+          RX[1].lastIndex = offset; m = RX[1].exec(text); if (m !== null && m[0].length > 0) { id = 58; matched = m[0]; end = offset + matched.length; break found }
           break
         }
         case 16: {
           if (text.startsWith("::", offset)) { id = 66; end = offset + 2; matched = "::"; break found }
-          RX[4].lastIndex = offset; m = RX[4].exec(text); if (m !== null && m[0].length > 0) { id = 67; matched = m[0]; end = offset + matched.length; break found }
+          { const e = dfa1(text, offset, length); if (e !== -1) { id = dfaId; end = e; matched = null; break found } }
           break
         }
         case 17: {
@@ -606,74 +1320,43 @@ function scan59 (text, offset) {
           break
         }
         case 22: {
-          { const e = scanKeyword(text, offset, length, KW[0][0], KW[0][1], look0); if (e !== -1) { id = 6; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[1][0], KW[1][1], look0); if (e !== -1) { id = 8; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[2][0], KW[2][1], look0); if (e !== -1) { id = 9; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[3][0], KW[3][1], look0); if (e !== -1) { id = 30; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word0(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 23: {
-          { const e = scanKeyword(text, offset, length, KW[4][0], KW[4][1], look0); if (e !== -1) { id = 17; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[5][0], KW[5][1], look0); if (e !== -1) { id = 28; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word1(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 24: {
-          { const e = scanKeyword(text, offset, length, KW[6][0], KW[6][1], look0); if (e !== -1) { id = 23; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[7][0], KW[7][1], look0); if (e !== -1) { id = 41; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[8][0], KW[8][1], look0); if (e !== -1) { id = 51; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word2(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 25: {
-          { const e = scanKeyword(text, offset, length, KW[9][0], KW[9][1], look0); if (e !== -1) { id = 7; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[10][0], KW[10][1], look0); if (e !== -1) { id = 31; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word3(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 26: {
-          { const e = scanKeyword(text, offset, length, KW[11][0], KW[11][1], look0); if (e !== -1) { id = 44; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[12][0], KW[12][1], look0); if (e !== -1) { id = 45; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[13][0], KW[13][1], look0); if (e !== -1) { id = 48; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[14][0], KW[14][1], look0); if (e !== -1) { id = 50; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[15][0], KW[15][1], look0); if (e !== -1) { id = 52; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word4(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 27: {
-          { const e = scanKeyword(text, offset, length, KW[16][0], KW[16][1], look0); if (e !== -1) { id = 4; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[17][0], KW[17][1], look0); if (e !== -1) { id = 21; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[18][0], KW[18][1], look0); if (e !== -1) { id = 40; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[19][0], KW[19][1], look0); if (e !== -1) { id = 55; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[20][0], KW[20][1], look0); if (e !== -1) { id = 56; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word5(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 28: {
-          { const e = scanKeyword(text, offset, length, KW[21][0], KW[21][1], look0); if (e !== -1) { id = 27; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word6(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 29: {
-          { const e = scanKeyword(text, offset, length, KW[22][0], KW[22][1], look0); if (e !== -1) { id = 33; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word7(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 30: {
-          { const e = scanKeyword(text, offset, length, KW[23][0], KW[23][1], look0); if (e !== -1) { id = 12; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[24][0], KW[24][1], look0); if (e !== -1) { id = 13; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[25][0], KW[25][1], look0); if (e !== -1) { id = 16; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[26][0], KW[26][1], look0); if (e !== -1) { id = 18; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[27][0], KW[27][1], look0); if (e !== -1) { id = 36; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[28][0], KW[28][1], look0); if (e !== -1) { id = 37; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[29][0], KW[29][1], look0); if (e !== -1) { id = 49; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word8(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 31: {
-          { const e = scanKeyword(text, offset, length, KW[30][0], KW[30][1], look0); if (e !== -1) { id = 24; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word9(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 32: {
@@ -681,67 +1364,55 @@ function scan59 (text, offset) {
           break
         }
         case 33: {
-          { const e = scanKeyword(text, offset, length, KW[31][0], KW[31][1], look0); if (e !== -1) { id = 15; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[32][0], KW[32][1], look0); if (e !== -1) { id = 19; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[33][0], KW[33][1], look0); if (e !== -1) { id = 34; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word10(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 34: {
-          { const e = scanKeyword(text, offset, length, KW[34][0], KW[34][1], look0); if (e !== -1) { id = 11; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[35][0], KW[35][1], look0); if (e !== -1) { id = 14; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[36][0], KW[36][1], look0); if (e !== -1) { id = 32; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word11(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 35: {
-          { const e = scanKeyword(text, offset, length, KW[37][0], KW[37][1], look0); if (e !== -1) { id = 10; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[38][0], KW[38][1], look0); if (e !== -1) { id = 22; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[39][0], KW[39][1], look0); if (e !== -1) { id = 25; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[40][0], KW[40][1], look0); if (e !== -1) { id = 29; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[41][0], KW[41][1], look0); if (e !== -1) { id = 35; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[42][0], KW[42][1], look0); if (e !== -1) { id = 53; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word12(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 36: {
-          { const e = scanKeyword(text, offset, length, KW[43][0], KW[43][1], look0); if (e !== -1) { id = 54; end = e; matched = null; break found } }
-          RX[5].lastIndex = offset; m = RX[5].exec(text); if (m !== null && m[0].length > 0) { id = 57; matched = m[0]; end = offset + matched.length; break found }
+          { const e = scanKeyword(text, offset, length, KW[0][0], KW[0][1], look0); if (e !== -1) { id = 54; end = e; matched = null; break found } }
+          {
+          let maybe3 = -1
+          if (!off3) {
+            maybe3 = dfa3(text, offset, length)
+            if (++calls3 === 64 && passes3 * 10 > 448) off3 = true
+            if (maybe3 !== 0 && calls3 <= 64) passes3++
+          }
+          if (maybe3 !== 0) {
+            if ((maybe3 & 1) !== 0) { RX[3].lastIndex = offset; m = RX[3].exec(text); if (m !== null && m[0].length > 0) { id = 57; matched = m[0]; end = offset + matched.length; break found } }
+          }
+        }
           if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
           break
         }
         case 37: {
-          { const e = scanKeyword(text, offset, length, KW[44][0], KW[44][1], look0); if (e !== -1) { id = 20; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word13(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 38: {
-          { const e = scanKeyword(text, offset, length, KW[45][0], KW[45][1], look0); if (e !== -1) { id = 3; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word14(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 39: {
-          { const e = scanKeyword(text, offset, length, KW[46][0], KW[46][1], look0); if (e !== -1) { id = 39; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[47][0], KW[47][1], look0); if (e !== -1) { id = 43; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word15(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 40: {
-          { const e = scanKeyword(text, offset, length, KW[48][0], KW[48][1], look0); if (e !== -1) { id = 26; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[49][0], KW[49][1], look0); if (e !== -1) { id = 47; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word16(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 41: {
-          { const e = scanKeyword(text, offset, length, KW[50][0], KW[50][1], look0); if (e !== -1) { id = 38; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word17(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 42: {
-          { const e = scanKeyword(text, offset, length, KW[51][0], KW[51][1], look0); if (e !== -1) { id = 5; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[52][0], KW[52][1], look0); if (e !== -1) { id = 42; end = e; matched = null; break found } }
-          { const e = scanKeyword(text, offset, length, KW[53][0], KW[53][1], look0); if (e !== -1) { id = 46; end = e; matched = null; break found } }
-          if ((code >= 65 && code <= 90) || code === 95 || (code >= 97 && code <= 122)) { let j = offset + 1; while (j < length) { const c = text.charCodeAt(j); if (!(c === 36 || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || c === 95 || (c >= 97 && c <= 122))) break; j++ } id = 62; end = j; matched = null; break found }
+          { const e = word18(text, offset, length); if (e !== -1) { id = wordId; end = e; matched = null; break found } }
           break
         }
         case 43: {
@@ -753,7 +1424,7 @@ function scan59 (text, offset) {
           break
         }
         case 45: {
-          RX[6].lastIndex = offset; m = RX[6].exec(text); if (m !== null && m[0].length > 0) { id = 61; matched = m[0]; end = offset + matched.length; break found }
+          { const e = dfa2(text, offset, length); if (e !== -1) { id = dfaId; end = e; matched = null; break found } }
           break
         }
         case 46: {

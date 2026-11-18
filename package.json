@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.2",
-    "grammatik": "0.1.3",
+    "grammatik": "0.1.4",
     "typescript": "^5.9.3"
   }
 }
