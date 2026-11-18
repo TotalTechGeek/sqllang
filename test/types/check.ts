@@ -1,7 +1,7 @@
 // Compiled with `tsc --noEmit --strict` (npm run test:types); never run.
 // Each line is something a user would write; the @ts-expect-error lines must fail.
 import {
-  query, prepare, execute, compile, executePlan, createEngine,
+  query, prepare, execute, compile, executePlan, createEngine, complete, createCompleter, inferSchema,
   SAFE_LIMITS, SqlError, SqlSyntaxError, SqlLimitError,
   type Row, type Rows, type Plan, type Limits
 } from 'sqllang'
@@ -52,4 +52,20 @@ query('SELECT 1', {}, { limits: { maxRows: 'lots' } })
 // @ts-expect-error — columns is read-only
 rows.columns = []
 
-void [columns, first, n, again, plan, loaded, limits]
+const completer = createCompleter({ data: { orders }, functions: ['MYFN'] })
+const suggestions: string[] = completer('SELECT o.', 9).items.map((i) => i.label)
+const { from, to, prefix } = complete('SEL', 3)
+const stated = createCompleter({
+  tables: { t: ['a', { name: 'b', type: 'number', values: ['x', 1, true] }] },
+  values: { 'orders.status': ['open', 'paid'], region: ['n'] }
+})
+const names = createCompleter({ tables: ['orders', 'users'], guessColumns: true })
+const same: typeof completer = completer.update({ data: { orders }, values: { status: ['a'] } })
+const insert: string | undefined = completer('SELECT 1').items[0]?.insert
+const inferred: string[] = inferSchema({ orders }).tables.orders.map((c) => c.name)
+// @ts-expect-error — a cursor is a number
+completer('SELECT', 'end')
+// @ts-expect-error — values are scalars
+createCompleter({ values: { a: [{}] } })
+
+void [columns, first, n, again, plan, loaded, limits, suggestions, from, to, prefix, stated, names, same, insert, inferred]

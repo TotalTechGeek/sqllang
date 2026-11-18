@@ -14,6 +14,7 @@ import { SqlError, SqlSyntaxError } from './errors.js'
 import { SqlLimitError, SAFE_LIMITS } from './guard.js'
 import { functions } from './functions.js'
 import { aggregates, windowFunctions } from './aggregates.js'
+import { complete, createCompleter, inferSchema } from './complete.js'
 
 /**
  * Compile once, run many times.
@@ -99,6 +100,6 @@ export const functionNames = Object.keys(functions).sort()
 export const aggregateNames = Object.keys(aggregates).sort()
 
 export {
-  compile, executePlan, createEngine, defaultEngine, toRows,
+  compile, executePlan, createEngine, defaultEngine, toRows, complete, createCompleter, inferSchema,
   SqlError, SqlSyntaxError, SqlLimitError, SAFE_LIMITS, windowFunctions
 }

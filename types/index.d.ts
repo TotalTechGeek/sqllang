@@ -219,3 +219,79 @@ export const functionNames: readonly string[]
 export const aggregateNames: readonly string[]
 /** Every window-only function name (ROW_NUMBER, RANK, LAG, ...). */
 export const windowFunctions: ReadonlySet<string>
+
+// ---------------------------------------------------------------------------
+// Autocomplete
+// ---------------------------------------------------------------------------
+
+export type CompletionKind = 'keyword' | 'operator' | 'table' | 'column' | 'alias' | 'function' | 'aggregate' | 'window' | 'value'
+
+export interface Completion {
+  label: string
+  kind: CompletionKind
+  /** A column's type, a table's column count, an alias's table, the column a value belongs to. */
+  detail?: string
+  /**
+   * The text to put in place of `from`..`to` when it is not the label: a value
+   * outside a string as a SQL literal (`'it''s'`, `TRUE`, `3`), inside one as escaped text.
+   */
+  insert?: string
+}
+
+export interface Completions {
+  /** The word (or string content) under the cursor, as a half-open range to replace. */
+  from: number
+  to: number
+  /** What was typed of it, before the cursor. */
+  prefix: string
+  /** Best first, already filtered by `prefix`. */
+  items: Completion[]
+}
+
+export interface CompleteColumn {
+  name: string
+  type?: string | null
+  /** The values this column is compared with, to suggest after `=`, in `IN (...)` and so on. */
+  values?: ReadonlyArray<string | number | boolean>
+}
+
+export interface CompleteOptions {
+  /**
+   * What you would pass to `query()`. Tables, columns, types, and the values of
+   * columns that have only a few (up to 50 distinct) are read from it.
+   */
+  data?: Data
+  /**
+   * Tables you state yourself: names, or names with columns. A table also in `data`
+   * keeps the types it found but takes these columns.
+   */
+  tables?: readonly string[] | Record<string, ReadonlyArray<string | CompleteColumn>>
+  /** Values to suggest for a column: `'table.column'` or just `'column'`. Wins over the data. */
+  values?: Record<string, ReadonlyArray<string | number | boolean>>
+  /** Names of custom scalar functions to suggest. */
+  functions?: readonly string[]
+  /** The engine you query with; the custom functions it was created with are suggested. */
+  engine?: Engine
+  /**
+   * A table's columns are only suggested while that table is in the statement, so a select list
+   * written before its `FROM` gets none. Set this to guess instead, for typing left to right:
+   * with no `FROM` yet, the columns of every table are offered, and an alias not declared yet is
+   * read as the table whose name it starts (`o.` as `orders`). Off by default.
+   */
+  guessColumns?: boolean
+}
+
+export interface Completer {
+  (sql: string, cursor?: number): Completions
+  /** Change what it knows; each option given replaces the one before. Returns itself. */
+  update (options: CompleteOptions): Completer
+}
+
+/** A completion function; it keeps what it read from the data, so it is cheap per keystroke. */
+export function createCompleter (options?: CompleteOptions): Completer
+
+/** One-off completion. Use `createCompleter` when calling it repeatedly. */
+export function complete (sql: string, cursor?: number, options?: CompleteOptions): Completions
+
+/** The tables in `data` and their columns, read from the first rows. */
+export function inferSchema (data: Data): { tables: Record<string, Array<{ name: string, type: string | null }>> }

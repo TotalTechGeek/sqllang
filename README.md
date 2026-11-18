@@ -210,6 +210,50 @@ input, also run the query in a worker you can terminate.
 Options: `params` (array or object), `engine`, `limits` (see above), `interpreted: true` (never generates code —
 for a strict Content-Security-Policy), `tables` (extra tables by name).
 
+## Autocomplete
+
+The parser knows what could come next at any point, so it can drive an editor's completion list:
+
+```js
+import { createCompleter } from 'sqllang'
+
+const complete = createCompleter({ data })        // tables, columns, types and short value lists are read from the data
+const sql = "SELECT o.to FROM orders o WHERE o.status = 'op'"
+
+complete(sql, 11)   // { from: 9, to: 11, prefix: 'to', items: [{ label: 'total', kind: 'column', detail: 'number' }] }
+complete(sql, 50)   // inside the string: [{ label: 'open', kind: 'value', insert: 'open', detail: 'orders.status' }]
+```
+
+Each result is the range to replace (`from`..`to`, the whole word or string under the cursor) and
+`items`, best first, with a `kind`: `keyword`, `operator`, `table`, `column`, `alias`, `function`,
+`aggregate`, `window` or `value`. Keywords come from the grammar, so they are only the ones that fit
+there; after `FROM` it offers tables, after `alias.` that table's columns (even when the alias is declared
+later in the statement), and after `=`, `LIKE` or inside `IN (...)` the values the column is compared with.
+A value's `insert` is the text to put in: a SQL literal outside a string (`'it''s'`, `TRUE`, `3`), the
+escaped text inside one.
+
+Pass in what the data cannot tell it, or what you would rather state:
+
+```js
+createCompleter({
+  data,                                           // optional
+  tables: ['orders', 'users'],                    // names, or { orders: ['id', { name: 'status', values: ['open', 'paid'] }] }
+  values: { 'orders.status': ['open', 'paid'], region: ['n', 's'] },   // 'table.column' or just 'column'
+  functions: ['MYFN'],                            // your own scalar functions, or
+  engine                                          // the engine you query with: its functions are offered
+})
+complete.update({ data: freshData })              // change what it knows; options you pass replace the old ones
+```
+
+A table's columns are suggested only while that table is in the statement (after `FROM` or `JOIN`), so
+`SELECT na| FROM orders` offers none if `orders` has no `name`. A select list written *before* its `FROM`
+therefore gets no columns; pass `guessColumns: true` to offer every table's columns there instead (and to
+read an undeclared alias as the table it starts: `o.` as `orders`). It is a guess, so it is off by default.
+
+Values are suggested for columns with at most 50 distinct values in the first 2000 rows. It keeps no state
+between calls beyond what it read, so calling it on every keystroke is cheap (tens of microseconds for
+ordinary statements).
+
 ## What a plan looks like
 
 ```js

@@ -1,6 +1,6 @@
 {
   "name": "sqllang",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "SQL over your own data: query arrays of rows, columnar tables, nested documents and JSON-text columns with a SQL dialect — joins, CTEs, window functions, subqueries. Compiles to JSON Logic and runs on json-logic-engine.",
   "type": "module",
   "main": "./dist/cjs/index.js",
